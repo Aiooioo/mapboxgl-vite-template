@@ -29,6 +29,10 @@ body {
   padding: 0;
 }
 
+.mapboxgl-ctrl-logo {
+  display: none !important;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

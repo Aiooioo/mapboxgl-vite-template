@@ -24,8 +24,11 @@ function createMapControls(map) {
     container: document.querySelector("body"),
   });
 
+  const scalebar = new mapboxgl.ScaleControl();
+
   map.addControl(nav);
   map.addControl(fullscreen);
+  map.addControl(scalebar);
 }
 
 export default {
