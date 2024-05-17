@@ -11,6 +11,10 @@ const useMapboxView = (container) => {
     configMapboxGL();
 
     mapRef.value = mapCreator.createMap(container.value);
+
+    // customize map options
+    mapRef.value.dragRotate.disable();
+    mapRef.value.touchZoomRotate.disableRotation();
   });
 
   onUnmounted(() => {});
