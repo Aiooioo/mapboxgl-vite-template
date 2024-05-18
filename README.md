@@ -8,7 +8,7 @@
  - 一组约定式的预先配置
  - 企业级的可扩展代码结构
 
-[Home](https://github.com/Aiooioo/mapboxgl-vite-template/blob/main/img/home.png)
+![Home](https://github.com/Aiooioo/mapboxgl-vite-template/blob/main/img/home.png)
 
 
 
