@@ -1,6 +1,12 @@
-# Vue 3 + Vite
+# 遥感影像地图脚手架模板
+---
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+脚手架模板构建了一套应用级的地图开发框架，包括
+
+ - **采用 Vue 3 与 Vite构建.**
+ - Mapbox GL JS v3.3
+
+
 
 ## Recommended IDE Setup
 
