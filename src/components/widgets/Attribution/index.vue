@@ -5,7 +5,10 @@
     </div>
     <div class="map-widget__attribution_divide">|</div>
     <div class="map-widget__attribution_center">
-      中心点: <span>{{ center && `${center.lng}, ${center.lat}` }}</span>
+      中心点:
+      <span>{{
+        center && `${center.lng.toFixed(5)}, ${center.lat.toFixed(5)}`
+      }}</span>
     </div>
   </div>
 </template>

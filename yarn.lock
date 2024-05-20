@@ -2275,6 +2275,11 @@ magic-string@^0.30.10:
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.4.15"
 
+map-gl-utils@^0.44.3:
+  version "0.44.3"
+  resolved "https://registry.npmmirror.com/map-gl-utils/-/map-gl-utils-0.44.3.tgz#22d74fd548c3d55bbcde1e5fd228da6366ae079c"
+  integrity sha512-H1j/LRzqtRkBtz5/yeto3+dyLe3Ua9vAb/mX05lP4R+6e8aw+yNkvNJH58bBCJxmE9fefDz2mr8/oPHPTE2nIg==
+
 mapbox-gl@^3.3.0:
   version "3.3.0"
   resolved "https://registry.npmmirror.com/mapbox-gl/-/mapbox-gl-3.3.0.tgz#30f0afc02b53ce82e7fddc3000d076882ec836f7"

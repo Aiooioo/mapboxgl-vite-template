@@ -1,4 +1,5 @@
 import mapboxgl from "mapbox-gl";
+import MapGlUtils from "map-gl-utils";
 import basemapCreator from "./basemap-creator.js";
 
 function buildStyleObject() {
@@ -41,6 +42,8 @@ export default {
       style: buildStyleObject(),
       ...initProps,
     });
+
+    MapGlUtils.init(map);
 
     createMapControls(map);
 
