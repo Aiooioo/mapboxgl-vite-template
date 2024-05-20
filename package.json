@@ -9,11 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mapbox/mapbox-gl-draw": "^1.4.3",
+    "@turf/turf": "^6.5.0",
     "@vueuse/core": "^10.9.0",
     "axios": "^1.6.8",
+    "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "mapbox-gl": "^3.3.0",
     "nanoid": "^5.0.7",
+    "pinia": "^2.1.7",
     "qs": "^6.12.1",
     "vue": "^3.4.21"
   },
