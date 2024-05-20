@@ -3,12 +3,13 @@
 </template>
 
 <script setup>
+import { inject } from 'vue'
 import ExtendDrawBar from "./extended/ExtendDrawBar.js";
 import useMapboxSketch from "../../utils/hooks/useMapboxSketch.js";
 
-const
+const map = inject('map')
 
-const {} = useMapboxSketch();
+const { draw } = useMapboxSketch(map);
 
 </script>
 
