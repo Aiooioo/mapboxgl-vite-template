@@ -6,19 +6,33 @@
     <div class="map-widget__attribution_divide">|</div>
     <div class="map-widget__attribution_center">
       中心点:
-      <span>{{
-        center && `${center.lng.toFixed(5)}, ${center.lat.toFixed(5)}`
-      }}</span>
+      <span>{{ `${longitude}, ${latitude}` }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { inject } from "vue";
+import { inject, computed } from "vue";
+import _ from "lodash";
 import useViewPort from "./useViewPort.js";
 
 const map = inject("map");
 const { center, zoom } = useViewPort(map);
+
+const longitude = computed(() => {
+  if (center.value && _.isNumber(center.value.lng)) {
+    return center.value.lng.toFixed(5);
+  }
+
+  return "0";
+});
+const latitude = computed(() => {
+  if (center.value && _.isNumber(center.value.lat)) {
+    return center.value.lat.toFixed(5);
+  }
+
+  return "0";
+});
 </script>
 
 <style scoped lang="scss">

@@ -16,12 +16,19 @@
         </div>
       </div>
     </div>
+    <div class="viewDiv-overlay">
+      <div class="viewDiv-overlay-left"></div>
+      <div class="viewDiv-overlay-right">
+        <SimpleObjDimension class="viewDiv-overlay-right-dimension" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, provide } from "vue";
 import Attribution from "./widgets/Attribution/index.vue";
+import SimpleObjDimension from "./overlay/ObjectDimension/SimpleObjDimension.vue";
 import useMapboxView from "../utils/hooks/useMapboxView.js";
 
 const viewDivRef = ref(null);
@@ -38,12 +45,17 @@ provide("map", map);
   padding: 0;
   position: relative;
 
-  .viewDiv-plus {
+  .viewDiv-plus,
+  .viewDiv-widgets,
+  .viewDiv-overlay {
     position: absolute;
     inset: 0;
     margin: 0 auto;
     width: 100%;
     height: 100%;
+  }
+
+  .viewDiv-plus {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -52,11 +64,6 @@ provide("map", map);
   }
 
   .viewDiv-widgets {
-    position: absolute;
-    inset: 0;
-    margin: 0 auto;
-    width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     pointer-events: none;
@@ -81,6 +88,26 @@ provide("map", map);
         border-radius: 40px 0 0 0;
         background: rgba(0, 0, 0, 0.5);
         color: #f9f9f9;
+      }
+    }
+  }
+
+  .viewDiv-overlay {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 3;
+
+    &-left {
+    }
+
+    &-right {
+      margin: 10px 0;
+
+      .viewDiv-overlay-right-dimension {
+        min-width: 260px;
+        margin: 0 50px 0 0;
       }
     }
   }
