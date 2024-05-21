@@ -11,7 +11,7 @@
       <div class="object-dimension__simple-draw">
         <div class="object-dimension__simple-draw-label">对象标注</div>
         <div class="object-dimension__simple-draw-input">
-
+          <DimensionDrawControl />
         </div>
       </div>
     </div>
@@ -21,6 +21,7 @@
 <script setup>
 import { inject } from "vue";
 import ObjectTypeSelect from "./ObjectTypeSelect.vue";
+import DimensionDrawControl from "./DimensionDrawControl.vue";
 
 const map = inject("map");
 </script>
@@ -57,7 +58,6 @@ const map = inject("map");
 
   &-draw {
     margin-top: 15px;
-
   }
 }
 </style>
