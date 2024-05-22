@@ -17,7 +17,9 @@
       </div>
     </div>
     <div class="viewDiv-overlay">
-      <div class="viewDiv-overlay-left"></div>
+      <div class="viewDiv-overlay-left">
+        <CatalogPanel class="viewDiv-overlay-left-catalog" />
+      </div>
       <div class="viewDiv-overlay-right">
         <SimpleObjDimension class="viewDiv-overlay-right-dimension" />
       </div>
@@ -29,6 +31,7 @@
 import { ref, provide } from "vue";
 import Attribution from "./widgets/Attribution/index.vue";
 import SimpleObjDimension from "./overlay/ObjectDimension/SimpleObjDimension.vue";
+import CatalogPanel from "@/components/overlay/ImageryCatalog/CatalogPanel.vue";
 import useMapboxView from "../utils/hooks/useMapboxView.js";
 
 const viewDivRef = ref(null);
@@ -102,6 +105,12 @@ provide("map", map);
     z-index: 3;
 
     &-left {
+      margin: 16px 0 64px 10px;
+
+      &-catalog {
+        width: 350px;
+        height: 100%;
+      }
     }
 
     &-right {
