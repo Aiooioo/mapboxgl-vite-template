@@ -9,6 +9,21 @@
       <CatalogList />
     </div>
     <div class="imagery-catalog__panel-footer">
+      <div class="imagery-catalog__panel-layers">
+        <div class="imagery-catalog__panel-layers-count">
+          当前已添加 {{ 0 }} 个图层
+        </div>
+        <div class="imagery-catalog__panel-layers-action">
+          <Button
+            variant="link"
+            class="px-0 py-0 h-2 text-[12px]"
+            :style="{
+              '--primary': '255, 91.7%, 76.3%',
+            }"
+            >全部移除</Button
+          >
+        </div>
+      </div>
       <span class="imagery-catalog__panel-collapse">
         <ArrowLeftStartOnRectangleIcon />
       </span>
@@ -21,6 +36,7 @@ import {
   MagnifyingGlassIcon,
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/vue/16/solid";
+import { Button } from "@/components/ui/button";
 import CatalogList from "@/components/overlay/ImageryCatalog/CatalogList.vue";
 </script>
 
@@ -73,7 +89,25 @@ import CatalogList from "@/components/overlay/ImageryCatalog/CatalogList.vue";
     border-image-slice: 1;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
+  }
+
+  &-layers {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &-count {
+      font-size: 12px;
+      line-height: 12px;
+      color: $secondary_text_color;
+    }
+
+    &-action {
+      font-size: 12px;
+      line-height: 16px;
+      color: $primary_bg_color;
+    }
   }
 
   &-collapse {

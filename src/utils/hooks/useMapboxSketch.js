@@ -31,6 +31,14 @@ const useMapboxSketch = () => {
     mapboxMapInst.on("draw.delete", onDeleteComplete);
   }
 
+  function createPoint() {
+    if (!sketchRef.value) return;
+
+    activeTool.value = "point";
+
+    sketchRef.value.changeMode("draw_point");
+  }
+
   function createRect() {
     if (!sketchRef.value) return;
 
@@ -48,7 +56,7 @@ const useMapboxSketch = () => {
   }
 
   function cancelDraw() {
-    if (!sketchRef.value) return;
+    if (!sketchRef.value || activeTool.value === "") return;
 
     activeTool.value = "";
 
@@ -84,6 +92,7 @@ const useMapboxSketch = () => {
   return {
     activeTool,
     draw: sketchRef,
+    createPoint,
     createRect,
     createPolygon,
     cancelDraw,

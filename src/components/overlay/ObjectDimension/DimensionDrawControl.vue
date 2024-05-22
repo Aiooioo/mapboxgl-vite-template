@@ -3,6 +3,15 @@
     <div class="object-dimension__draw-actions">
       <span
         :class="[
+          'object-dimension__draw-item object-dimension__draw-point',
+          { active: activeTool === 'point' },
+        ]"
+        @click="createPoint"
+      >
+        <MapPinIcon />
+      </span>
+      <span
+        :class="[
           'object-dimension__draw-item object-dimension__draw-rect',
           { active: activeTool === 'rect' },
         ]"
@@ -19,14 +28,20 @@
       >
         <Icon icon="ph:polygon-light" style="height: 28px; width: 28px" />
       </span>
-    </div>
-    <div class="object-dimension__draw-more">
       <span
-        class="object-dimension__draw-item object-dimension__draw-cancel"
-        v-show="activeTool !== ''"
+        :class="[
+          'object-dimension__draw-item object-dimension__draw-cancel',
+          { disabled: activeTool === '' },
+        ]"
         @click="cancelDraw"
       >
-        <NoSymbolIcon style="color: #d50000; height: 24px; width: 24px" />
+        <NoSymbolIcon
+          :style="{
+            color: activeTool === '' ? '#71717a' : '#d50000',
+            height: '24px',
+            width: '24px',
+          }"
+        />
       </span>
     </div>
   </div>
@@ -35,27 +50,21 @@
 <script setup>
 import { ref, inject } from "vue";
 import { Icon } from "@iconify/vue";
-import { StopIcon, NoSymbolIcon } from "@heroicons/vue/24/outline";
+import { MapPinIcon, StopIcon, NoSymbolIcon } from "@heroicons/vue/24/outline";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
 
-const { activeTool, createRect, createPolygon, cancelDraw } = useMapboxSketch();
+const { activeTool, createRect, createPolygon, cancelDraw, createPoint } =
+  useMapboxSketch();
 </script>
 
 <style scoped lang="scss">
 .object-dimension__draw {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
   &-actions {
     flex: 1;
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
     align-items: center;
-  }
-  &-more {
-    flex: none;
   }
 
   &-item {

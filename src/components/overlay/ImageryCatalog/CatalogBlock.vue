@@ -16,26 +16,39 @@
           </span>
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent style="margin-top: 8px"> 12345 </CollapsibleContent>
+      <CollapsibleContent style="margin-top: 8px">
+        <CatalogItem
+          v-for="(layer, index) in childLayers"
+          :key="`catalog-item-${index}`"
+          :item="layer"
+        />
+      </CollapsibleContent>
     </Collapsible>
-    <div class="imagery-catalog__block-title"></div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { ChevronDownIcon } from "@heroicons/vue/16/solid";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import CatalogItem from "@/components/overlay/ImageryCatalog/CatalogItem.vue";
 
 const props = defineProps({
   item: {},
 });
 
 const isOpen = ref(false);
+const childLayers = computed(() => {
+  if (!props.item || !props.item.layers) {
+    return [];
+  }
+
+  return props.item.layers;
+});
 </script>
 
 <style scoped lang="scss">

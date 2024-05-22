@@ -16,6 +16,8 @@
     <div class="object-dimension__bar-controls">
       <DimensionDrawControl />
     </div>
+    <div class="object-dimension__bar-split"></div>
+    <ObjectDimensionListToggle />
   </div>
 </template>
 
@@ -23,6 +25,7 @@
 import { ref } from "vue";
 import { Switch } from "@/components/ui/switch";
 import DimensionDrawControl from "./DimensionDrawControl.vue";
+import ObjectDimensionListToggle from "@/components/overlay/ObjectDimension/ObjectDimensionListToggle.vue";
 
 const enabled = ref(false);
 

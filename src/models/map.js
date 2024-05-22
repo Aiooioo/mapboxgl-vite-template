@@ -6,6 +6,8 @@ const useMap = defineStore("map", {
       map: null,
 
       ready: false,
+
+      layerIds: [],
     };
   },
 
