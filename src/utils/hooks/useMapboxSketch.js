@@ -2,12 +2,15 @@ import {} from "@vueuse/core";
 import { ref, watch, onMounted, toValue, onUnmounted, shallowRef } from "vue";
 import * as turf from "@turf/turf";
 import Draw from "@mapbox/mapbox-gl-draw";
+import debugSupport from "@/utils/debug-support.js";
 
 const useMapboxSketch = (mapboxMap) => {
   const sketchRef = shallowRef(null);
   const activeTool = ref("");
 
-  function onCreateComplete() {}
+  function onCreateComplete() {
+    activeTool.value = "";
+  }
 
   function onUpdateComplete() {}
 
@@ -17,6 +20,8 @@ const useMapboxSketch = (mapboxMap) => {
     sketchRef.value = new Draw({
       displayControlsDefault: false,
     });
+
+    debugSupport.set("mapbox-draw", sketchRef.value);
 
     mapboxMapInst.addControl(sketchRef.value);
     mapboxMapInst.on("draw.create", onCreateComplete);
@@ -29,7 +34,23 @@ const useMapboxSketch = (mapboxMap) => {
 
     activeTool.value = "rect";
 
+    sketchRef.value.changeMode("draw_rectangle");
+  }
+
+  function createPolygon() {
+    if (!sketchRef.value) return;
+
+    activeTool.value = "polygon";
+
     sketchRef.value.changeMode("draw_polygon");
+  }
+
+  function cancelDraw() {
+    if (!sketchRef.value) return;
+
+    activeTool.value = "";
+
+    sketchRef.value.changeMode("simple_select");
   }
 
   function createDrawToolAfterLoad() {
@@ -67,6 +88,8 @@ const useMapboxSketch = (mapboxMap) => {
     activeTool,
     draw: sketchRef,
     createRect,
+    createPolygon,
+    cancelDraw,
   };
 };
 

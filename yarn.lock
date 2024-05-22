@@ -2729,6 +2729,11 @@ map-gl-utils@^0.44.3:
   resolved "https://registry.npmmirror.com/map-gl-utils/-/map-gl-utils-0.44.3.tgz#22d74fd548c3d55bbcde1e5fd228da6366ae079c"
   integrity sha512-H1j/LRzqtRkBtz5/yeto3+dyLe3Ua9vAb/mX05lP4R+6e8aw+yNkvNJH58bBCJxmE9fefDz2mr8/oPHPTE2nIg==
 
+mapbox-gl-draw-rectangle-mode@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmmirror.com/mapbox-gl-draw-rectangle-mode/-/mapbox-gl-draw-rectangle-mode-1.0.4.tgz#42987d68872a5fb5cc5d76d3375ee20cd8bab8f7"
+  integrity sha512-BdF6nwEK2p8n9LQoMPzBO8LhddW1fe+d5vK8HQIei+4VcRnUbKNsEj7Z15FsJxCHzsc2BQKXbESx5GaE8x0imQ==
+
 mapbox-gl@^3.3.0:
   version "3.3.0"
   resolved "https://registry.npmmirror.com/mapbox-gl/-/mapbox-gl-3.3.0.tgz#30f0afc02b53ce82e7fddc3000d076882ec836f7"
