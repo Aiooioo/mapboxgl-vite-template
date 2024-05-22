@@ -85,8 +85,10 @@ provide("map", map);
 
       &-right {
         padding: 4px 15px 4px 30px;
-        border-radius: 40px 0 0 0;
+        border-radius: 20px 0 0 0;
         background: rgba(0, 0, 0, 0.5);
+        border-top: 1px solid #d3d4d5;
+        border-left: 1px solid #d3d4d5;
         color: #f9f9f9;
       }
     }
