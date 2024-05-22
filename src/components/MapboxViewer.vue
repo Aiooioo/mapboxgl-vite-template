@@ -11,26 +11,20 @@
       </div>
       <div class="viewDiv-widgets-bottom">
         <div class="viewDiv-widgets-bottom-left"></div>
-        <div class="viewDiv-widgets-bottom-right">
-          <Attribution />
-        </div>
+        <div class="viewDiv-widgets-bottom-right"></div>
       </div>
     </div>
     <div class="viewDiv-overlay">
       <div class="viewDiv-overlay-left">
         <CatalogPanel class="viewDiv-overlay-left-catalog" />
       </div>
-      <div class="viewDiv-overlay-right">
-        <SimpleObjDimension class="viewDiv-overlay-right-dimension" />
-      </div>
+      <div class="viewDiv-overlay-right"></div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, provide } from "vue";
-import Attribution from "./widgets/Attribution/index.vue";
-import SimpleObjDimension from "./overlay/ObjectDimension/SimpleObjDimension.vue";
 import CatalogPanel from "@/components/overlay/ImageryCatalog/CatalogPanel.vue";
 import useMapboxView from "../utils/hooks/useMapboxView.js";
 
@@ -85,15 +79,6 @@ provide("map", map);
       display: flex;
       align-items: center;
       justify-content: space-between;
-
-      &-right {
-        padding: 4px 15px 4px 30px;
-        border-radius: 20px 0 0 0;
-        background: rgba(0, 0, 0, 0.5);
-        border-top: 1px solid #d3d4d5;
-        border-left: 1px solid #d3d4d5;
-        color: #f9f9f9;
-      }
     }
   }
 
@@ -115,11 +100,6 @@ provide("map", map);
 
     &-right {
       margin: 10px 0;
-
-      .viewDiv-overlay-right-dimension {
-        min-width: 260px;
-        margin: 0 50px 0 0;
-      }
     }
   }
 }

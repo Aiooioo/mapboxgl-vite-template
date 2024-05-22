@@ -1,5 +1,5 @@
 import { ref, onMounted, onUnmounted } from "vue";
-import { useMap } from "../../models/map.js";
+import { useMap } from "@/models/map.js";
 import { configMapboxGL } from "../map-init.js";
 import mapCreator from "../map-creator.js";
 import debugSupport from "../debug-support.js";
@@ -23,7 +23,7 @@ const useMapboxView = (container) => {
     mapRef.value.touchZoomRotate.disableRotation();
 
     mapRef.value.on("load", () => {
-      mapStore.onViewReady();
+      mapStore.onViewReady(mapRef.value);
     });
   });
 

@@ -5,7 +5,9 @@
         <MagnifyingGlassIcon />
       </span>
     </div>
-    <div class="imagery-catalog__panel-content"></div>
+    <div class="imagery-catalog__panel-content">
+      <CatalogList />
+    </div>
     <div class="imagery-catalog__panel-footer">
       <span class="imagery-catalog__panel-collapse">
         <ArrowLeftStartOnRectangleIcon />
@@ -19,6 +21,7 @@ import {
   MagnifyingGlassIcon,
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/vue/16/solid";
+import CatalogList from "@/components/overlay/ImageryCatalog/CatalogList.vue";
 </script>
 
 <style scoped lang="scss">

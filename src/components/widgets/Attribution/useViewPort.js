@@ -1,7 +1,7 @@
 import { ref, toValue, watch, onMounted } from "vue";
 import { useMap } from "../../../models/map.js";
 
-const useViewPort = (mapboxMap) => {
+const useViewPort = () => {
   const zoom = ref(0);
   const center = ref([]);
   const mapStore = useMap();
@@ -14,7 +14,7 @@ const useViewPort = (mapboxMap) => {
   watch(
     () => mapStore.ready,
     () => {
-      const map = toValue(mapboxMap);
+      const map = toValue(mapStore.map);
 
       map.on("load", () => {
         updateValues(map);

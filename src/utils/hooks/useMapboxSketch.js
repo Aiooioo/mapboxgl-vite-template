@@ -1,12 +1,14 @@
 import {} from "@vueuse/core";
 import { ref, watch, onMounted, toValue, onUnmounted, shallowRef } from "vue";
+import { useMap } from "@/models/map.js";
 import * as turf from "@turf/turf";
 import Draw from "@mapbox/mapbox-gl-draw";
 import debugSupport from "@/utils/debug-support.js";
 
-const useMapboxSketch = (mapboxMap) => {
+const useMapboxSketch = () => {
   const sketchRef = shallowRef(null);
   const activeTool = ref("");
+  const mapStore = useMap();
 
   function onCreateComplete() {
     activeTool.value = "";
@@ -54,7 +56,7 @@ const useMapboxSketch = (mapboxMap) => {
   }
 
   function createDrawToolAfterLoad() {
-    const map = toValue(mapboxMap);
+    const map = toValue(mapStore.map);
 
     if (map) {
       if (map.loaded()) {
@@ -67,15 +69,10 @@ const useMapboxSketch = (mapboxMap) => {
     }
   }
 
-  onMounted(() => {
-    if (mapboxMap.value) {
-      createDrawToolAfterLoad();
-    } else {
-      watch(() => !!mapboxMap.value, createDrawToolAfterLoad, {
-        once: true,
-      });
-    }
+  watch(() => !!mapStore.ready, createDrawToolAfterLoad, {
+    once: true,
   });
+
   onUnmounted(() => {
     if (sketchRef.value) {
       map.off("draw.create", onCreateComplete);

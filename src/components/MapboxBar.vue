@@ -4,14 +4,23 @@
       <ViewportNavi />
       <div class="mapbox-viewer__bar-split"></div>
       <Home />
+      <div class="mapbox-viewer__bar-split"></div>
+      <Attribution />
+      <div class="mapbox-viewer__bar-split"></div>
     </div>
-    <div class="mapbox-viewer__bar-right"></div>
+    <div class="mapbox-viewer__bar-right">
+      <div class="mapbox-viewer__bar-split"></div>
+      <ObjectDimensionBar />
+      <div class="mapbox-viewer__bar-split"></div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import ViewportNavi from "@/components/widgets/Navigation/ViewportNavi.vue";
+import Attribution from "@/components/widgets/Attribution/index.vue";
 import Home from "./widgets/Navigation/Home.vue";
+import ObjectDimensionBar from "@/components/overlay/ObjectDimension/ObjectDimensionBar.vue";
 </script>
 
 <style scoped lang="scss">
@@ -31,7 +40,7 @@ import Home from "./widgets/Navigation/Home.vue";
   }
 
   &-split {
-    width: 1.5px;
+    width: 2px;
     height: 28px;
     margin: 0 24px;
     background: $primary_border_color;

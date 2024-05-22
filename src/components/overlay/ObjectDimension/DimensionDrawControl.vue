@@ -38,9 +38,7 @@ import { Icon } from "@iconify/vue";
 import { StopIcon, NoSymbolIcon } from "@heroicons/vue/24/outline";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
 
-const map = inject("map");
-const { activeTool, createRect, createPolygon, cancelDraw } =
-  useMapboxSketch(map);
+const { activeTool, createRect, createPolygon, cancelDraw } = useMapboxSketch();
 </script>
 
 <style scoped lang="scss">
@@ -52,7 +50,7 @@ const { activeTool, createRect, createPolygon, cancelDraw } =
   &-actions {
     flex: 1;
     display: flex;
-    gap: 8px;
+    gap: 20px;
     flex-wrap: wrap;
     align-items: center;
   }
@@ -61,20 +59,21 @@ const { activeTool, createRect, createPolygon, cancelDraw } =
   }
 
   &-item {
-    @apply rounded-md bg-gray-50 ring-1 ring-inset ring-gray-500;
-
     flex: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 3px;
-    box-sizing: border-box;
+    width: 24px;
+    height: 24px;
+    color: $primary_text_color;
     cursor: pointer;
 
+    &:hover:not(&.active) {
+      color: $secondary_bg_color;
+    }
+
     &.active {
-      background: hsl(173, 80%, 36%);
+      color: $primary_bg_color;
     }
   }
 }
