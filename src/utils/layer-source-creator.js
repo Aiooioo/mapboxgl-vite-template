@@ -2,12 +2,13 @@ import _ from "lodash";
 import qs from "qs";
 import idGenerator from "./id-generator.js";
 
-const tdtVecUrl =
-  "http://t0.tianditu.com/vec_w/wmts?tk=317e52a409b6b382957e09003ee7e235";
-const tdtImgUrl =
-  "http://t0.tianditu.com/img_w/wmts?tk=317e52a409b6b382957e09003ee7e235";
-const tdtCvaUrl =
-  "http://t0.tianditu.com/cva_w/wmts?tk=317e52a409b6b382957e09003ee7e235";
+const tdtVecUrl = "https://basemaps.geosceneonline.cn/t/vec_w/wmts";
+const tdtImgUrl = "https://basemaps.geosceneonline.cn/t/img_w/wmts";
+const tdtCvaUrl = "https://basemaps.geosceneonline.cn/t/cva_w/wmts";
+const agolImageryUrl =
+  "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer";
+const agolImageryWmtsUrl =
+  "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/WMTS/tile/1.0.0/World_Imagery/default/default028mm/{z}/{y}/{x}.jpg";
 
 const tdtWmtsParams = {
   SERVICE: "WMTS",
@@ -76,6 +77,12 @@ export default {
                 },
               ),
           ],
+          tileSize: 256,
+        };
+      case "ArcGIS-World-Imagery":
+        return {
+          type: "raster",
+          tiles: [agolImageryWmtsUrl],
           tileSize: 256,
         };
       default:
