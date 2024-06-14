@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
+import router from "@/router";
 import "./index.css";
 import "./style.css";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -17,4 +18,5 @@ const app = createApp(App);
 pluginsManager.registerAll();
 
 app.use(pinia);
+app.use(router);
 app.mount("#app");

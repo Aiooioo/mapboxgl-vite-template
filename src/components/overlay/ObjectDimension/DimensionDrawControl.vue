@@ -26,7 +26,7 @@
         ]"
         @click="createPolygon"
       >
-        <Icon icon="ph:polygon-light" style="height: 28px; width: 28px" />
+        <i-ph-polygon-light style="height: 28px; width: 28px" />
       </span>
       <span
         :class="[
@@ -49,7 +49,6 @@
 
 <script setup>
 import { ref, inject } from "vue";
-import { Icon } from "@iconify/vue";
 import { MapPinIcon, StopIcon, NoSymbolIcon } from "@heroicons/vue/24/outline";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
 
