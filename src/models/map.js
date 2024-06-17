@@ -9,6 +9,8 @@ const useMap = defineStore("map", {
 
       layerIds: [],
 
+      activeBar: '',
+
       showZones: true,
 
       zone: "长沙市",
@@ -20,6 +22,10 @@ const useMap = defineStore("map", {
       this.map = map;
 
       this.ready = true;
+    },
+
+    switchActiveTool(toolName) {
+      this.activeBar = toolName;
     },
 
     switchCurrentZone(current) {

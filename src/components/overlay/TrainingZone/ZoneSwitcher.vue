@@ -2,7 +2,7 @@
   <div class="app-zone__switcher">
     <div class="app-zone__switcher-header">
       <i-mdi-select-multiple-marker class="app-zone__switcher-header-icon" />
-      训练场地管理
+      切换训练场地
     </div>
     <div class="app-zone__switcher-content">
       <div class="app-zone__switcher-content-search">

@@ -13,6 +13,9 @@
             }"
           />
         </template>
+        <template #overlay-right>
+          <MapToolPane v-if="mapStore.activeBar !== ''" />
+        </template>
       </MapboxViewer>
     </div>
   </div>
@@ -23,6 +26,7 @@ import { storeToRefs } from "pinia";
 import MapperBar from "@/components/MapperBar.vue";
 import MapboxViewer from "@/components/MapboxViewer.vue";
 import ZoneSwitcher from "@/components/overlay/TrainingZone/ZoneSwitcher.vue";
+import MapToolPane from "@/components/MapToolPane.vue";
 import { useMap } from "@/models/map.js";
 
 const mapStore = useMap();

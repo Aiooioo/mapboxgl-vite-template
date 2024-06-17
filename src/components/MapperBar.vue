@@ -14,10 +14,13 @@
     </div>
     <div class="mapbox-mapper__bar-right">
       <div class="mapbox-mapper__bar-split"></div>
-      <span class="mapbox-mapper__bar-btn">
+      <span class="mapbox-mapper__bar-btn" @click="startRoutePlan">
         <i-mdi-vector-polyline-edit />
       </span>
       <div class="mapbox-mapper__bar-split"></div>
+      <span class="mapbox-mapper__bar-btn" @click="startPrintMap">
+        <i-mdi-printer-outline />
+      </span>
     </div>
   </div>
 </template>
@@ -33,6 +36,12 @@ const mapStore = useMap();
 function toggleZoneSwitcher() {
   mapStore.showZones = !mapStore.showZones;
 }
+
+function startRoutePlan() {
+  mapStore.switchActiveTool("mapper");
+}
+
+function startPrintMap() {}
 </script>
 
 <style scoped lang="scss">
