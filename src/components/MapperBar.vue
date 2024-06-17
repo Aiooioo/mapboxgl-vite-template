@@ -5,12 +5,18 @@
       <div class="mapbox-mapper__bar-split"></div>
       <Home />
       <div class="mapbox-mapper__bar-split"></div>
+      <span class="mapbox-mapper__bar-btn" @click="toggleZoneSwitcher">
+        <i-mdi-select-multiple-marker />
+      </span>
+      <div class="mapbox-mapper__bar-split"></div>
       <Attribution />
       <div class="mapbox-mapper__bar-split"></div>
     </div>
     <div class="mapbox-mapper__bar-right">
       <div class="mapbox-mapper__bar-split"></div>
-
+      <span class="mapbox-mapper__bar-btn">
+        <i-mdi-vector-polyline-edit />
+      </span>
       <div class="mapbox-mapper__bar-split"></div>
     </div>
   </div>
@@ -20,6 +26,13 @@
 import ViewportNavi from "@/components/widgets/Navigation/ViewportNavi.vue";
 import Attribution from "@/components/widgets/Attribution/index.vue";
 import Home from "@/components/widgets/Navigation/Home.vue";
+import { useMap } from "@/models/map.js";
+
+const mapStore = useMap();
+
+function toggleZoneSwitcher() {
+  mapStore.showZones = !mapStore.showZones;
+}
 </script>
 
 <style scoped lang="scss">
@@ -43,6 +56,22 @@ import Home from "@/components/widgets/Navigation/Home.vue";
     height: 28px;
     margin: 0 24px;
     background: $primary_border_color;
+  }
+
+  &-btn {
+    flex: none;
+    height: 24px;
+    width: 24px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $primary_text_color;
+    cursor: pointer;
+
+    &:hover {
+      color: $secondary_bg_color;
+    }
   }
 }
 </style>

@@ -11,12 +11,10 @@ import pluginsManager from "./utils/plugins-manager.js";
 
 debugSupport.attach();
 
-const pinia = createPinia();
-
 const app = createApp(App);
 
 pluginsManager.registerAll();
 
-app.use(pinia);
+app.use(createPinia());
 app.use(router);
 app.mount("#app");
