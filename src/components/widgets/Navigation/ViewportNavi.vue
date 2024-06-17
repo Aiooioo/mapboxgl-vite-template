@@ -1,20 +1,15 @@
 <template>
   <div class="mapbox-viewer__quick-navi">
     <div class="mapbox-viewer__quick-navi-btn">
-      <ArrowUturnLeftIcon />
+      <i-mdi-arrow-left-top />
     </div>
     <div class="mapbox-viewer__quick-navi-btn">
-      <ArrowUturnRightIcon />
+      <i-mdi-arrow-right-top />
     </div>
   </div>
 </template>
 
-<script setup>
-import {
-  ArrowUturnLeftIcon,
-  ArrowUturnRightIcon,
-} from "@heroicons/vue/24/outline";
-</script>
+<script setup></script>
 
 <style scoped lang="scss">
 .mapbox-viewer__quick-navi {
@@ -26,6 +21,7 @@ import {
     flex: none;
     height: 24px;
     width: 24px;
+    font-size: 24px;
     display: flex;
     align-items: center;
     justify-content: center;

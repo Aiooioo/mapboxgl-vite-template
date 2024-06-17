@@ -8,7 +8,7 @@
         ]"
         @click="createPoint"
       >
-        <MapPinIcon />
+        <i-mdi-map-marker-outline style="height: 28px; width: 28px" />
       </span>
       <span
         :class="[
@@ -17,7 +17,7 @@
         ]"
         @click="createRect"
       >
-        <StopIcon />
+        <i-mdi-rectangle-outline style="height: 28px; width: 28px" />
       </span>
       <span
         :class="[
@@ -35,7 +35,7 @@
         ]"
         @click="cancelDraw"
       >
-        <NoSymbolIcon
+        <i-mdi-cancel
           :style="{
             color: activeTool === '' ? '#71717a' : '#d50000',
             height: '24px',
@@ -49,7 +49,6 @@
 
 <script setup>
 import { ref, inject } from "vue";
-import { MapPinIcon, StopIcon, NoSymbolIcon } from "@heroicons/vue/24/outline";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
 
 const { activeTool, createRect, createPolygon, cancelDraw, createPoint } =

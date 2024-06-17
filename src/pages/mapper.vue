@@ -1,26 +1,21 @@
 <template>
-  <div class="page-imagery">
-    <div class="page-imagery-bar">
-      <MapboxBar />
+  <div class="page-mapper">
+    <div class="page-mapper-bar">
+      <MapperBar />
     </div>
-    <div class="page-imagery-main">
-      <MapboxViewer>
-        <template #overlay-left>
-          <CatalogPanel class="page-imagery-main__catalog"></CatalogPanel>
-        </template>
-      </MapboxViewer>
+    <div class="page-mapper-main">
+      <MapboxViewer />
     </div>
   </div>
 </template>
 
 <script setup>
+import MapperBar from "@/components/MapperBar.vue";
 import MapboxViewer from "@/components/MapboxViewer.vue";
-import MapboxBar from "@/components/MapboxBar.vue";
-import CatalogPanel from "@/components/overlay/ImageryCatalog/CatalogPanel.vue";
 </script>
 
 <style scoped lang="scss">
-.page-imagery {
+.page-mapper {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -38,13 +33,9 @@ import CatalogPanel from "@/components/overlay/ImageryCatalog/CatalogPanel.vue";
     );
     border-image-slice: 1;
   }
+
   &-main {
     flex: 1;
-
-    &__catalog {
-      width: 350px;
-      height: 100%;
-    }
   }
 }
 </style>

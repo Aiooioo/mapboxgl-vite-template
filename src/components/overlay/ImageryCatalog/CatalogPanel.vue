@@ -2,7 +2,7 @@
   <div class="imagery-catalog__panel">
     <div class="imagery-catalog__panel-search">
       <span class="imagery-catalog__panel-search-icon">
-        <MagnifyingGlassIcon />
+        <i-mdi-search />
       </span>
     </div>
     <div class="imagery-catalog__panel-content">
@@ -25,17 +25,13 @@
         </div>
       </div>
       <span class="imagery-catalog__panel-collapse">
-        <ArrowLeftStartOnRectangleIcon />
+        <i-mdi-arrow-collapse-left />
       </span>
     </div>
   </div>
 </template>
 
 <script setup>
-import {
-  MagnifyingGlassIcon,
-  ArrowLeftStartOnRectangleIcon,
-} from "@heroicons/vue/16/solid";
 import { Button } from "@/components/ui/button";
 import CatalogList from "@/components/overlay/ImageryCatalog/CatalogList.vue";
 </script>
@@ -55,6 +51,7 @@ import CatalogList from "@/components/overlay/ImageryCatalog/CatalogList.vue";
     margin-bottom: 16px;
     height: 36px;
     width: 100%;
+    font-size: 24px;
     display: flex;
     align-items: center;
     border-radius: 6px;
@@ -114,6 +111,7 @@ import CatalogList from "@/components/overlay/ImageryCatalog/CatalogList.vue";
     flex: none;
     width: 24px;
     height: 24px;
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;

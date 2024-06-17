@@ -7,7 +7,7 @@
             props.item.label
           }}</span>
           <span class="imagery-catalog__block-title-icon">
-            <ChevronDownIcon
+            <i-mdi-keyboard-arrow-down
               :style="{
                 transition: 'all 0.2s',
                 transform: `rotate(${isOpen ? '180deg' : '0deg'})`,
@@ -29,7 +29,6 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { ChevronDownIcon } from "@heroicons/vue/16/solid";
 import {
   Collapsible,
   CollapsibleContent,

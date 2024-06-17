@@ -16,16 +16,17 @@
     </div>
     <div class="viewDiv-overlay">
       <div class="viewDiv-overlay-left">
-        <CatalogPanel class="viewDiv-overlay-left-catalog" />
+        <slot name="overlay-left"></slot>
       </div>
-      <div class="viewDiv-overlay-right"></div>
+      <div class="viewDiv-overlay-right">
+        <slot name="overlay-right"></slot>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, provide } from "vue";
-import CatalogPanel from "@/components/overlay/ImageryCatalog/CatalogPanel.vue";
 import useMapboxView from "../utils/hooks/useMapboxView.js";
 
 const viewDivRef = ref(null);
@@ -91,11 +92,6 @@ provide("map", map);
 
     &-left {
       margin: 16px 0 64px 10px;
-
-      &-catalog {
-        width: 350px;
-        height: 100%;
-      }
     }
 
     &-right {

@@ -6,7 +6,7 @@ function getAbsolutePath() {
 }
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(getAbsolutePath()),
   routes: [
     {
       path: "/",
@@ -14,7 +14,17 @@ const router = createRouter({
     },
     {
       path: "/",
-      component: () => import("../pages/imagery.vue"),
+      component: () => import("../layout/EditorStyleLayout.vue"),
+      children: [
+        {
+          path: "imagery",
+          component: () => import("../pages/imagery.vue"),
+        },
+        {
+          path: "mapper",
+          component: () => import("../pages/mapper.vue"),
+        },
+      ],
     },
   ],
 });

@@ -1,11 +1,11 @@
 <template>
   <div class="object-dimension__list-toggle">
-    <SwatchIcon />
+    <i-mdi-palette-swatch-variant />
   </div>
 </template>
 
 <script setup>
-import { SwatchIcon } from "@heroicons/vue/16/solid";
+
 </script>
 
 <style scoped lang="scss">
