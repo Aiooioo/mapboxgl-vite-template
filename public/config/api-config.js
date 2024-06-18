@@ -6,7 +6,7 @@ const accessToken =
     token: accessToken,
 
     initialViewProps: {
-      center: [-74.5, 40],
+      center: [112.59, 28.12],
       zoom: 9,
       minZoom: 1,
       maxZoom: 18,

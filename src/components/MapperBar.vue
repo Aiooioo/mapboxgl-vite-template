@@ -13,9 +13,16 @@
       <div class="mapbox-mapper__bar-split"></div>
     </div>
     <div class="mapbox-mapper__bar-right">
+      <span class="mapbox-mapper__bar-btn" @click="showCheckPoints">
+        <i-mdi-source-branch-check />
+      </span>
       <div class="mapbox-mapper__bar-split"></div>
       <span class="mapbox-mapper__bar-btn" @click="startRoutePlan">
         <i-mdi-vector-polyline-edit />
+      </span>
+      <div class="mapbox-mapper__bar-split"></div>
+      <span class="mapbox-mapper__bar-btn" @click="startMapDrawing">
+        <i-mdi-drawing />
       </span>
       <div class="mapbox-mapper__bar-split"></div>
       <span class="mapbox-mapper__bar-btn" @click="startPrintMap">
@@ -37,11 +44,21 @@ function toggleZoneSwitcher() {
   mapStore.showZones = !mapStore.showZones;
 }
 
+function showCheckPoints() {
+  mapStore.switchActiveTool("checks");
+}
+
 function startRoutePlan() {
   mapStore.switchActiveTool("mapper");
 }
 
-function startPrintMap() {}
+function startMapDrawing() {
+  mapStore.switchActiveTool("drawing");
+}
+
+function startPrintMap() {
+  mapStore.switchActiveTool("print");
+}
 </script>
 
 <style scoped lang="scss">

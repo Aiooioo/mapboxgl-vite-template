@@ -5,11 +5,13 @@ const useMap = defineStore("map", {
     return {
       map: null,
 
+      currentBasemapId: "arcgis-imagery",
+
       ready: false,
 
       layerIds: [],
 
-      activeBar: '',
+      activeBar: "",
 
       showZones: true,
 

@@ -15,12 +15,14 @@
 <script setup>
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
+import CheckPointsList from "@/components/overlay/CheckPoints/CheckPointsList.vue";
 import RoutePlan from "@/components/overlay/RoutePlan/RoutePlan.vue";
 import { useMap } from "@/models/map.js";
 
 const mapStore = useMap();
 
 const tools = {
+  checks: CheckPointsList,
   mapper: RoutePlan,
 };
 
@@ -32,8 +34,14 @@ const logicalKey = computed(() => {
 
 const displayTitle = computed(() => {
   switch (logicalKey.value) {
+    case "checks":
+      return "点位库";
     case "mapper":
       return "线路规划";
+    case "drawing":
+      return "地图标注";
+    case "print":
+      return "制图出图";
   }
 
   return "";
@@ -46,7 +54,6 @@ function closePanel() {
 
 <style scoped lang="scss">
 .viewer-tools__pane {
-  margin-right: 50px;
   max-height: 480px;
   width: 330px;
   border-radius: 4px;

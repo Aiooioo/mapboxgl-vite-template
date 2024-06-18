@@ -14,7 +14,12 @@
           />
         </template>
         <template #overlay-right>
-          <MapToolPane v-if="mapStore.activeBar !== ''" />
+          <div class="page-mapper-main-right">
+            <div class="page-mapper-main-right-panel-holder">
+              <MapToolPane v-if="mapStore.activeBar !== ''" />
+            </div>
+            <BasemapToggle />
+          </div>
         </template>
       </MapboxViewer>
     </div>
@@ -27,6 +32,7 @@ import MapperBar from "@/components/MapperBar.vue";
 import MapboxViewer from "@/components/MapboxViewer.vue";
 import ZoneSwitcher from "@/components/overlay/TrainingZone/ZoneSwitcher.vue";
 import MapToolPane from "@/components/MapToolPane.vue";
+import BasemapToggle from "@/components/widgets/BasemapGallery/BasemapToggle.vue";
 import { useMap } from "@/models/map.js";
 
 const mapStore = useMap();
@@ -59,6 +65,20 @@ const { showZones } = storeToRefs(mapStore);
     &__zones {
       width: 350px;
       max-height: 100%;
+    }
+
+    &-right {
+      margin-right: 50px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 15px;
+
+      &-panel-holder {
+        flex: 1;
+        pointer-events: none;
+      }
     }
   }
 }

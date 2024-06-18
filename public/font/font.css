@@ -1,0 +1,44 @@
+@font-face {
+  font-family: "LeagueGothic-Regular-2";
+  src: url("LeagueGothic-Regular-2.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PingFang SC";
+  src: url("PingFang SC Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PingFang SC Bold";
+  src: url("PingFang-SC-Semibold.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*@font-face {*/
+/*  font-family: "Material Icons";*/
+/*  src: url("MaterialIcons-Regular.ttf") format("truetype");*/
+/*  font-weight: normal;*/
+/*  font-style: normal;*/
+/*}*/
+
+@font-face {
+  font-family: "DINPro Regular";
+  src: url("DINPro-Regular.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*
+
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  src: url(https://example.com/material-symbols.woff) format('woff');
+}
+
+*/

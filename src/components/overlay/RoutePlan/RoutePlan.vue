@@ -5,6 +5,21 @@
     </div>
     <div class="route-planning__actions">
       <span
+        v-if="mapperStore.currentView === 'editor'"
+        class="route-planning__action-btn route-planning__action-cancel"
+        @click="mapperStore.cancelEditLine"
+      >
+        <i-mdi-cancel-octagon-outline style="margin-right: 3px; font-size: 16px" /> 取 消
+      </span>
+      <span
+        v-if="mapperStore.currentView === 'editor'"
+        class="route-planning__action-btn route-planning__action-save"
+        @click="mapperStore.saveCurrentLine"
+      >
+        <i-mdi-content-save-outline />
+      </span>
+      <span
+        v-if="mapperStore.currentView === 'list'"
         class="route-planning__action-btn route-planning__action-add"
         @click="startAddLine"
       >
@@ -70,7 +85,24 @@ function startAddLine() {
     cursor: pointer;
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
   }
-  &__action-add {
+  &__action-cancel {
+    margin-right: 8px;
+    border-radius: 6px;
+    height: 28px;
+    width: 72px;
+    font-size: 14px;
+    background: transparent;
+    border: 1px dashed crimson;
+    color: crimson;
+    box-shadow: none;
+
+    &:hover {
+      background: $minor_bg_color;
+    }
+  }
+
+  &__action-add,
+  &__action-save {
     height: 36px;
     width: 36px;
     border-radius: 50%;
