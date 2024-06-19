@@ -2,6 +2,10 @@ const accessToken =
   "pk.eyJ1IjoiYWlvb2lvbyIsImEiOiJjbHdhNHhxbTIwNjBiMmlxdGVpeDdnZzM4In0.vHK5bpeCj4sSK2POMI4y4Q";
 
 (function () {
+  window.networkConfig = {
+
+  };
+
   window.gisApiConfig = {
     token: accessToken,
 

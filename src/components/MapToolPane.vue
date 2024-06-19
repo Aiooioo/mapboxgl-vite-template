@@ -17,6 +17,7 @@ import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import CheckPointsList from "@/components/overlay/CheckPoints/CheckPointsList.vue";
 import RoutePlan from "@/components/overlay/RoutePlan/RoutePlan.vue";
+import DrawingPane from "@/components/overlay/SimpleDrawing/DrawingPane.vue";
 import { useMap } from "@/models/map.js";
 
 const mapStore = useMap();
@@ -24,6 +25,7 @@ const mapStore = useMap();
 const tools = {
   checks: CheckPointsList,
   mapper: RoutePlan,
+  drawing: DrawingPane,
 };
 
 const logicalKey = computed(() => {

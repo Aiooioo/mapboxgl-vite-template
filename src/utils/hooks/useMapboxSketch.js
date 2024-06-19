@@ -31,12 +31,44 @@ const useMapboxSketch = () => {
     mapboxMapInst.on("draw.delete", onDeleteComplete);
   }
 
+  function createText() {
+    if (!sketchRef.value) return;
+
+    activeTool.value = "text";
+
+    sketchRef.value.changeMode("draw_text");
+  }
+
   function createPoint() {
     if (!sketchRef.value) return;
 
     activeTool.value = "point";
 
     sketchRef.value.changeMode("draw_point");
+  }
+
+  function createPolyline() {
+    if (!sketchRef.value) return;
+
+    activeTool.value = "polyline";
+
+    sketchRef.value.changeMode("draw_line_string");
+  }
+
+  function createCircle() {
+    if (!sketchRef.value) return;
+
+    activeTool.value = "circle";
+
+    sketchRef.value.changeMode("draw_circle");
+  }
+
+  function createEllipse() {
+    if (!sketchRef.value) return;
+
+    activeTool.value = "ellipse";
+
+    sketchRef.value.changeMode("draw_ellipse");
   }
 
   function createRect() {
@@ -79,9 +111,12 @@ const useMapboxSketch = () => {
 
   watch(() => !!mapStore.ready, createDrawToolAfterLoad, {
     once: true,
+    immediate: true,
   });
 
   onUnmounted(() => {
+    const map = toValue(mapStore.map);
+
     if (sketchRef.value) {
       map.off("draw.create", onCreateComplete);
       map.off("draw.update", onUpdateComplete);
@@ -92,7 +127,11 @@ const useMapboxSketch = () => {
   return {
     activeTool,
     draw: sketchRef,
+    createText,
     createPoint,
+    createPolyline,
+    createCircle,
+    createEllipse,
     createRect,
     createPolygon,
     cancelDraw,
