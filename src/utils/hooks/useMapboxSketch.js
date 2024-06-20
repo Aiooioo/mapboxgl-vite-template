@@ -7,10 +7,22 @@ import debugSupport from "@/utils/debug-support.js";
 
 const useMapboxSketch = () => {
   const sketchRef = shallowRef(null);
+  const completeFeature = shallowRef(null);
+  const deletedFeature = shallowRef(null);
   const activeTool = ref("");
   const mapStore = useMap();
 
-  function onCreateComplete() {
+  function onCreateComplete(evt) {
+    if (evt.features && evt.features.length > 0) {
+      // const clone = JSON.parse(JSON.stringify(evt.features[0]));
+
+      evt.features[0].properties = {
+        sketch: activeTool.value,
+      };
+
+      completeFeature.value = evt.features[0];
+    }
+
     activeTool.value = "";
   }
 
@@ -31,8 +43,16 @@ const useMapboxSketch = () => {
     mapboxMapInst.on("draw.delete", onDeleteComplete);
   }
 
+  function checkAndPrepare() {
+    if (!sketchRef.value) return false;
+
+    completeFeature.value = null;
+
+    return true;
+  }
+
   function createText() {
-    if (!sketchRef.value) return;
+    if (!checkAndPrepare()) return;
 
     activeTool.value = "text";
 
@@ -40,7 +60,7 @@ const useMapboxSketch = () => {
   }
 
   function createPoint() {
-    if (!sketchRef.value) return;
+    if (!checkAndPrepare()) return;
 
     activeTool.value = "point";
 
@@ -48,7 +68,7 @@ const useMapboxSketch = () => {
   }
 
   function createPolyline() {
-    if (!sketchRef.value) return;
+    if (!checkAndPrepare()) return;
 
     activeTool.value = "polyline";
 
@@ -56,7 +76,7 @@ const useMapboxSketch = () => {
   }
 
   function createCircle() {
-    if (!sketchRef.value) return;
+    if (!checkAndPrepare()) return;
 
     activeTool.value = "circle";
 
@@ -64,7 +84,7 @@ const useMapboxSketch = () => {
   }
 
   function createEllipse() {
-    if (!sketchRef.value) return;
+    if (!checkAndPrepare()) return;
 
     activeTool.value = "ellipse";
 
@@ -72,7 +92,7 @@ const useMapboxSketch = () => {
   }
 
   function createRect() {
-    if (!sketchRef.value) return;
+    if (!checkAndPrepare()) return;
 
     activeTool.value = "rect";
 
@@ -80,7 +100,7 @@ const useMapboxSketch = () => {
   }
 
   function createPolygon() {
-    if (!sketchRef.value) return;
+    if (!checkAndPrepare()) return;
 
     activeTool.value = "polygon";
 
@@ -94,6 +114,8 @@ const useMapboxSketch = () => {
 
     sketchRef.value.changeMode("simple_select");
   }
+
+  function clear() {}
 
   function createDrawToolAfterLoad() {
     const map = toValue(mapStore.map);
@@ -118,6 +140,7 @@ const useMapboxSketch = () => {
     const map = toValue(mapStore.map);
 
     if (sketchRef.value) {
+      map.removeControl(sketchRef.value);
       map.off("draw.create", onCreateComplete);
       map.off("draw.update", onUpdateComplete);
       map.off("draw.delete", onDeleteComplete);
@@ -127,6 +150,8 @@ const useMapboxSketch = () => {
   return {
     activeTool,
     draw: sketchRef,
+    completeFeature,
+    deletedFeature,
     createText,
     createPoint,
     createPolyline,
@@ -135,6 +160,7 @@ const useMapboxSketch = () => {
     createRect,
     createPolygon,
     cancelDraw,
+    clear,
   };
 };
 

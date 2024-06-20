@@ -23,23 +23,70 @@
         <i-mdi-arrow-top-right-bold-outline />
       </span>
     </div>
+    <div
+      v-if="sketchStore.currentStep !== 0"
+      class="simple-drawing__pane-content"
+    >
+      <component :is="contentComps[displayContent]"></component>
+    </div>
+    <div
+      v-if="sketchStore.currentStep !== 0"
+      class="simple-drawing__pane-footer"
+    >
+      <span
+        v-if="sketchStore.currentStep !== 2"
+        class="simple-drawing__pane-action simple-drawing__pane-action-minor"
+        @click="sketchStore.saveAndNext"
+      >
+        <i-mdi-color style="margin-right: 4px" />保存并继续设置样式
+      </span>
+      <span
+        class="simple-drawing__pane-action simple-drawing__pane-action-primary"
+        @click="sketchStore.saveAndExit"
+      >
+        <i-mdi-content-save-outline style="margin-right: 4px" /> 保 存
+      </span>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref, computed, watch } from "vue";
+import FeatureEditor from "@/components/overlay/SimpleDrawing/FeatureEditor.vue";
+import FeatureStyler from "@/components/overlay/SymbolStyler/FeatureStyler.vue";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
+import { useSketch } from "@/models/sketch.js";
 
 const {
   activeTool,
+  completeFeature,
   createText,
   createRect,
   createPolyline,
-  createPolygon,
-  cancelDraw,
   createEllipse,
   createCircle,
   createPoint,
 } = useMapboxSketch();
+const sketchStore = useSketch();
+
+const contentComps = {
+  "prop-editor": FeatureEditor,
+  "style-editor": FeatureStyler,
+};
+
+const displayContent = computed(() => {
+  if (sketchStore.currentStep === 1) {
+    return "prop-editor";
+  } else if (sketchStore.currentStep === 2) {
+    return "style-editor";
+  }
+});
+
+watch(completeFeature, (value) => {
+  if (value) {
+    sketchStore.onCompleteDrawFeature(value);
+  }
+});
 </script>
 
 <style scoped lang="scss">
@@ -68,6 +115,40 @@ const {
         border-right: 2px solid $secondary_text_color;
       }
     }
+  }
+
+  &-content {
+    padding: 15px 0;
+  }
+
+  &-footer {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  &-action {
+    margin-left: 8px;
+    height: 28px;
+    min-width: 72px;
+    padding: 0 6px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  &-action-primary {
+    background: $secondary_bg_color;
+    color: $primary_text_color;
+  }
+  &-action-minor {
+    background: transparent;
+    border: 1px solid $primary_bg_color;
+    color: $primary_bg_color;
   }
 }
 </style>
