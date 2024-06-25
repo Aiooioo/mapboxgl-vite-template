@@ -8,7 +8,7 @@ import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import App from "./App.vue";
 import debugSupport from "./utils/debug-support.js";
 import pluginsManager from "./utils/plugins-manager.js";
-
+import "@/utils/api/initLogin.ts";
 debugSupport.attach();
 
 const app = createApp(App);

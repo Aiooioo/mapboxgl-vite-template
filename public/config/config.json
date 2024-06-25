@@ -1,0 +1,16 @@
+{
+  "apiUrl": "/nudt",
+  "login": {
+    "password": "macro123",
+    "relogin": "../login/",
+    "username": "admin"
+  },
+  "message": {
+    "closable": true,
+    "duration": 3000,
+    "keepAliveOnHover": true,
+    "level": [
+      "error"
+    ]
+  }
+}

@@ -30,4 +30,13 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    proxy: {
+      "/nudt": {
+        target: "http://192.168.0.215:6201",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/nudt/, ""),
+      },
+    },
+  },
 });
