@@ -1,22 +1,40 @@
 <template>
   <div class="simple-drawing__pane">
     <div class="simple-drawing__pane-bar">
-      <span :class="['simple-drawing__pane-bar-item']" @click="createPoint">
+      <span
+        :class="['simple-drawing__pane-bar-item']"
+        @click="ensureCreateStatus(createPoint)"
+      >
         <i-mdi-map-marker />
       </span>
-      <span :class="['simple-drawing__pane-bar-item']" @click="createPolyline">
+      <span
+        :class="['simple-drawing__pane-bar-item']"
+        @click="ensureCreateStatus(createPolyline)"
+      >
         <i-mdi-vector-line />
       </span>
-      <span :class="['simple-drawing__pane-bar-item']" @click="createRect">
+      <span
+        :class="['simple-drawing__pane-bar-item']"
+        @click="ensureCreateStatus(createRect)"
+      >
         <i-mdi-rectangle-outline />
       </span>
-      <span :class="['simple-drawing__pane-bar-item']" @click="createCircle">
+      <span
+        :class="['simple-drawing__pane-bar-item']"
+        @click="ensureCreateStatus(createCircle)"
+      >
         <i-mdi-checkbox-blank-circle-outline />
       </span>
-      <span :class="['simple-drawing__pane-bar-item']" @click="createEllipse">
+      <span
+        :class="['simple-drawing__pane-bar-item']"
+        @click="ensureCreateStatus(createEllipse)"
+      >
         <i-mdi-ellipse-outline />
       </span>
-      <span :class="['simple-drawing__pane-bar-item']" @click="createText">
+      <span
+        :class="['simple-drawing__pane-bar-item']"
+        @click="ensureCreateStatus(createText)"
+      >
         <i-mdi-format-text />
       </span>
       <span :class="['simple-drawing__pane-bar-item']">
@@ -81,6 +99,19 @@ const displayContent = computed(() => {
     return "style-editor";
   }
 });
+
+function checkCurrentStatus() {
+  return new Promise((resolve, reject) => {
+    if (sketchStore.currentStep === 1) {
+    }
+
+    resolve();
+  });
+}
+
+function ensureCreateStatus(createFn) {
+  checkCurrentStatus().then(createFn);
+}
 
 watch(completeFeature, (value) => {
   if (value) {

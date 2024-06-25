@@ -3,6 +3,9 @@ import { ref, watch, onMounted, toValue, onUnmounted, shallowRef } from "vue";
 import { useMap } from "@/models/map.js";
 import * as turf from "@turf/turf";
 import Draw from "@mapbox/mapbox-gl-draw";
+import patchMapboxDraw, {
+  DrawPatchTextSource,
+} from "@/utils/plugins/mapbox/draw-style-hotfix.js";
 import debugSupport from "@/utils/debug-support.js";
 
 const useMapboxSketch = () => {
@@ -26,6 +29,15 @@ const useMapboxSketch = () => {
     activeTool.value = "";
   }
 
+  function onDrawTextComplete({ features }) {
+    console.log(features);
+
+    mapStore.map.getSource(DrawPatchTextSource).setData({
+      type: Draw.constants.geojsonTypes.FEATURE_COLLECTION,
+      features,
+    });
+  }
+
   function onUpdateComplete() {}
 
   function onDeleteComplete() {}
@@ -38,9 +50,12 @@ const useMapboxSketch = () => {
     debugSupport.set("mapbox-draw", sketchRef.value);
 
     mapboxMapInst.addControl(sketchRef.value);
+    patchMapboxDraw(mapboxMapInst);
+
     mapboxMapInst.on("draw.create", onCreateComplete);
     mapboxMapInst.on("draw.update", onUpdateComplete);
     mapboxMapInst.on("draw.delete", onDeleteComplete);
+    mapboxMapInst.on("draw.text", onDrawTextComplete);
   }
 
   function checkAndPrepare() {

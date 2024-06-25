@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 
+let mapInst= null;
+
 const useMap = defineStore("map", {
   state: () => {
     return {
