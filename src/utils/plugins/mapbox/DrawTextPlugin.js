@@ -3,6 +3,10 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 const DrawText = {
   onSetup: function (opts) {
     const state = {};
+    const { onDraw, onCancel } = opts;
+
+    state.onDraw = onDraw;
+    state.onCancel = onCancel;
 
     return state;
   },
@@ -20,10 +24,38 @@ const DrawText = {
       },
     });
     this.addFeature(point);
+
+    state.point = point;
     this.changeMode("simple_select");
   },
   toDisplayFeatures: function (state, geojson, display) {
     display(geojson);
+  },
+  onStop: function (state) {
+    const f = state.point;
+
+    this.updateUIClasses({ mouse: MapboxDraw.constants.cursors.NONE });
+    MapboxDraw.lib.doubleClickZoom.enable(this);
+    this.activateUIButton();
+
+    const drawnFeature = this.getFeature(f.id);
+    if (drawnFeature === undefined) {
+      if (typeof state.onCancel === "function") state.onCancel();
+      return;
+    } else {
+    }
+
+    if (f.isValid()) {
+      if (typeof state.onDraw === "function") state.onDraw(f.toGeoJSON());
+      else {
+        this.map.fire("draw.text", {
+          features: [f.toGeoJSON()],
+        });
+      }
+    }
+
+    this.deleteFeature([f.id], { silent: true });
+    this.changeMode("simple_select", {}, { silent: true });
   },
 };
 

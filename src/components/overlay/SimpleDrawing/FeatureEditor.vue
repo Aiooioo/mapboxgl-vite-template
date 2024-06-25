@@ -6,6 +6,15 @@
         <span>标注类型:</span>
         <span>{{ displayNoteType }}</span>
       </div>
+      <div
+        v-if="sketchStore.context.geometryType === 'text'"
+        class="simple-drawing__editor-text"
+      >
+        <span>文本内容</span>
+        <span>
+          <n-input placeholder="请输入文本内容"></n-input>
+        </span>
+      </div>
       <div class="simple-drawing__editor-remark">
         <span>备注信息:</span>
         <span>

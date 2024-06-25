@@ -1,11 +1,13 @@
 import _ from "lodash";
 import DrawRectanglePlugin from "@/utils/plugins/mapbox/DrawRectanglePlugin.js";
+import DrawIconPlugin from "@/utils/plugins/mapbox/DrawIconPlugin.js";
 import DrawTextPlugin from "@/utils/plugins/mapbox/DrawTextPlugin.js";
 import DrawCirclePlugin from "@/utils/plugins/mapbox/DrawCirclePlugin.js";
 import DrawEllipsePlugin from "@/utils/plugins/mapbox/DrawEllipsePlugin.js";
 
 const PluginsList = [
   DrawRectanglePlugin,
+  DrawIconPlugin,
   DrawTextPlugin,
   DrawCirclePlugin,
   DrawEllipsePlugin,
