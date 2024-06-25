@@ -48,11 +48,31 @@
 </template>
 
 <script setup>
-import { ref, inject } from "vue";
+import { watch } from "vue";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
+import { useImageryStore } from "@/models/imagery";
 
-const { activeTool, createRect, createPolygon, cancelDraw, createPoint } =
-  useMapboxSketch();
+const imageryStore = useImageryStore();
+
+const {
+  createDrawToolAfterLoad,
+  activeTool,
+  createRect,
+  createPolygon,
+  cancelDraw,
+  createPoint,
+} = useMapboxSketch();
+
+watch(
+  () => imageryStore.enableDraw,
+  (val) => {
+    if (val) {
+      createDrawToolAfterLoad();
+
+      createPoint();
+    }
+  }
+);
 </script>
 
 <style scoped lang="scss">

@@ -43,6 +43,8 @@ const useMapboxSketch = () => {
   function onDeleteComplete() {}
 
   function initSketchTool(mapboxMapInst) {
+    if (sketchRef.value) return;
+
     sketchRef.value = new Draw({
       displayControlsDefault: false,
     });
@@ -176,6 +178,7 @@ const useMapboxSketch = () => {
     createPolygon,
     cancelDraw,
     clear,
+    createDrawToolAfterLoad,
   };
 };
 
