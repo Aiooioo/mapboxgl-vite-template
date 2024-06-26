@@ -1,11 +1,21 @@
 import { defineStore } from "pinia";
 import { useMap } from "./map.js";
+import { hasNextStep } from "@/components/overlay/SimpleDrawing/workflow.js";
 
+const DefaultState = {
+  defaultStep: 0,
+  defaultFeature: null,
+};
+
+/**
+ * Sketch Steps States Composition API
+ *
+ */
 const useSketch = defineStore("sketch", {
   state() {
     return {
-      currentStep: 0,
-      currentFeature: null,
+      currentStep: DefaultState.defaultStep,
+      currentFeature: DefaultState.defaultFeature,
 
       featureRemark: "",
     };
@@ -26,7 +36,7 @@ const useSketch = defineStore("sketch", {
 
         geometryType,
 
-        featureDrawId: state.currentFeature.id,
+        featureDrawId: state.currentFeature?.id,
         feature: state.currentFeature,
       };
     },
@@ -39,15 +49,27 @@ const useSketch = defineStore("sketch", {
       this.currentStep = 1;
     },
 
+    cancelWorkflow() {},
+
+    exitSketch() {
+      // reset
+      this.featureRemark = "";
+      this.currentFeature = null;
+      this.currentStep = 0;
+    },
+
     saveAndExit() {
       if (!this.featureRemark) {
         this.currentFeature.properties.remark = this.featureRemark;
       }
 
-      // reset
-      this.featureRemark = "";
-      this.currentFeature = null;
-      this.currentStep = 0;
+      this.exitSketch();
+    },
+
+    goToNextStep() {
+      if (hasNextStep(this.context)) {
+        this.currentStep++;
+      }
     },
 
     saveAndNext() {
@@ -55,7 +77,7 @@ const useSketch = defineStore("sketch", {
         this.currentFeature.properties.remark = this.featureRemark;
       }
 
-      this.currentStep++;
+      this.goToNextStep();
     },
   },
 });

@@ -1,11 +1,17 @@
 import Draw from "@mapbox/mapbox-gl-draw";
 
+const COLD = Draw.constants.sources.COLD;
+const HOT = Draw.constants.sources.HOT;
+
 export const DrawPatchTextSource = "mapbox-gl-draw-text";
 
-export default function (map) {
-  const COLD = Draw.constants.sources.COLD;
-  const HOT = Draw.constants.sources.HOT;
+export function unpackMapboxDraw(map) {
+  map.removeSource(DrawPatchTextSource);
 
+  map.removeLayer(`gl-draw-text-active.${COLD}`);
+}
+
+export function patchMapboxDraw(map) {
   map.addSource(DrawPatchTextSource, {
     type: "geojson",
     data: {

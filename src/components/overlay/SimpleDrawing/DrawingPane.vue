@@ -52,31 +52,45 @@
       class="simple-drawing__pane-footer"
     >
       <span
-        v-if="sketchStore.currentStep !== 2"
-        class="simple-drawing__pane-action simple-drawing__pane-action-minor"
-        @click="sketchStore.saveAndNext"
+        v-if="sketchStore.currentStep === 1"
+        class="simple-drawing__pane-action simple-drawing__pane-action-delete"
       >
-        <i-mdi-color style="margin-right: 4px" />保存并继续设置样式
+        <i-mdi-delete />
       </span>
-      <span
-        class="simple-drawing__pane-action simple-drawing__pane-action-primary"
-        @click="sketchStore.saveAndExit"
+      <span class="simple-drawing__pane-footer-last">
+        <span
+          v-if="sketchStore.currentStep !== 2"
+          class="simple-drawing__pane-action simple-drawing__pane-action-minor"
+          @click="sketchStore.saveAndNext"
+        >
+          <i-mdi-color style="margin-right: 4px" />继续设置样式
+        </span>
+        <span
+          class="simple-drawing__pane-action simple-drawing__pane-action-primary"
+          @click="sketchStore.saveAndExit"
+        >
+          <i-mdi-content-save-outline style="margin-right: 4px" /> 保 存
+        </span></span
       >
-        <i-mdi-content-save-outline style="margin-right: 4px" /> 保 存
-      </span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { computed, watch } from "vue";
 import FeatureEditor from "@/components/overlay/SimpleDrawing/FeatureEditor.vue";
 import FeatureStyler from "@/components/overlay/SymbolStyler/FeatureStyler.vue";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
 import { useSketch } from "@/models/sketch.js";
+import { useFeatureProps } from "./useFeatureProps.js";
+import setupWorkflow from "./workflow.js";
 
+const sketchStore = useSketch();
+
+const { $channel: $feature } = useFeatureProps(sketchStore.context);
 const {
   activeTool,
+  $channel: $sketch,
   completeFeature,
   createText,
   createRect,
@@ -85,7 +99,6 @@ const {
   createCircle,
   createPoint,
 } = useMapboxSketch();
-const sketchStore = useSketch();
 
 const contentComps = {
   "prop-editor": FeatureEditor,
@@ -113,6 +126,7 @@ function ensureCreateStatus(createFn) {
   checkCurrentStatus().then(createFn);
 }
 
+setupWorkflow($sketch, $feature);
 watch(completeFeature, (value) => {
   if (value) {
     sketchStore.onCompleteDrawFeature(value);
@@ -156,7 +170,12 @@ watch(completeFeature, (value) => {
     height: 40px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
+
+    &-last {
+      display: flex;
+      align-items: center;
+    }
   }
 
   &-action {
@@ -172,6 +191,13 @@ watch(completeFeature, (value) => {
     cursor: pointer;
   }
 
+  &-action-delete {
+    width: 28px;
+    min-width: unset;
+    border-radius: 50%;
+    background: crimson;
+    color: $primary_text_color;
+  }
   &-action-primary {
     background: $secondary_bg_color;
     color: $primary_text_color;

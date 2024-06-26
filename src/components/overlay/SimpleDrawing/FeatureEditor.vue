@@ -6,22 +6,15 @@
         <span>标注类型:</span>
         <span>{{ displayNoteType }}</span>
       </div>
-      <div
-        v-if="sketchStore.context.geometryType === 'text'"
-        class="simple-drawing__editor-text"
-      >
-        <span>文本内容</span>
-        <span>
-          <n-input placeholder="请输入文本内容"></n-input>
-        </span>
-      </div>
+      <TextFeatureEditor v-if="sketchStore.context.geometryType === 'text'">
+      </TextFeatureEditor>
       <div class="simple-drawing__editor-remark">
         <span>备注信息:</span>
         <span>
           <n-input
             type="textarea"
             placeholder="为当前标注添加备注信息"
-            v-model="sketchStore.featureRemark"
+            v-model="featureStore.remark"
           />
         </span>
       </div>
@@ -32,13 +25,16 @@
 <script setup>
 import { computed } from "vue";
 import { NInput } from "naive-ui";
+import TextFeatureEditor from "@/components/overlay/SimpleDrawing/support/TextFeatureEditor.vue";
 import { useSketch } from "@/models/sketch.js";
+import { useFeature } from "@/models/feature.js";
 
 const sketchStore = useSketch();
+const featureStore = useFeature();
 
 const displayNoteType = computed(() => {
-  if (sketchStore.currentFeature) {
-    switch (sketchStore.currentFeature.properties.sketch) {
+  if (sketchStore.context.feature) {
+    switch (sketchStore.context.geometryType) {
       case "point":
         return "点";
       case "polyline":
@@ -49,6 +45,8 @@ const displayNoteType = computed(() => {
         return "椭圆";
       case "rect":
         return "矩形";
+      case "text":
+        return "文本";
     }
   }
 

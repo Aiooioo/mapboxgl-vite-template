@@ -15,6 +15,7 @@
     "@mapbox/mapbox-gl-draw": "^1.4.3",
     "@turf/turf": "^6.5.0",
     "@vueuse/core": "^10.9.0",
+    "@vueuse/rxjs": "^10.11.0",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

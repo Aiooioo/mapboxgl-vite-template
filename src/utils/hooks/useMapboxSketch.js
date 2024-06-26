@@ -1,37 +1,51 @@
-import {} from "@vueuse/core";
+import { from, useObservable, useSubject } from "@vueuse/rxjs";
+import { mergeAll, mergeMap, switchAll, BehaviorSubject } from "rxjs";
 import { ref, watch, onMounted, toValue, onUnmounted, shallowRef } from "vue";
 import { useMap } from "@/models/map.js";
-import * as turf from "@turf/turf";
 import Draw from "@mapbox/mapbox-gl-draw";
-import patchMapboxDraw, {
+import {
+  unpackMapboxDraw,
+  patchMapboxDraw,
   DrawPatchTextSource,
 } from "@/utils/plugins/mapbox/draw-style-hotfix.js";
 import debugSupport from "@/utils/debug-support.js";
 
 const useMapboxSketch = () => {
+  const $channel = new BehaviorSubject(null);
+
   const sketchRef = shallowRef(null);
   const completeFeature = shallowRef(null);
+  const editedFeature = shallowRef(null);
   const deletedFeature = shallowRef(null);
+
   const activeTool = ref("");
   const mapStore = useMap();
 
   function onCreateComplete(evt) {
     if (evt.features && evt.features.length > 0) {
-      // const clone = JSON.parse(JSON.stringify(evt.features[0]));
+      const clone = JSON.parse(JSON.stringify(evt.features[0]));
+      const drawId = evt.features[0].id;
 
-      evt.features[0].properties = {
+      if (sketchRef.value.get(drawId)) {
+        sketchRef.value.delete(drawId);
+      }
+
+      clone.properties = {
         sketch: activeTool.value,
       };
 
-      completeFeature.value = evt.features[0];
+      completeFeature.value = clone;
+
+      $channel.next({
+        map: toValue(mapStore.map),
+        feature: clone,
+      });
     }
 
     activeTool.value = "";
   }
 
   function onDrawTextComplete({ features }) {
-    console.log(features);
-
     mapStore.map.getSource(DrawPatchTextSource).setData({
       type: Draw.constants.geojsonTypes.FEATURE_COLLECTION,
       features,
@@ -155,6 +169,8 @@ const useMapboxSketch = () => {
     const map = toValue(mapStore.map);
 
     if (sketchRef.value) {
+      unpackMapboxDraw(map);
+
       map.removeControl(sketchRef.value);
       map.off("draw.create", onCreateComplete);
       map.off("draw.update", onUpdateComplete);
@@ -164,6 +180,7 @@ const useMapboxSketch = () => {
 
   return {
     activeTool,
+    $channel,
     draw: sketchRef,
     completeFeature,
     deletedFeature,
