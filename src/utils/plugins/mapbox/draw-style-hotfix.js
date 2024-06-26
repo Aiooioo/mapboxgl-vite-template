@@ -6,9 +6,8 @@ const HOT = Draw.constants.sources.HOT;
 export const DrawPatchTextSource = "mapbox-gl-draw-text";
 
 export function unpackMapboxDraw(map) {
-  map.removeSource(DrawPatchTextSource);
-
   map.removeLayer(`gl-draw-text-active.${COLD}`);
+  map.removeSource(DrawPatchTextSource);
 }
 
 export function patchMapboxDraw(map) {
