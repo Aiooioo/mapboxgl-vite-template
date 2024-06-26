@@ -4,8 +4,8 @@
       <div class="object-dimension__bar-switch-label">启用标注</div>
       <div class="object-dimension__bar-switch-action">
         <Switch
-          :checked="enabled"
-          @update:checked="handleEnableChanged"
+          :checked="enableDraw"
+          @update:checked="toggelEnableDraw"
           :style="{
             '--primary': '255, 91.7%, 76.3%',
           }"
@@ -22,16 +22,18 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed } from "vue";
 import { Switch } from "@/components/ui/switch";
 import DimensionDrawControl from "./DimensionDrawControl.vue";
-import ObjectDimensionListToggle from "@/components/overlay/ObjectDimension/ObjectDimensionListToggle.vue";
+import ObjectDimensionListToggle from "./ObjectDimensionListToggle.vue";
 
-const enabled = ref(false);
+import { useImageryStore } from "@/models/imagery";
 
-function handleEnableChanged() {
-  enabled.value = !enabled.value;
-}
+const imageryStore = useImageryStore();
+
+const { toggelEnableDraw } = imageryStore;
+
+const enableDraw = computed(() => imageryStore.enableDraw);
 </script>
 
 <style scoped lang="scss">
