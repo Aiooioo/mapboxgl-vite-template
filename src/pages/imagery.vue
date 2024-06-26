@@ -8,6 +8,14 @@
         <template #overlay-left>
           <CatalogPanel class="page-imagery-main__catalog"></CatalogPanel>
         </template>
+
+        <template #overlay-right>
+          <div class="page-imagery-main-right">
+            <div class="page-imagery-main-right-panel-holder">
+              <MapToolPane v-if="imageryStore.enableDraw" />
+            </div>
+          </div>
+        </template>
       </MapboxViewer>
     </div>
   </div>
@@ -17,6 +25,10 @@
 import MapboxViewer from "@/components/MapboxViewer.vue";
 import MapboxBar from "@/components/MapboxBar.vue";
 import CatalogPanel from "@/components/overlay/ImageryCatalog/CatalogPanel.vue";
+import MapToolPane from "@/components/MapToolPane.vue";
+import { useImageryStore } from "@/models/imagery";
+
+const imageryStore = useImageryStore();
 </script>
 
 <style scoped lang="scss">
@@ -44,6 +56,20 @@ import CatalogPanel from "@/components/overlay/ImageryCatalog/CatalogPanel.vue";
     &__catalog {
       width: 350px;
       height: 100%;
+    }
+
+    &-right {
+      margin-right: 50px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 15px;
+
+      &-panel-holder {
+        flex: 1;
+        pointer-events: none;
+      }
     }
   }
 }

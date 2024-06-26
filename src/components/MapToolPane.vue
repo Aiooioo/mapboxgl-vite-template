@@ -18,6 +18,7 @@ import { storeToRefs } from "pinia";
 import CheckPointsList from "@/components/overlay/CheckPoints/CheckPointsList.vue";
 import RoutePlan from "@/components/overlay/RoutePlan/RoutePlan.vue";
 import DrawingPane from "@/components/overlay/SimpleDrawing/DrawingPane.vue";
+import LocationType from "@/components/overlay/LocationType/LocationType.vue";
 import { useMap } from "@/models/map.js";
 
 const mapStore = useMap();
@@ -26,6 +27,7 @@ const tools = {
   checks: CheckPointsList,
   mapper: RoutePlan,
   drawing: DrawingPane,
+  location: LocationType,
 };
 
 const logicalKey = computed(() => {
@@ -44,6 +46,8 @@ const displayTitle = computed(() => {
       return "地图标注";
     case "print":
       return "制图出图";
+    case "location":
+      return "标注类型";
   }
 
   return "";

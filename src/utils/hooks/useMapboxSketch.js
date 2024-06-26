@@ -2,6 +2,8 @@ import { from, useObservable, useSubject } from "@vueuse/rxjs";
 import { mergeAll, mergeMap, switchAll, BehaviorSubject } from "rxjs";
 import { ref, watch, onMounted, toValue, onUnmounted, shallowRef } from "vue";
 import { useMap } from "@/models/map.js";
+import * as turf from "@turf/turf";
+import mapboxgl from "mapbox-gl";
 import Draw from "@mapbox/mapbox-gl-draw";
 import {
   unpackMapboxDraw,
@@ -34,6 +36,37 @@ const useMapboxSketch = () => {
         sketch: activeTool.value,
       };
 
+      // evt.features[0].properties = {
+      //   sketch: activeTool.value,
+      //   cus_name: "custom_name_test",
+      // };
+
+      const feat = evt.features[0];
+      // sketchRef.value.setFeatureProperty(
+      //   feat.id,
+      //   "cus_name",
+      //   "custom_name_test"
+      // );
+
+      // console.log("onCreateComplete", feat);
+
+      if (feat.geometry.type === "Point") {
+        const el = document.createElement("div");
+        el.className = "marker";
+
+        const marker = new mapboxgl.Marker(el)
+          .setLngLat(feat.geometry.coordinates)
+          .addTo(mapStore.map);
+
+        setTimeout(() => {
+          marker.toggleClassName("mark-active");
+
+          setTimeout(() => {
+            marker.remove();
+          }, 3 * 1000);
+        }, 3 * 1000);
+      }
+
       completeFeature.value = clone;
 
       $channel.next({
@@ -52,15 +85,28 @@ const useMapboxSketch = () => {
     });
   }
 
-  function onUpdateComplete() {}
+  function onUpdateComplete(evt) {
+    console.log("onUpdateComplete", evt);
+  }
 
   function onDeleteComplete() {}
+
+  function onSelectionChange({ features }) {
+    console.log("onSelectionChange", features);
+
+    // setTimeout(() => {
+    //   const ids = features.map((f) => f.id);
+
+    //   sketchRef.value.delete(ids);
+    // }, 3 * 1000);
+  }
 
   function initSketchTool(mapboxMapInst) {
     if (sketchRef.value) return;
 
     sketchRef.value = new Draw({
       displayControlsDefault: false,
+      userProperties: true,
     });
 
     debugSupport.set("mapbox-draw", sketchRef.value);
@@ -72,6 +118,8 @@ const useMapboxSketch = () => {
     mapboxMapInst.on("draw.update", onUpdateComplete);
     mapboxMapInst.on("draw.delete", onDeleteComplete);
     mapboxMapInst.on("draw.text", onDrawTextComplete);
+
+    mapboxMapInst.on("draw.selectionchange", onSelectionChange);
   }
 
   function checkAndPrepare() {
@@ -146,7 +194,12 @@ const useMapboxSketch = () => {
     sketchRef.value.changeMode("simple_select");
   }
 
-  function clear() {}
+  function clear() {
+    if (!sketchRef.value) return;
+
+    // sketchRef.value.delete([feature.id])
+    sketchRef.value.deleteAll();
+  }
 
   function createDrawToolAfterLoad() {
     const map = toValue(mapStore.map);

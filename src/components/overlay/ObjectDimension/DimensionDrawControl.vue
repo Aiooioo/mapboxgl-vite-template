@@ -43,6 +43,22 @@
           }"
         />
       </span>
+
+      <span
+        :class="[
+          'object-dimension__draw-item object-dimension__draw-cancel',
+          { disabled: activeTool === '' },
+        ]"
+        @click="clear"
+      >
+        <i-mdi-delete
+          :style="{
+            color: activeTool === '' ? '#71717a' : '#d50000',
+            height: '24px',
+            width: '24px',
+          }"
+        />
+      </span>
     </div>
   </div>
 </template>
@@ -51,7 +67,9 @@
 import { watch } from "vue";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
 import { useImageryStore } from "@/models/imagery";
+import { useMap } from "@/models/map.js";
 
+const mapStore = useMap();
 const imageryStore = useImageryStore();
 
 const {
@@ -61,6 +79,7 @@ const {
   createPolygon,
   cancelDraw,
   createPoint,
+  clear,
 } = useMapboxSketch();
 
 watch(
@@ -69,7 +88,13 @@ watch(
     if (val) {
       createDrawToolAfterLoad();
 
+      mapStore.switchActiveTool("location");
+
       createPoint();
+    } else {
+      cancelDraw();
+
+      mapStore.switchActiveTool("");
     }
   }
 );
