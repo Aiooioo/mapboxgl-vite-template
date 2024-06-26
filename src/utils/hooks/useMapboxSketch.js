@@ -79,10 +79,28 @@ const useMapboxSketch = () => {
   }
 
   function onDrawTextComplete({ features }) {
-    mapStore.map.getSource(DrawPatchTextSource).setData({
-      type: Draw.constants.geojsonTypes.FEATURE_COLLECTION,
-      features,
-    });
+    // mapStore.map.getSource(DrawPatchTextSource).setData({
+    //   type: Draw.constants.geojsonTypes.FEATURE_COLLECTION,
+    //   features,
+    // });
+
+    if (features && features.length > 0) {
+      const clone = JSON.parse(JSON.stringify(features[0]));
+      const drawId = features[0].id;
+
+      clone.properties = {
+        sketch: activeTool.value,
+      };
+
+      completeFeature.value = clone;
+
+      $channel.next({
+        map: toValue(mapStore.map),
+        feature: clone,
+      });
+    }
+
+    activeTool.value = "";
   }
 
   function onUpdateComplete(evt) {

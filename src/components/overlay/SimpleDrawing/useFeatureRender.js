@@ -2,7 +2,7 @@ import { shallowRef, onMounted, onUnmounted } from "vue";
 import { from } from "@vueuse/rxjs";
 
 const useFeatureRender = () => {
-  const channel = shallowRef();
+  const $channel = shallowRef();
 
   function initRenderChannel() {}
   function disposeRenderChannel() {}

@@ -14,7 +14,7 @@
           <n-input
             type="textarea"
             placeholder="为当前标注添加备注信息"
-            v-model="featureStore.remark"
+            v-model:value="featureStore.remark"
           />
         </span>
       </div>

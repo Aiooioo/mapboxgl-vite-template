@@ -40,10 +40,10 @@ const useFeature = defineStore("feature", {
       if (sketchStore.context.feature) {
         switch (sketchStore.context.geometryType) {
           case "text":
-            return this.textFeatureProps(state);
+            return { remark: state.remark, ...state.textFeatureProps };
         }
       }
-      return null;
+      return { remark: state.remark };
     },
 
     textFeatureProps(state) {
@@ -54,4 +54,4 @@ const useFeature = defineStore("feature", {
   },
 });
 
-export { useFeature };
+export { useFeature, useTextFeature };

@@ -19,7 +19,9 @@ const useFeatureProps = (ctx) => {
   watch(ctx, (value) => {});
 
   onMounted(() => {
-    from(featureProps).subscribe($channel);
+    from(featureProps).subscribe((v) => {
+      $channel.next(v);
+    });
   });
   onUnmounted(() => {});
 

@@ -1,5 +1,5 @@
-import { merge, combineLatest } from "rxjs";
-import { tap, combineLatestWith } from "rxjs/operators";
+import { of, merge, combineLatestWith } from "rxjs";
+import { tap, switchMap, filter } from "rxjs/operators";
 import {
   ensureSketchFeatureSourceData,
   ensureDrawingFeatureLayerData,
@@ -11,13 +11,19 @@ export function hasNextStep(ctx) {
 }
 
 export default function ($sketch, $feature, $symbol) {
-  combineLatest($sketch, $feature, $symbol)
+  $sketch
     .pipe(
-      tap(([{ map, feature }]) => {
+      filter((x) => x != null),
+      tap((sketch) => {
+        const map = sketch.map;
+        const feature = sketch.feature;
         ensureSketchFeatureSourceData(map, feature);
-
-        ensureDrawingFeatureLayerData(map, feature);
       }),
+      combineLatestWith($feature),
+      tap(([{ map, feature }, featureProps]) => {
+        ensureDrawingFeatureLayerData(map, feature, featureProps);
+      }),
+      combineLatestWith($symbol),
     )
     .subscribe(([sketch, feature, symbol]) => {
       render2Map(sketch, feature, symbol);
