@@ -11,6 +11,7 @@ import {
   DrawPatchTextSource,
 } from "@/utils/plugins/mapbox/draw-style-hotfix.js";
 import debugSupport from "@/utils/debug-support.js";
+import { useImageryStore } from "@/models/imagery";
 
 const useMapboxSketch = () => {
   const $channel = new BehaviorSubject(null);
@@ -22,6 +23,8 @@ const useMapboxSketch = () => {
 
   const activeTool = ref("");
   const mapStore = useMap();
+
+  const imageryStore = useImageryStore();
 
   function onCreateComplete(evt) {
     if (evt.features && evt.features.length > 0) {
@@ -36,35 +39,8 @@ const useMapboxSketch = () => {
         sketch: activeTool.value,
       };
 
-      // evt.features[0].properties = {
-      //   sketch: activeTool.value,
-      //   cus_name: "custom_name_test",
-      // };
-
-      const feat = evt.features[0];
-      // sketchRef.value.setFeatureProperty(
-      //   feat.id,
-      //   "cus_name",
-      //   "custom_name_test"
-      // );
-
-      // console.log("onCreateComplete", feat);
-
-      if (feat.geometry.type === "Point") {
-        const el = document.createElement("div");
-        el.className = "marker";
-
-        const marker = new mapboxgl.Marker(el)
-          .setLngLat(feat.geometry.coordinates)
-          .addTo(mapStore.map);
-
-        setTimeout(() => {
-          marker.toggleClassName("mark-active");
-
-          setTimeout(() => {
-            marker.remove();
-          }, 3 * 1000);
-        }, 3 * 1000);
+      if (mapStore.activeBar === "location") {
+        drawLocationMarker(evt);
       }
 
       completeFeature.value = clone;
@@ -101,6 +77,24 @@ const useMapboxSketch = () => {
     }
 
     activeTool.value = "";
+  }
+
+  function drawLocationMarker(evt) {
+    const feat = evt.features[0];
+    if (feat.geometry.type === "Point") {
+      const el = document.createElement("div");
+      el.className = "marker-base carbon--tank";
+
+      const marker = new mapboxgl.Marker({
+        element: el,
+        // draggable: true,
+        clickTolerance: 10,
+      })
+        .setLngLat(feat.geometry.coordinates)
+        .addTo(mapStore.map);
+
+      imageryStore.addMarker({ marker, el });
+    }
   }
 
   function onUpdateComplete(evt) {

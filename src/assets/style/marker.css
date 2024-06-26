@@ -1,0 +1,35 @@
+.marker-base{
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.marker-selected {
+  border: 2px solid #007bff;
+}
+
+.carbon--tank {
+  background-image: url('../imgs/mdi--tank.png');  
+}
+
+.game-icons--tank {
+  background-image: url('../imgs/game-icons--tank.png');
+}
+
+.mdi--tank {
+  background-image: url('../imgs/mdi--tank.png');  
+}
+
+.akar-icons--plane {
+  background-image: url('../imgs/mdi--tank.png');  
+}
+
+.lucide--plane {
+  background-image: url('../imgs/mdi--tank.png');  
+}
+
+.jam--plane {
+  background-image: url('../imgs/mdi--tank.png');  
+}
+

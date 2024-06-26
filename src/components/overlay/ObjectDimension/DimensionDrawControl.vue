@@ -6,7 +6,7 @@
           'object-dimension__draw-item object-dimension__draw-point',
           { active: activeTool === 'point' },
         ]"
-        @click="createPoint"
+        @click="handlePoint"
       >
         <i-mdi-map-marker-outline style="height: 28px; width: 28px" />
       </span>
@@ -49,11 +49,11 @@
           'object-dimension__draw-item object-dimension__draw-cancel',
           { disabled: activeTool === '' },
         ]"
-        @click="clear"
+        @click="imageryStore.removeMarker"
       >
         <i-mdi-delete
           :style="{
-            color: activeTool === '' ? '#71717a' : '#d50000',
+            color: imageryStore.curEditMarker ? '#d50000' : '#71717a',
             height: '24px',
             width: '24px',
           }"
@@ -98,6 +98,10 @@ watch(
     }
   }
 );
+
+const handlePoint = () => {
+  createPoint();
+};
 </script>
 
 <style scoped lang="scss">

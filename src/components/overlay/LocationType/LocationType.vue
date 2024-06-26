@@ -5,7 +5,7 @@
       <n-select
         size="small"
         v-model:value="locationInfo.type"
-        :options="typeOptions"
+        :options="MARKER_TYPE_OPTS"
       />
     </div>
     <div class="flex items-center gap-1">
@@ -20,33 +20,38 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import { NSelect } from "naive-ui";
+import { useImageryStore } from "@/models/imagery";
+
+import { MARKER_TYPE_OPTS, TANK_OPTS, PLANE_OPTS } from "./conf";
+
+const imageryStore = useImageryStore();
+const { changeMarkerType, changeMarkerStyle } = imageryStore;
 
 const locationInfo = reactive({
-  type: "airplane",
-  style: "marker",
+  type: "tank",
+  style: TANK_OPTS[0].value,
 });
 
-const typeOptions = [
-  {
-    label: "飞机",
-    value: "plane",
-  },
-  {
-    label: "坦克",
-    value: "tank",
-  },
-];
+const styleOptions = ref(TANK_OPTS);
 
-const styleOptions = [
-  {
-    label: "坦克1",
-    value: "marker",
-  },
-  {
-    label: "坦克2",
-    value: "mark-active",
-  },
-];
+watch(
+  () => locationInfo.type,
+  (val) => {
+    styleOptions.value = val === "tank" ? TANK_OPTS : PLANE_OPTS;
+    locationInfo.style = styleOptions.value[0].value;
+
+    changeMarkerType(val);
+    // changeMarkerStyle(locationInfo.style);
+  }
+);
+
+watch(
+  () => locationInfo.style,
+  (val) => {
+    // console.log("locationInfo.style", val);
+    changeMarkerStyle(val);
+  }
+);
 </script>
