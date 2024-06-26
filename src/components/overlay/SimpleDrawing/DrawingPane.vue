@@ -83,11 +83,13 @@ import FeatureStyler from "@/components/overlay/SymbolStyler/FeatureStyler.vue";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
 import { useSketch } from "@/models/sketch.js";
 import { useFeatureProps } from "./useFeatureProps.js";
+import { useFeatureStyler } from "../SymbolStyler/useFeatureStyler.js";
 import setupWorkflow from "./workflow.js";
 
 const sketchStore = useSketch();
 
 const { $channel: $feature } = useFeatureProps(sketchStore.context);
+const { $channel: $symbol } = useFeatureStyler(sketchStore.context);
 const {
   activeTool,
   $channel: $sketch,
@@ -126,7 +128,7 @@ function ensureCreateStatus(createFn) {
   checkCurrentStatus().then(createFn);
 }
 
-setupWorkflow($sketch, $feature);
+setupWorkflow($sketch, $feature, $symbol);
 watch(completeFeature, (value) => {
   if (value) {
     sketchStore.onCompleteDrawFeature(value);

@@ -43,11 +43,18 @@
 <script setup>
 import { ref } from "vue";
 import FeatureColorStyler from "@/components/overlay/SymbolStyler/FeatureColorStyler.vue";
+import FeatureSizeStyler from "@/components/overlay/SymbolStyler/FeatureSizeStyler.vue";
+import FeatureRotateStyler from "@/components/overlay/SymbolStyler/FeatureRotateStyler.vue";
+import { useSymbol } from "@/models/symbol.js";
+
+const symbolStore = useSymbol();
 
 const currentType = ref("color");
 
 const editors = {
   color: FeatureColorStyler,
+  size: FeatureSizeStyler,
+  rotate: FeatureRotateStyler,
 };
 
 function switchToColor() {

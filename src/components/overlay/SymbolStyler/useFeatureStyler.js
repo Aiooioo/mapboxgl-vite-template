@@ -1,16 +1,20 @@
 import {} from "vue";
+import { storeToRefs } from "pinia";
 import { BehaviorSubject } from "rxjs";
 import { from } from "@vueuse/rxjs";
+import { useSymbol } from "@/models/symbol.js";
 
-const useFeatureStyler = () => {
+const useFeatureStyler = (ctx) => {
   const $channel = new BehaviorSubject(null);
 
+  const symbolStore = useSymbol();
+  const { sketchSymbolPaint } = storeToRefs(symbolStore);
 
-  from().subscribe((value) => {
+  from(sketchSymbolPaint).subscribe((value) => {
     $channel.next(value);
   });
 
-  return {};
+  return { $channel };
 };
 
 export { useFeatureStyler };

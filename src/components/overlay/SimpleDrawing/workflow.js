@@ -4,6 +4,7 @@ import {
   ensureSketchFeatureSourceData,
   ensureDrawingFeatureLayerData,
   render2Map,
+  ensureDrawingStylerLayerData,
 } from "./renders";
 
 export function hasNextStep(ctx) {
@@ -24,8 +25,11 @@ export default function ($sketch, $feature, $symbol) {
         ensureDrawingFeatureLayerData(map, feature, featureProps);
       }),
       combineLatestWith($symbol),
+      tap(([[{ map, feature }, _], symbol]) => {
+        ensureDrawingStylerLayerData(map, feature, symbol);
+      }),
     )
-    .subscribe(([sketch, feature, symbol]) => {
-      render2Map(sketch, feature, symbol);
+    .subscribe(([[{ map, feature }, _], symbol]) => {
+      render2Map(map, feature, symbol);
     });
 }

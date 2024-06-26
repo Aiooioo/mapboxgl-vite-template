@@ -2,6 +2,15 @@ import { defineStore } from "pinia";
 import { useSketch } from "./sketch.js";
 import * as defaults from "@/components/overlay/SymbolStyler/support/defaults.js";
 
+const useLineSymbol = defineStore("symbol-line", {
+  state() {
+    return {
+      strokeColor: defaults.DefaultPolygonOutline,
+      strokeWidth: defaults.DefaultPolygonOutlineWidth,
+    };
+  },
+});
+
 const useTextSymbol = defineStore("symbol-text", {
   state() {
     return {
@@ -39,24 +48,46 @@ const useSymbol = defineStore("symbol", {
         case "ellipse": {
           return this.fillSymbol;
         }
+        case "polyline": {
+          return this.lineSymbol;
+        }
         case "text": {
           return this.textSymbol;
         }
       }
     },
 
+    lineSymbol() {
+      const line = useLineSymbol();
+
+      return {
+        strokeColor: line.strokeColor,
+        strokeWidth: line.strokeWidth,
+      };
+    },
+
     fillSymbol(state) {
       const fill = useFillSymbol();
 
-      return { ...fill };
+      return {
+        fillColor: fill.fillColor,
+        fillOpacity: fill.fillOpacity,
+        strokeColor: fill.strokeColor,
+        strokeWidth: fill.strokeWidth,
+      };
     },
 
     textSymbol() {
       const text = useTextSymbol();
 
-      return { ...text };
+      return {
+        color: text.color,
+        fontSize: text.fontSize,
+        haloColor: text.haloColor,
+        haloSize: text.haloSize,
+      };
     },
   },
 });
 
-export { useSymbol };
+export { useSymbol, useTextSymbol, useFillSymbol, useLineSymbol };
