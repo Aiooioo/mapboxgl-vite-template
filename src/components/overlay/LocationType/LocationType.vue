@@ -62,4 +62,18 @@ watch(
     changeMarkerStyle(val);
   }
 );
+
+watch(
+  () => imageryStore.curEditMarker,
+  (val) => {
+    if (val) {
+      locationInfo.type = val.type;
+      locationInfo.style = val.style;
+      locationInfo.backup = val.backup;
+
+      // TODO
+      // 更新 geojson 信息， 通过 id
+    }
+  }
+);
 </script>

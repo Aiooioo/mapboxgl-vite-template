@@ -3,7 +3,6 @@ import { mergeAll, mergeMap, switchAll, BehaviorSubject } from "rxjs";
 import { ref, watch, onMounted, toValue, onUnmounted, shallowRef } from "vue";
 import { useMap } from "@/models/map.js";
 import * as turf from "@turf/turf";
-import mapboxgl from "mapbox-gl";
 import Draw from "@mapbox/mapbox-gl-draw";
 import {
   unpackMapboxDraw,
@@ -40,7 +39,8 @@ const useMapboxSketch = () => {
       };
 
       if (mapStore.activeBar === "location") {
-        drawLocationMarker(evt);
+        // drawLocationMarker(evt);
+        drawLocationGeometry(evt.features[0].geometry);
       }
 
       completeFeature.value = clone;
@@ -79,21 +79,24 @@ const useMapboxSketch = () => {
     activeTool.value = "";
   }
 
-  function drawLocationMarker(evt) {
-    const feat = evt.features[0];
-    if (feat.geometry.type === "Point") {
-      const el = document.createElement("div");
-      el.className = "marker-base carbon--tank";
+  function drawLocationGeometry(geometry) {
+    const params = {
+      geometry,
+      map: mapStore.map,
+    };
 
-      const marker = new mapboxgl.Marker({
-        element: el,
-        // draggable: true,
-        clickTolerance: 10,
-      })
-        .setLngLat(feat.geometry.coordinates)
-        .addTo(mapStore.map);
+    if (activeTool.value === "point") {
+      imageryStore.addPoint(params);
+    }
 
-      imageryStore.addMarker({ marker, el });
+    if (activeTool.value === "rect") {
+      // console.log("drawLocationGeometry--rect", geometry);
+      imageryStore.addRect(params);
+    }
+
+    if (activeTool.value === "polygon") {
+      // console.log("drawLocationGeometry--polygon", geometry);
+      imageryStore.addPolygon(params);
     }
   }
 
