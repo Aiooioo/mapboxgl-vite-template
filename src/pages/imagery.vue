@@ -12,7 +12,12 @@
         <template #overlay-right>
           <div class="page-imagery-main-right">
             <div class="page-imagery-main-right-panel-holder">
-              <MapToolPane v-if="imageryStore.enableDraw" />
+              <MapToolPane
+                v-show="
+                  mapStore.activeBar === 'location' &&
+                  imageryStore.curEditMarker
+                "
+              />
             </div>
           </div>
         </template>
@@ -27,7 +32,10 @@ import MapboxBar from "@/components/MapboxBar.vue";
 import CatalogPanel from "@/components/overlay/ImageryCatalog/CatalogPanel.vue";
 import MapToolPane from "@/components/MapToolPane.vue";
 
+import { useMap } from "@/models/map.js";
 import { useImageryStore } from "@/models/imagery";
+
+const mapStore = useMap();
 
 const imageryStore = useImageryStore();
 </script>

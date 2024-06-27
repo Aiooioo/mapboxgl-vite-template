@@ -79,24 +79,25 @@ const {
   createPolygon,
   cancelDraw,
   createPoint,
-  clear,
 } = useMapboxSketch();
+
+const handleEnable = (val) => {
+  if (val) {
+    createDrawToolAfterLoad();
+    createPoint();
+
+    mapStore.switchActiveTool("location");
+  } else {
+    imageryStore.setCurEditMarker(null);
+    cancelDraw();
+
+    mapStore.switchActiveTool("");
+  }
+};
 
 watch(
   () => imageryStore.enableDraw,
-  (val) => {
-    if (val) {
-      createDrawToolAfterLoad();
-
-      mapStore.switchActiveTool("location");
-
-      createPoint();
-    } else {
-      cancelDraw();
-
-      mapStore.switchActiveTool("");
-    }
-  }
+  (val) => handleEnable(val)
 );
 
 const handlePoint = () => {

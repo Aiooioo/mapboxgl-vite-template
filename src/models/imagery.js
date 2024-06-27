@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import { defineStore } from "pinia";
+import { useMap } from "@/models/map.js";
 
 export const useImageryStore = defineStore("imagery", {
   state: () => ({
@@ -12,21 +13,30 @@ export const useImageryStore = defineStore("imagery", {
       this.enableDraw = !this.enableDraw;
     },
     setCurEditMarker(marker) {
-      console.log("marker clicked--setCurEditMarker", marker);
+      // console.log("marker clicked--setCurEditMarker", marker);
 
-      if (this.curEditMarker && this.curEditMarker.id !== marker.id) {
+      const mapStore = useMap();
+      if (mapStore.activeBar !== "location") return;
+
+      if (this.curEditMarker) {
         this.curEditMarker.marker.removeClassName("marker-selected");
       }
 
       this.curEditMarker = marker;
-      this.curEditMarker.marker.addClassName("marker-selected");
+
+      if (this.curEditMarker) {
+        this.curEditMarker.marker.addClassName("marker-selected");
+      }
     },
     addMarker({ marker, el }) {
+      // console.log("addMarker", marker, el);
       const id = nanoid();
       const newMarker = { marker, el, id, type: "tank", style: "carbon--tank" };
 
       const listener = this.setCurEditMarker.bind(this, newMarker);
       el.addEventListener("click", listener);
+
+      this.setCurEditMarker(newMarker);
 
       newMarker.listener = listener;
       this.markers.push(newMarker);
