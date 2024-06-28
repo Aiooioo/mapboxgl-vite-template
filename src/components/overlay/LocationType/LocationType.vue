@@ -6,6 +6,7 @@
         size="small"
         v-model:value="locationInfo.type"
         :options="typeOptions"
+        placeholder="请选择标注类型"
       />
     </div>
     <div class="mb-2 flex items-center gap-1">
@@ -26,16 +27,24 @@
     </div>
 
     <div class="flex items-center justify-center gap-3">
-      <n-button size="small" type="warning" @click="handleCompare">
+      <n-button
+        size="small"
+        type="warning"
+        :disabled="!locationInfo.type"
+        @click="handleCompare"
+      >
         验证
       </n-button>
+
       <n-button
         size="small"
         type="primary"
         @click="handleSave"
         :disabled="!locationInfo.type"
-        >保存</n-button
       >
+        保存
+      </n-button>
+
       <n-button size="small" type="secondary" @click="handleDelete">
         删除
       </n-button>
@@ -60,7 +69,7 @@ const imageryStore = useImageryStore();
 const { changeMarkerType, changeMarkerStyle, removeMarker } = imageryStore;
 
 const locationInfo = reactive({
-  type: "",
+  type: undefined,
   style: MARKER_STYLE_OPTS[0].value,
   remark: "",
 });

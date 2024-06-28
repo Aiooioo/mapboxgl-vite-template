@@ -64,8 +64,8 @@ export const useImageryStore = defineStore("imagery", {
         listener: null,
         loGeometry,
         centerGeometry,
-        type: "",
-        code: "",
+        type: null,
+        code: null,
         style: "carbon--tank",
         remark: "",
       };

@@ -227,7 +227,7 @@ const useMapboxSketch = () => {
   }
 
   watch(() => !!mapStore.ready, createDrawToolAfterLoad, {
-    once: true,
+    // once: true, // imagery 标绘无法触发
     immediate: true,
   });
 
@@ -260,7 +260,6 @@ const useMapboxSketch = () => {
     createPolygon,
     cancelDraw,
     clear,
-    createDrawToolAfterLoad,
   };
 };
 

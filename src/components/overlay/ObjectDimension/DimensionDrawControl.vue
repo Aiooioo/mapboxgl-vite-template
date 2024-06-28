@@ -56,18 +56,11 @@ import { useMap } from "@/models/map.js";
 const mapStore = useMap();
 const imageryStore = useImageryStore();
 
-const {
-  createDrawToolAfterLoad,
-  activeTool,
-  createRect,
-  createPolygon,
-  cancelDraw,
-  createPoint,
-} = useMapboxSketch();
+const { activeTool, createRect, createPolygon, cancelDraw, createPoint } =
+  useMapboxSketch();
 
 const handleEnable = (val) => {
   if (val) {
-    createDrawToolAfterLoad();
     createPoint();
 
     mapStore.switchActiveTool("location");
