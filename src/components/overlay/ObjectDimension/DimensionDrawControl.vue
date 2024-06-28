@@ -6,7 +6,7 @@
           'object-dimension__draw-item object-dimension__draw-point',
           { active: activeTool === 'point' },
         ]"
-        @click="handlePoint"
+        @click="createPoint"
       >
         <i-mdi-map-marker-outline style="height: 28px; width: 28px" />
       </span>
@@ -43,22 +43,6 @@
           }"
         />
       </span>
-
-      <span
-        :class="[
-          'object-dimension__draw-item object-dimension__draw-cancel',
-          { disabled: activeTool === '' },
-        ]"
-        @click="imageryStore.removeMarker"
-      >
-        <i-mdi-delete
-          :style="{
-            color: imageryStore.curEditMarker ? '#d50000' : '#71717a',
-            height: '24px',
-            width: '24px',
-          }"
-        />
-      </span>
     </div>
   </div>
 </template>
@@ -72,18 +56,11 @@ import { useMap } from "@/models/map.js";
 const mapStore = useMap();
 const imageryStore = useImageryStore();
 
-const {
-  createDrawToolAfterLoad,
-  activeTool,
-  createRect,
-  createPolygon,
-  cancelDraw,
-  createPoint,
-} = useMapboxSketch();
+const { activeTool, createRect, createPolygon, cancelDraw, createPoint } =
+  useMapboxSketch();
 
 const handleEnable = (val) => {
   if (val) {
-    createDrawToolAfterLoad();
     createPoint();
 
     mapStore.switchActiveTool("location");
@@ -99,10 +76,6 @@ watch(
   () => imageryStore.enableDraw,
   (val) => handleEnable(val)
 );
-
-const handlePoint = () => {
-  createPoint();
-};
 </script>
 
 <style scoped lang="scss">
