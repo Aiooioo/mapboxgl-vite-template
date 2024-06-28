@@ -9,8 +9,6 @@ const useMapper = defineStore("mapper", {
 
       selectedLine: "1",
 
-      checkPoints: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-
       lines: ["1", "2", "3"],
 
       lineInEdit: null,

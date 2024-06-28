@@ -9,6 +9,8 @@ const useMap = defineStore("map", {
 
       currentBasemapId: "arcgis-imagery",
 
+      checkPointIconLoaded: false,
+
       ready: false,
 
       layerIds: [],

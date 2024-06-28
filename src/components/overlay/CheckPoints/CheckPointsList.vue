@@ -9,14 +9,14 @@
   </div>
   <div class="check-points__list">
     <div
-      v-for="(item, index) in mapperStore.checkPoints"
+      v-for="(item, index) in checkPoints?.features"
       :key="`${mapStore.zone}-check-points-${index}`"
       class="check-points__list-item"
     >
       <span class="check-points__list-item-icon">
         <i-mdi-circle-double />
       </span>
-      <span class="check-points__list-item-name">{{ item }}</span>
+      <span class="check-points__list-item-name">{{ item.id }}</span>
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@ import { useCheckPointService } from "./useCheckPointService.js";
 
 const mapStore = useMap();
 const mapperStore = useMapper();
-useCheckPointService();
+const { checkPoints } = useCheckPointService();
 
 const selectedGroup = ref("all");
 const groups = ref([
@@ -66,7 +66,7 @@ const groups = ref([
   gap: 6px;
 
   &-item {
-    padding-left: 6px;
+    padding-left: 4px;
     border-radius: 4px;
     height: 32px;
     display: flex;
@@ -81,7 +81,7 @@ const groups = ref([
     }
 
     &-icon {
-      margin-right: 6px;
+      margin-right: 4px;
       font-size: 14px;
     }
     &-name {

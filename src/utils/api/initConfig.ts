@@ -1,5 +1,6 @@
 import axios from "axios";
 export interface IConfig {
+  baseUrl: string;
   apiUrl: "http://192.168.0.215:7001";
   login: {
     password: "macro123";
