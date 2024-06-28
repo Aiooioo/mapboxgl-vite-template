@@ -153,6 +153,14 @@ const useMapboxSketch = () => {
     sketchRef.value.changeMode("draw_text");
   }
 
+  function createIcon() {
+    if (!checkAndPrepare()) return;
+
+    activeTool.value = "icon";
+
+    sketchRef.value.changeMode("draw_icon");
+  }
+
   function createPoint() {
     if (!checkAndPrepare()) return;
 
@@ -255,6 +263,7 @@ const useMapboxSketch = () => {
     completeFeature,
     deletedFeature,
     createText,
+    createIcon,
     createPoint,
     createPolyline,
     createCircle,

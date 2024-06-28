@@ -1,6 +1,10 @@
 <template>
   <div class="check-points__filter">
-    <n-select placeholder="请指定点位库分组"></n-select>
+    <n-select
+      placeholder="请指定点位库分组"
+      :options="groups"
+      v-model:value="selectedGroup"
+    ></n-select>
     <n-input placeholder="根据关键词检索" size="small"></n-input>
   </div>
   <div class="check-points__list">
@@ -18,12 +22,23 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { NSelect, NInput } from "naive-ui";
 import { useMap } from "@/models/map.js";
 import { useMapper } from "@/models/mapper.js";
+import { useCheckPointService } from "./useCheckPointService.js";
 
 const mapStore = useMap();
 const mapperStore = useMapper();
+useCheckPointService();
+
+const selectedGroup = ref("all");
+const groups = ref([
+  {
+    label: "全部",
+    value: "all",
+  },
+]);
 </script>
 
 <style scoped lang="scss">

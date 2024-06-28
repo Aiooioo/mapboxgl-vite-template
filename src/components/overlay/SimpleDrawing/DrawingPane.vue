@@ -2,42 +2,55 @@
   <div class="simple-drawing__pane">
     <div class="simple-drawing__pane-bar">
       <span
+        title="点"
         :class="['simple-drawing__pane-bar-item']"
         @click="ensureCreateStatus(createPoint)"
+      >
+        <i-mdi-radio-button-checked />
+      </span>
+      <span
+        title="符号"
+        :class="['simple-drawing__pane-bar-item']"
+        @click="ensureCreateStatus(createIcon)"
       >
         <i-mdi-map-marker />
       </span>
       <span
+        title="线"
         :class="['simple-drawing__pane-bar-item']"
         @click="ensureCreateStatus(createPolyline)"
       >
         <i-mdi-vector-line />
       </span>
       <span
+        title="矩形"
         :class="['simple-drawing__pane-bar-item']"
         @click="ensureCreateStatus(createRect)"
       >
         <i-mdi-rectangle-outline />
       </span>
       <span
+        title="圆"
         :class="['simple-drawing__pane-bar-item']"
         @click="ensureCreateStatus(createCircle)"
       >
         <i-mdi-checkbox-blank-circle-outline />
       </span>
       <span
+        title="椭圆"
         :class="['simple-drawing__pane-bar-item']"
         @click="ensureCreateStatus(createEllipse)"
       >
         <i-mdi-ellipse-outline />
       </span>
       <span
+        title="文字"
         :class="['simple-drawing__pane-bar-item']"
         @click="ensureCreateStatus(createText)"
       >
         <i-mdi-format-text />
       </span>
-      <span :class="['simple-drawing__pane-bar-item']">
+      <span title="箭头" :class="['simple-drawing__pane-bar-item']">
         <i-mdi-arrow-top-right-bold-outline />
       </span>
     </div>
@@ -95,6 +108,7 @@ const {
   $channel: $sketch,
   completeFeature,
   createText,
+  createIcon,
   createRect,
   createPolyline,
   createEllipse,
