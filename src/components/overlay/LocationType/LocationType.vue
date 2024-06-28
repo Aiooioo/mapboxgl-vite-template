@@ -63,6 +63,9 @@ import {
 } from "@/utils/api/location/plot";
 import { $comparePlot } from "@/utils/api/location/identify";
 
+import WKT from "terraformer-wkt-parser";
+import proj4 from "proj4";
+
 import { MARKER_TYPE_OPTS, MARKER_STYLE_OPTS } from "./conf";
 
 const imageryStore = useImageryStore();
@@ -126,14 +129,26 @@ watch(
 );
 
 const handleCompare = async () => {
-  const params = {
-    itemId: "0acefb3c845a42e5b0f81373797cdb6e",
-    name: "",
-    code: "",
-    geometry: "", // wkt
-  };
-  const res = await $comparePlot(params);
-  console.log("$comparePlot--res", res);
+  const { type } = locationInfo;
+  const typeInfo = typeOptions.value.find((item) => item.value === type);
+  const { loGeometry } = imageryStore.curEditMarker;
+  const loWkt = WKT.convert(loGeometry);
+
+  // console.log("loGeometry", loGeometry);
+  // const lo = proj4("EPSG:3857", "EPSG:4326", loGeometry.coordinates);
+  // console.log("lo", lo);
+
+  const params = [
+    {
+      itemId: "0acefb3c845a42e5b0f81373797cdb6e",
+      type: typeInfo.name,
+      code: typeInfo.code,
+      geometrys: [loWkt], // wkt
+    },
+  ];
+  // console.log("handleCompare--params", params);
+  // const res = await $comparePlot(params);
+  // console.log("$comparePlot--res", res);
 };
 
 const handleSave = async () => {
