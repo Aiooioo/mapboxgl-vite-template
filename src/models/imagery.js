@@ -8,11 +8,12 @@ export const useImageryStore = defineStore("imagery", {
   state: () => ({
     enableDraw: false,
     curEditMarker: null,
-    markers: [],
-    geojson: {
+    loMarkers: [],
+    imagerGeojson: {
       type: "FeatureCollection",
       features: [],
     },
+    loMap: null,
   }),
   actions: {
     toggelEnableDraw() {
@@ -28,26 +29,9 @@ export const useImageryStore = defineStore("imagery", {
 
       if (!map) return;
 
+      this.loMap = map;
+
       createLoLayer(map);
-
-      // map.on("click", (e) => {
-      //   // console.log("click", e);
-      //   const bbox = [
-      //     [e.point.x - 5, e.point.y - 5],
-      //     [e.point.x + 5, e.point.y + 5],
-      //   ];
-      //   // Find features intersecting the bounding box.
-      //   const selectedFeatures = map.queryRenderedFeatures(bbox, {
-      //     layers: ["lo-layer"],
-      //   });
-
-      //   console.log("selectedFeatures", selectedFeatures);
-
-      //   // if (selectedFeatures.length > 0) {
-      //   //   const feature = selectedFeatures[0];
-      //   //   this.setCurEditMarker(feature);
-      //   // }
-      // });
     },
 
     setCurEditMarker(marker) {
@@ -67,32 +51,47 @@ export const useImageryStore = defineStore("imagery", {
       }
     },
 
-    addMarker({ id, geometry, map }) {
-      // console.log("addMarker", marker, el);
-      const { marker, el } = createMarker({ geometry, map });
-      const newMarker = { marker, el, id, type: "tank", style: "carbon--tank" };
+    addMarker({ id, centerGeometry, loGeometry }) {
+      const map = this.loMap;
 
-      const listener = this.setCurEditMarker.bind(this, newMarker);
+      const { marker, el } = createMarker({ geometry: centerGeometry, map });
+
+      const loMarker = {
+        id,
+        cid: id,
+        marker,
+        el,
+        listener: null,
+        loGeometry,
+        centerGeometry,
+        type: "",
+        code: "",
+        style: "carbon--tank",
+        remark: "",
+      };
+
+      const listener = this.setCurEditMarker.bind(this, loMarker);
       el.addEventListener("click", listener);
 
-      this.setCurEditMarker(newMarker);
+      this.setCurEditMarker(loMarker);
 
-      newMarker.listener = listener;
-      this.markers.push(newMarker);
+      loMarker.listener = listener;
+      this.loMarkers.push(loMarker);
     },
 
     removeMarker() {
-      const index = this.markers.findIndex(
-        (item) => item.id === this.curEditMarker.id
-      );
+      const cid = this.curEditMarker.cid;
+      const index = this.loMarkers.findIndex((item) => item.cid === cid);
 
       if (index > -1) {
-        const { marker, el, listener } = this.markers.splice(index, 1)[0];
+        const { marker, el, listener } = this.loMarkers.splice(index, 1)[0];
         marker.remove();
 
         el.removeEventListener("click", listener);
 
         this.curEditMarker = null;
+
+        this.deleteFeature(cid);
       }
     },
 
@@ -104,76 +103,69 @@ export const useImageryStore = defineStore("imagery", {
     changeMarkerStyle(val) {
       const { marker, style } = this.curEditMarker;
 
-      // console.log("changeMarkerStyle", val);
-
       marker.removeClassName(style);
       marker.addClassName(val);
 
       this.curEditMarker.style = val;
     },
 
-    addPoint({ geometry, map }) {
+    plotGeometry({ geometry, plotType }) {
+      if (plotType === "point") {
+        this.addPoint(geometry);
+      } else {
+        this.addPolygon(geometry);
+      }
+    },
+
+    addPoint(geometry) {
       const id = nanoid();
       const point = turf.point(geometry.coordinates);
-      const feature = turf.buffer(point, 5, {
-        units: "miles",
-      });
-
+      const feature = turf.buffer(point, 5, { units: "miles" });
       feature.id = id;
-      feature.properties = {
-        loInfo: "location-point", // 标注信息
-        loStyle: "carbon--location-polygon", // 标注样式
-        loType: "tank", // 标注类型
+
+      this.imagerGeojson.features.push(feature);
+      this.loMap.getSource("lo-source").setData(this.imagerGeojson);
+
+      const params = {
+        id: id,
+        centerGeometry: geometry,
+        loGeometry: feature.geometry,
       };
 
-      // console.log("geometry", geometry);
-
-      this.geojson.features.push(feature);
-      map.getSource("lo-source").setData(this.geojson);
-
-      this.addMarker({ id, geometry, map });
+      this.addMarker(params);
     },
 
-    addRect({ geometry, map }) {
+    addPolygon(geometry) {
       const id = nanoid();
       const feature = {
         id,
         geometry,
         type: "Feature",
-        properties: {
-          loInfo: "location-rect", // 标注信息
-          loStyle: "carbon--location-polygon", // 标注样式
-          loType: "tank", // 标注类型
-        },
       };
 
-      this.geojson.features.push(feature);
-      map.getSource("lo-source").setData(this.geojson);
+      this.imagerGeojson.features.push(feature);
+      this.loMap.getSource("lo-source").setData(this.imagerGeojson);
 
       const polygon = turf.polygon(geometry.coordinates);
       const center = turf.centroid(polygon);
-      this.addMarker({ id, geometry: center.geometry, map });
+
+      const params = {
+        id,
+        centerGeometry: center.geometry,
+        loGeometry: geometry,
+      };
+
+      this.addMarker(params);
     },
 
-    addPolygon({ geometry, map }) {
-      const id = nanoid();
-      const feature = {
-        id,
-        geometry,
-        type: "Feature",
-        properties: {
-          loInfo: "location-polygon", // 标注信息
-          loStyle: "carbon--location-polygon", // 标注样式
-          loType: "tank", // 标注类型
-        },
-      };
+    deleteFeature(cid) {
+      const { features } = this.imagerGeojson;
+      const index = features.findIndex((item) => item.id === cid);
 
-      this.geojson.features.push(feature);
-      map.getSource("lo-source").setData(this.geojson);
-
-      const polygon = turf.polygon(geometry.coordinates);
-      const center = turf.centroid(polygon);
-      this.addMarker({ id, geometry: center.geometry, map });
+      if (index > -1) {
+        features.splice(index, 1);
+        this.loMap.getSource("lo-source").setData(this.imagerGeojson);
+      }
     },
   },
 });
@@ -184,12 +176,11 @@ function createMarker({ geometry, map }) {
 
   const marker = new mapboxgl.Marker({
     element: el,
-    // draggable: true,
-    // clickTolerance: 10,
-    scale: 0.5,
-  })
-    .setLngLat(geometry.coordinates)
-    .addTo(map);
+    // draggable: true, clickTolerance: 10,
+    // scale: 0.5,
+  });
+  marker.setLngLat(geometry.coordinates);
+  marker.addTo(map);
 
   return { marker, el };
 }

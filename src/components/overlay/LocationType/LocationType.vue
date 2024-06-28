@@ -5,7 +5,7 @@
       <n-select
         size="small"
         v-model:value="locationInfo.type"
-        :options="MARKER_TYPE_OPTS"
+        :options="typeOptions"
       />
     </div>
     <div class="mb-2 flex items-center gap-1">
@@ -13,43 +13,85 @@
       <n-select
         size="small"
         v-model:value="locationInfo.style"
-        :options="styleOptions"
+        :options="MARKER_STYLE_OPTS"
       />
     </div>
-    <div class="flex gap-1">
+    <div class="mb-4 flex gap-1">
       <label class="ml-6">备注：</label>
       <n-input
-        v-model:value="locationInfo.backup"
+        v-model:value="locationInfo.remark"
         type="textarea"
         placeholder="请输入备注信息"
       />
+    </div>
+
+    <div class="flex items-center justify-center gap-3">
+      <n-button size="small" type="warning" @click="handleCompare">
+        验证
+      </n-button>
+      <n-button
+        size="small"
+        type="primary"
+        @click="handleSave"
+        :disabled="!locationInfo.type"
+        >保存</n-button
+      >
+      <n-button size="small" type="secondary" @click="handleDelete">
+        删除
+      </n-button>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, reactive, watch } from "vue";
-import { NSelect, NInput } from "naive-ui";
+import { ref, reactive, watch, onMounted } from "vue";
+import { NSelect, NInput, NButton } from "naive-ui";
 import { useImageryStore } from "@/models/imagery";
+import {
+  $listByCode,
+  $createPlot,
+  $deletePlot,
+} from "@/utils/api/location/plot";
+import { $comparePlot } from "@/utils/api/location/identify";
 
-import { MARKER_TYPE_OPTS, TANK_OPTS, PLANE_OPTS } from "./conf";
+import { MARKER_TYPE_OPTS, MARKER_STYLE_OPTS } from "./conf";
 
 const imageryStore = useImageryStore();
-const { changeMarkerType, changeMarkerStyle } = imageryStore;
+const { changeMarkerType, changeMarkerStyle, removeMarker } = imageryStore;
 
 const locationInfo = reactive({
-  type: "tank",
-  style: TANK_OPTS[0].value,
-  backup: "",
+  type: "",
+  style: MARKER_STYLE_OPTS[0].value,
+  remark: "",
 });
 
-const styleOptions = ref(TANK_OPTS);
+const typeOptions = ref(MARKER_TYPE_OPTS);
+
+const getCodeListAsync = async () => {
+  const res = await $listByCode({ code: "featuretype" });
+  // console.log("$listByCode--res", res);
+  if (res.code === 200) {
+    const options = res?.data?.map((item) => ({
+      ...item,
+      label: item.name,
+      value: item.code,
+    }));
+
+    typeOptions.value = options;
+    // locationInfo.type = options?.[0]?.value;
+  }
+};
+
+onMounted(() => {
+  getCodeListAsync();
+});
 
 watch(
   () => locationInfo.type,
   (val) => {
-    styleOptions.value = val === "tank" ? TANK_OPTS : PLANE_OPTS;
-    locationInfo.style = styleOptions.value[0].value;
+    // const code = typeOptions.value.find((item) => item.value === val)?.code;
+    // styleOptions.value = code === "tank" ? TANK_OPTS : PLANE_OPTS;
+    // locationInfo.style = styleOptions.value[0].value;
 
     changeMarkerType(val);
   }
@@ -69,11 +111,53 @@ watch(
     if (val) {
       locationInfo.type = val.type;
       locationInfo.style = val.style;
-      locationInfo.backup = val.backup;
-
-      // TODO
-      // 更新 geojson 信息， 通过 id
+      locationInfo.remark = val.remark;
     }
   }
 );
+
+const handleCompare = async () => {
+  const params = {
+    itemId: "0acefb3c845a42e5b0f81373797cdb6e",
+    name: "",
+    code: "",
+    geometry: "", // wkt
+  };
+  const res = await $comparePlot(params);
+  console.log("$comparePlot--res", res);
+};
+
+const handleSave = async () => {
+  // console.log(imageryStore.curEditMarker);
+  const { type, style, remark } = locationInfo;
+  const typeInfo = typeOptions.value.find((item) => item.value === type);
+  const { loGeometry } = imageryStore.curEditMarker;
+
+  // console.log("loGeometry", loGeometry);
+
+  const content = JSON.stringify({
+    type: "FeatureCollection",
+    features: [loGeometry],
+  });
+
+  const params = {
+    code: typeInfo.code,
+    type: typeInfo.name,
+    style,
+    remark, // 备注信息
+    content,
+  };
+  const res = await $createPlot(params);
+  console.log("$createPlot--res", res);
+};
+
+const handleDelete = async () => {
+  const params = {
+    ids: "",
+  };
+  // const res = await $deletePlot(params);
+  // console.log("$deletePlot--res", res);
+
+  removeMarker();
+};
 </script>

@@ -7,7 +7,9 @@
       </div>
     </div>
     <div class="viewer-tools__pane-content">
-      <component :is="tools[logicalKey]" />
+      <keep-alive :include="['LocationType']">
+        <component :is="tools[logicalKey]" />
+      </keep-alive>
     </div>
   </div>
 </template>

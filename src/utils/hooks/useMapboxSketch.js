@@ -82,22 +82,10 @@ const useMapboxSketch = () => {
   function drawLocationGeometry(geometry) {
     const params = {
       geometry,
-      map: mapStore.map,
+      plotType: activeTool.value,
     };
 
-    if (activeTool.value === "point") {
-      imageryStore.addPoint(params);
-    }
-
-    if (activeTool.value === "rect") {
-      // console.log("drawLocationGeometry--rect", geometry);
-      imageryStore.addRect(params);
-    }
-
-    if (activeTool.value === "polygon") {
-      // console.log("drawLocationGeometry--polygon", geometry);
-      imageryStore.addPolygon(params);
-    }
+    imageryStore.plotGeometry(params);
   }
 
   function onUpdateComplete(evt) {
