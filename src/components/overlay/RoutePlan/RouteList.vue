@@ -17,7 +17,7 @@
       </span>
       <span class="route-planning-view__list-item-content">
         <span class="route-planning-view__list-item-title">
-          {{ `线路${index + 1}` }}
+          {{ item.name }}
           <n-rate size="small" allow-half readonly :value="2.5 + index" />
         </span>
         <span class="route-planning-view__list-item-desc">

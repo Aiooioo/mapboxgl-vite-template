@@ -64,6 +64,17 @@ const useCheckPointService = () => {
     });
   }
 
+  function removeCheckPointsDataAndSymbol() {
+    const map = toValue(mapStore.map);
+    if (map.getLayer("check-point-layer")) {
+      map.removeLayer("check-point-layer");
+    }
+
+    if (map.getSource("check-points")) {
+      map.removeSource("check-points");
+    }
+  }
+
   watch(
     checkPoints,
     (value) => {
@@ -115,10 +126,12 @@ const useCheckPointService = () => {
     // });
   });
 
-  onUnmounted(() => {});
+  onUnmounted(() => {
+    removeCheckPointsDataAndSymbol();
+  });
 
   return {
-    checkPoints
+    checkPoints,
   };
 };
 

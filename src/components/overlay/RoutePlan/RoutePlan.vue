@@ -9,7 +9,10 @@
         class="route-planning__action-btn route-planning__action-cancel"
         @click="mapperStore.cancelEditLine"
       >
-        <i-mdi-cancel-octagon-outline style="margin-right: 3px; font-size: 16px" /> 取 消
+        <i-mdi-cancel-octagon-outline
+          style="margin-right: 3px; font-size: 16px"
+        />
+        取 消
       </span>
       <span
         v-if="mapperStore.currentView === 'editor'"
@@ -34,7 +37,11 @@ import { ref } from "vue";
 import { useMapper } from "@/models/mapper.js";
 import RouteList from "./RouteList.vue";
 import RouteLineEditor from "./RouteLineEditor.vue";
+import { useCheckPointService } from "../CheckPoints/useCheckPointService.js";
+import { useRoutePlan } from "./useRoutePlan.js";
 
+const { checkPoints } = useCheckPointService();
+useRoutePlan();
 const mapperStore = useMapper();
 
 const views = {
