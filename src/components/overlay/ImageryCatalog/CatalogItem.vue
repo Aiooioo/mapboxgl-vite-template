@@ -16,9 +16,11 @@ const props = defineProps({
 });
 const added = ref(false);
 
-const {} = useMapboxLayer(props.item);
+const { toogelLayerVisibility } = useMapboxLayer(props.item);
 
-function handleItemAddRemove() {}
+function handleItemAddRemove() {
+  toogelLayerVisibility(added.value);
+}
 </script>
 
 <style scoped lang="scss">
