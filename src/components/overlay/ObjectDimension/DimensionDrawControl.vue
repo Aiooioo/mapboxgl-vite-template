@@ -61,7 +61,7 @@ const { activeTool, createRect, createPolygon, cancelDraw, createPoint } =
 
 const handleEnable = (val) => {
   if (val) {
-    createPoint();
+    // createPoint();
 
     mapStore.switchActiveTool("location");
   } else {
