@@ -27,20 +27,30 @@
       />
     </div>
 
-    <div class="mb-4 flex items-center gap-1">
+    <div class="mb-4 flex items-center justify-center gap-1">
       <n-button
         size="small"
         type="warning"
-        :disabled="!locationInfo.type"
+        :disabled="isCanCompare"
         @click="handleCompare"
       >
-        验证地物判读结果：
+        验证地物判读结果
       </n-button>
+
+      <n-button
+        size="small"
+        type="secondary"
+        @click="handleDelete"
+        v-if="locationInfo.result === null || locationInfo.result === undefined"
+      >
+        取消
+      </n-button>
+
       <n-tag
         size="small"
         round
         :type="locationInfo.result === 1 ? 'success' : 'error'"
-        v-show="locationInfo.result !== undefined"
+        v-else
       >
         <template #icon>
           <div
@@ -59,7 +69,7 @@
       </n-tag>
     </div>
 
-    <div class="flex items-center justify-center gap-3">
+    <!-- <div class="flex items-center justify-center gap-3">
       <n-button
         size="small"
         type="primary"
@@ -70,14 +80,14 @@
       </n-button>
 
       <n-button size="small" type="secondary" @click="handleDelete">
-        删除
+        取消
       </n-button>
-    </div>
+    </div> -->
   </section>
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted } from "vue";
+import { ref, reactive, watch, onMounted, computed } from "vue";
 import { NSelect, NInput, NButton, NTag } from "naive-ui";
 import { useImageryStore } from "@/models/imagery";
 import {
@@ -97,10 +107,10 @@ const { changeMarkerType, changeMarkerStyle, removeMarker, updateCurMarkerId } =
   imageryStore;
 
 const locationInfo = reactive({
-  type: undefined,
+  type: null,
   style: MARKER_STYLE_OPTS[0].value,
-  remark: "",
-  result: undefined,
+  remark: null,
+  result: null,
 });
 
 const typeOptions = ref(MARKER_TYPE_OPTS);
@@ -122,6 +132,16 @@ const getCodeListAsync = async () => {
 
 onMounted(() => {
   getCodeListAsync();
+});
+
+const isCanCompare = computed(() => {
+  if (locationInfo.result !== null) return true;
+
+  if (!locationInfo.type || locationInfo.result !== null) {
+    return true;
+  }
+
+  return false;
 });
 
 watch(
@@ -150,6 +170,9 @@ watch(
       locationInfo.type = val.type;
       locationInfo.style = val.style;
       locationInfo.remark = val.remark;
+      locationInfo.result = val.result;
+
+      // console.log("curEditMarker", val);
     }
   }
 );
@@ -168,6 +191,7 @@ const handleCompare = async () => {
       itemId: "0acefb3c845a42e5b0f81373797cdb6e",
       type: typeInfo.name,
       code: typeInfo.code,
+      style: locationInfo.style,
       geometrys: [loWkt], // wkt
     },
   ];
@@ -210,14 +234,16 @@ const handleSave = async () => {
 };
 
 const handleDelete = async () => {
-  const params = {
-    ids: [imageryStore.curEditMarker.id],
-  };
-  const res = await $deletePlot(params);
-  console.log("$deletePlot--res", res);
+  removeMarker();
 
-  if (res.code === 200) {
-    removeMarker();
-  }
+  // const params = {
+  //   ids: [imageryStore.curEditMarker.id],
+  // };
+  // const res = await $deletePlot(params);
+  // console.log("$deletePlot--res", res);
+
+  // if (res.code === 200) {
+  //   removeMarker();
+  // }
 };
 </script>

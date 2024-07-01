@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import { defineStore } from "pinia";
 import mapboxgl from "mapbox-gl";
 import * as turf from "@turf/turf";
+import WKT from "terraformer-wkt-parser";
 import { useMap } from "@/models/map.js";
 
 export const useImageryStore = defineStore("imagery", {
@@ -34,6 +35,28 @@ export const useImageryStore = defineStore("imagery", {
       createLoLayer(map);
     },
 
+    initLoMarkers(list) {
+      this.imagerGeojson.features = [];
+
+      list.forEach((item) => {
+        const id = item.id;
+        const wGeometry = WKT.parse(item.geometry);
+        const loGeometry = turf.toWgs84(wGeometry);
+        const centerGeometry = turf.center(loGeometry).geometry;
+
+        const feature = {
+          id,
+          geometry: loGeometry,
+          type: "Feature",
+        };
+        this.imagerGeojson.features.push(feature);
+
+        this.addMarker({ id, centerGeometry, loGeometry, ...item });
+      });
+
+      this.loMap.getSource("lo-source").setData(this.imagerGeojson);
+    },
+
     setCurEditMarker(marker) {
       // console.log("marker clicked--setCurEditMarker", marker);
 
@@ -51,7 +74,7 @@ export const useImageryStore = defineStore("imagery", {
       }
     },
 
-    addMarker({ id, centerGeometry, loGeometry }) {
+    addMarker({ id, centerGeometry, loGeometry, ...args }) {
       const map = this.loMap;
 
       const { marker, el } = createMarker({ geometry: centerGeometry, map });
@@ -64,11 +87,14 @@ export const useImageryStore = defineStore("imagery", {
         listener: null,
         loGeometry,
         centerGeometry,
-        type: null,
-        code: null,
-        style: "carbon--tank",
-        remark: "",
+        type: args.type || null,
+        code: args.code || null,
+        style: args.style || "carbon--tank",
+        remark: args.remark || null,
+        result: args.result,
       };
+
+      // console.log(loMarker);
 
       const listener = this.setCurEditMarker.bind(this, loMarker);
       el.addEventListener("click", listener);
