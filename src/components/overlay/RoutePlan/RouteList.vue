@@ -9,6 +9,7 @@
           selected: mapperStore.selectedLine === item,
         },
       ]"
+      @click="() => switchCurrentRouteLine(item.id)"
     >
       <span class="route-planning-view__list-item-icon">
         <span class="route-planning-view__list-item-icon-num">{{
@@ -36,6 +37,10 @@ import { useMap } from "@/models/map.js";
 
 const mapStore = useMap();
 const mapperStore = useMapper();
+
+function switchCurrentRouteLine(routeId) {
+  mapperStore.switchDisplayRouteLine(routeId)
+}
 </script>
 
 <style scoped lang="scss">
