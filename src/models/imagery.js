@@ -159,7 +159,7 @@ export const useImageryStore = defineStore("imagery", {
     addPoint(geometry) {
       const id = nanoid();
       const point = turf.point(geometry.coordinates);
-      const feature = turf.buffer(point, 5, { units: "miles" });
+      const feature = turf.buffer(point, 0.1, { units: "miles" });
       feature.id = id;
 
       this.imagerGeojson.features.push(feature);
@@ -212,14 +212,24 @@ export const useImageryStore = defineStore("imagery", {
 function createMarker({ geometry, map }) {
   const el = document.createElement("div");
   el.className = "marker-base carbon--tank";
+  el.style.transform = `scale(${map.getZoom() / 30})`;
 
   const marker = new mapboxgl.Marker({
     element: el,
     // draggable: true, clickTolerance: 10,
-    // scale: 0.5,
+    scale: 0.1,
   });
   marker.setLngLat(geometry.coordinates);
   marker.addTo(map);
+
+  // map.on("zoom", () => {
+  //   const zoom = map.getZoom();
+
+  //   // el.style.transform = `translate(516.75px, 219.133px) translate(-50%, -50%) translate(0px, 0px) scale(${zoom / 100})`;
+
+  //   // console.log(marker);
+  //   console.log("zoom", zoom);
+  // });
 
   return { marker, el };
 }

@@ -135,11 +135,14 @@ onMounted(() => {
 });
 
 const isCanCompare = computed(() => {
-  if (locationInfo.result !== null) return true;
+  if (!locationInfo.type) return true;
 
-  if (!locationInfo.type || locationInfo.result !== null) {
-    return true;
-  }
+  // if (locationInfo.result !== null) return true;
+
+  // 已校验过是否需要再校验
+  // if (!locationInfo.type || locationInfo.result !== null) {
+  //   return true;
+  // }
 
   return false;
 });
