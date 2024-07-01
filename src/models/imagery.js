@@ -79,6 +79,12 @@ export const useImageryStore = defineStore("imagery", {
       this.loMarkers.push(loMarker);
     },
 
+    updateCurMarkerId(id) {
+      if (this.curEditMarker) {
+        this.curEditMarker.id = id;
+      }
+    },
+
     removeMarker() {
       const cid = this.curEditMarker.cid;
       const index = this.loMarkers.findIndex((item) => item.cid === cid);
