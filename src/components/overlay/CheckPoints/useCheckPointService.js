@@ -7,6 +7,7 @@ import { toAbsoluteUrl } from "@/utils/url-utils.js";
 
 const useCheckPointService = () => {
   const checkPoints = ref(null);
+  const selectedId = ref(null);
   const mapStore = useMap();
 
   function initCheckPointSourceAndLayer() {
@@ -28,6 +29,10 @@ const useCheckPointService = () => {
               "EPSG:4326",
               feature.geometry.coordinates,
             );
+
+            // FIX: 后端返回的ID是表名加ID，不是number类型，mapbox无法识别
+            const idArr = feature.id.split(".");
+            feature.id = parseInt(idArr[1]);
           });
 
           delete epsg3857Data.crs;
@@ -62,6 +67,17 @@ const useCheckPointService = () => {
         "icon-size": 0.5,
       },
     });
+
+    map.addLayer({
+      id: "check-point-layer-highlight",
+      source: "check-points",
+      filter: ["==", ["id"], "point.5"],
+      type: "symbol",
+      layout: {
+        "icon-image": "check-point-highlight",
+        "icon-size": 0.5,
+      },
+    });
   }
 
   function removeCheckPointsDataAndSymbol() {
@@ -70,8 +86,24 @@ const useCheckPointService = () => {
       map.removeLayer("check-point-layer");
     }
 
+    if (map.getLayer("check-point-layer-highlight")) {
+      map.removeLayer("check-point-layer-highlight");
+    }
+
     if (map.getSource("check-points")) {
       map.removeSource("check-points");
+    }
+  }
+
+  function highlightCheckPointById(id) {
+    const map = toValue(mapStore.map);
+    const layer = map.getLayer("check-point-layer");
+    const highlightLayer = map.getLayer("check-point-layer-highlight");
+    if (highlightLayer) {
+      map.setFilter("check-point-layer-highlight", ["==", ["id"], id]);
+    }
+    if (layer) {
+      map.setFilter("check-point-layer", ["!=", ["id"], id]);
     }
   }
 
@@ -82,7 +114,7 @@ const useCheckPointService = () => {
         if (!mapStore.checkPointIconLoaded) {
           mapStore.map.loadImage(
             toAbsoluteUrl("./imgs/icons/check-point.png"),
-            function (error, image) {
+            (error, image) => {
               if (error) {
                 throw error;
               }
@@ -91,7 +123,14 @@ const useCheckPointService = () => {
               mapStore.checkPointIconLoaded = true;
 
               addCheckPointsDataAndSymbol();
-            }.bind(mapStore.map),
+            },
+          );
+
+          mapStore.map.loadImage(
+            toAbsoluteUrl("./imgs/icons/check-point-highlight.png"),
+            (error, image) => {
+              mapStore.map.addImage("check-point-highlight", image);
+            },
           );
         } else {
           addCheckPointsDataAndSymbol();
@@ -131,7 +170,9 @@ const useCheckPointService = () => {
   });
 
   return {
+    selectedId,
     checkPoints,
+    highlightCheckPointById,
   };
 };
 

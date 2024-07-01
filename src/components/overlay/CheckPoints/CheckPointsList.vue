@@ -11,7 +11,8 @@
     <div
       v-for="(item, index) in checkPoints?.features"
       :key="`${mapStore.zone}-check-points-${index}`"
-      class="check-points__list-item"
+      :class="['check-points__list-item', { selected: selectedId === item.id }]"
+      @click="() => highlightCheckPoint(item.id)"
     >
       <span class="check-points__list-item-icon">
         <i-mdi-circle-double />
@@ -30,7 +31,8 @@ import { useCheckPointService } from "./useCheckPointService.js";
 
 const mapStore = useMap();
 const mapperStore = useMapper();
-const { checkPoints } = useCheckPointService();
+const { selectedId, checkPoints, highlightCheckPointById } =
+  useCheckPointService();
 
 const selectedGroup = ref("all");
 const groups = ref([
@@ -39,6 +41,12 @@ const groups = ref([
     value: "all",
   },
 ]);
+
+function highlightCheckPoint(itemId) {
+  selectedId.value = itemId;
+
+  highlightCheckPointById(itemId);
+}
 </script>
 
 <style scoped lang="scss">
@@ -76,7 +84,11 @@ const groups = ref([
     font-size: 14px;
     cursor: pointer;
 
-    &:hover {
+    &.selected {
+      color: $primary_bg_color;
+    }
+
+    &:not(.selected):hover {
       color: $secondary_bg_color;
     }
 
