@@ -11,6 +11,7 @@
         v-for="item in loMarkers"
         :key="item"
         class="mb-2 cursor-pointer hover:bg-gray-600"
+        @click="imageryStore.flyToMarker(item.id)"
       >
         <ul>
           <li>

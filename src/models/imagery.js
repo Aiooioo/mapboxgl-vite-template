@@ -74,6 +74,13 @@ export const useImageryStore = defineStore("imagery", {
       }
     },
 
+    flyToMarker(id) {
+      const marker = this.loMarkers.find((item) => item.id === id);
+
+      if (!marker) return;
+      this.loMap.flyTo({ center: marker.centerGeometry.coordinates, zoom: 10 });
+    },
+
     addMarker({ id, centerGeometry, loGeometry, ...args }) {
       const map = this.loMap;
 
