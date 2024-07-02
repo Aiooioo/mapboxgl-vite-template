@@ -8,3 +8,8 @@ export const DefaultTextFillColor = "#D20C0C";
 export const DefaultTextFontSize = 16;
 export const DefaultTextHaloColor = "#fff";
 export const DefaultTextHaloSize = 2;
+
+export const DefaultPointColor = "#e5a746";
+export const DefaultPointSize = 5;
+export const DefaultPointStroke = "#fff";
+export const DefaultPointStrokeWidth = 2;

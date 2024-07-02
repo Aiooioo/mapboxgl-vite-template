@@ -77,6 +77,32 @@
         </div>
       </div>
     </template>
+    <template v-else-if="sketchStore.context.geometryType === 'point'">
+      <div class="feature-symbol__styler-color-row">
+        <div class="feature-symbol__styler-color-row-label">颜色</div>
+        <div class="feature-symbol__styler-color-row-value">
+          <div class="feature-symbol__styler-color-thumb">
+            <n-color-picker
+              v-model:value="pointSymbolStore.pointColor"
+              :modes="['rgb']"
+              :show-alpha="false"
+            ></n-color-picker>
+          </div>
+        </div>
+      </div>
+      <div class="feature-symbol__styler-color-row">
+        <div class="feature-symbol__styler-color-row-label">边框颜色</div>
+        <div class="feature-symbol__styler-color-row-value">
+          <div class="feature-symbol__styler-color-thumb">
+            <n-color-picker
+              v-model:value="pointSymbolStore.pointStrokeColor"
+              :modes="['rgb']"
+              :show-alpha="false"
+            ></n-color-picker>
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -84,6 +110,7 @@
 import { computed } from "vue";
 import { NColorPicker, NSlider } from "naive-ui";
 import {
+  usePointSymbol,
   useFillSymbol,
   useTextSymbol,
   useLineSymbol,
@@ -91,6 +118,7 @@ import {
 import { useSketch } from "@/models/sketch.js";
 
 const sketchStore = useSketch();
+const pointSymbolStore = usePointSymbol();
 const fillSymbolStore = useFillSymbol();
 const textSymbolStore = useTextSymbol();
 const lineSymbolStore = useLineSymbol();

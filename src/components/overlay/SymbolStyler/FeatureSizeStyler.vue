@@ -50,12 +50,26 @@
         </div>
       </div>
     </template>
+    <template v-else-if="sketchStore.context.geometryType === 'point'">
+      <div class="feature-symbol__styler-size-row">
+        <div class="feature-symbol__styler-size-row-label">点半径</div>
+        <div class="feature-symbol__styler-size-row-value">
+          <n-slider
+            v-model:value="pointSymbolStore.pointSize"
+            :min="1"
+            :max="10"
+            :step="1"
+          />
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup>
 import { NSlider } from "naive-ui";
 import {
+  usePointSymbol,
   useFillSymbol,
   useTextSymbol,
   useLineSymbol,
@@ -64,6 +78,7 @@ import { useSketch } from "@/models/sketch.js";
 import { computed } from "vue";
 
 const sketchStore = useSketch();
+const pointSymbolStore = usePointSymbol();
 const fillSymbolStore = useFillSymbol();
 const textSymbolStore = useTextSymbol();
 const lineSymbolStore = useLineSymbol();

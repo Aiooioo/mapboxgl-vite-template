@@ -2,6 +2,17 @@ import { defineStore } from "pinia";
 import { useSketch } from "./sketch.js";
 import * as defaults from "@/components/overlay/SymbolStyler/support/defaults.js";
 
+const usePointSymbol = defineStore("symbol-point", {
+  state() {
+    return {
+      pointColor: defaults.DefaultPointColor,
+      pointSize: defaults.DefaultPointSize,
+      pointStrokeColor: defaults.DefaultPointStroke,
+      pointStrokeWidth: defaults.DefaultPointStrokeWidth,
+    };
+  },
+});
+
 const useLineSymbol = defineStore("symbol-line", {
   state() {
     return {
@@ -54,7 +65,21 @@ const useSymbol = defineStore("symbol", {
         case "text": {
           return this.textSymbol;
         }
+        case "point": {
+          return this.pointSymbol;
+        }
       }
+    },
+
+    pointSymbol() {
+      const point = usePointSymbol();
+
+      return {
+        color: point.pointColor,
+        size: point.pointSize,
+        strokeColor: point.pointStrokeColor,
+        strokeWidth: point.pointStrokeWidth,
+      };
     },
 
     lineSymbol() {
@@ -90,4 +115,10 @@ const useSymbol = defineStore("symbol", {
   },
 });
 
-export { useSymbol, useTextSymbol, useFillSymbol, useLineSymbol };
+export {
+  useSymbol,
+  usePointSymbol,
+  useTextSymbol,
+  useFillSymbol,
+  useLineSymbol,
+};

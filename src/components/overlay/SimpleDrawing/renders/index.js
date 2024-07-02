@@ -12,6 +12,10 @@ import {
   generateLineSymbolLayers,
   updateLineSymbolPaint,
 } from "./render-line.js";
+import {
+  updatePointSymbolPaint,
+  generatePointSymbolLayers,
+} from "./render-point.js";
 
 function generateLayerSource(feature) {
   return {
@@ -49,6 +53,9 @@ export function generateLayerStyle(feature) {
     }
     case "text": {
       return generateTextSymbolLayers(layer, feature);
+    }
+    case "point": {
+      return generatePointSymbolLayers(layer, feature);
     }
   }
 
@@ -104,6 +111,8 @@ export function ensureDrawingFeatureLayerData(map, feature, featureProps) {
 }
 
 export function render2Map(map, feature, symbol) {
+  if (!symbol) return;
+
   switch (feature.properties.sketch) {
     case "rect":
     case "polygon":
@@ -118,6 +127,10 @@ export function render2Map(map, feature, symbol) {
     }
     case "text": {
       updateTextSymbolPaint(map, feature, symbol);
+      break;
+    }
+    case "point": {
+      updatePointSymbolPaint(map, feature, symbol);
       break;
     }
   }
