@@ -39,6 +39,8 @@ export function generateTextSymbolLayers(layer, feature) {
 }
 
 export function updateTextSymbolPaint(map, feature, symbolSettings) {
+  if (!symbolSettings) return;
+
   const symbolLayers = generateLayerStyle(feature);
 
   const textLayer = symbolLayers.find(

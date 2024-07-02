@@ -9,6 +9,10 @@ import path from "path";
 export default defineConfig({
   base: "./",
 
+  build: {
+    target: 'esnext',
+  },
+
   plugins: [
     vue(),
     Components({

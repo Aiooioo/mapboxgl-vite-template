@@ -16,8 +16,6 @@ const useSketch = defineStore("sketch", {
     return {
       currentStep: DefaultState.defaultStep,
       currentFeature: DefaultState.defaultFeature,
-
-      featureRemark: "",
     };
   },
 
@@ -53,16 +51,11 @@ const useSketch = defineStore("sketch", {
 
     exitSketch() {
       // reset
-      this.featureRemark = "";
       this.currentFeature = null;
       this.currentStep = 0;
     },
 
     saveAndExit() {
-      if (!this.featureRemark) {
-        this.currentFeature.properties.remark = this.featureRemark;
-      }
-
       this.exitSketch();
     },
 
@@ -73,10 +66,6 @@ const useSketch = defineStore("sketch", {
     },
 
     saveAndNext() {
-      if (!this.featureRemark) {
-        this.currentFeature.properties.remark = this.featureRemark;
-      }
-
       this.goToNextStep();
     },
   },

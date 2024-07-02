@@ -21,21 +21,18 @@ export async function getToken(): Promise<{
   if (typeof user === "object") {
     return { token, user };
   }
-  if (import.meta.env.DEV) {
-    const { username, password } = config.login;
-    return $login(
-      {
-        username,
-        password,
-      },
-      {
-        content: "获取开发模式token",
-      },
-    ).then(({ data }) => {
-      jsCookie.set("tk", data.token);
-      return getToken();
-    });
-  }
-  throw Error("token无效");
+
+  const { username, password } = config.login;
+  const { data } = await $login(
+    {
+      username,
+      password,
+    },
+    {
+      content: "获取开发模式token",
+    },
+  );
+  jsCookie.set("tk", data.token);
+  return getToken();
 }
 export const { token, user } = await getToken();

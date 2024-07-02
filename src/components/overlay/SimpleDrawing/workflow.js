@@ -22,7 +22,9 @@ export default function ($sketch, $feature, $symbol) {
       }),
       combineLatestWith($feature),
       tap(([{ map, feature }, featureProps]) => {
-        ensureDrawingFeatureLayerData(map, feature, featureProps);
+        if (featureProps && !featureProps.noop) {
+          ensureDrawingFeatureLayerData(map, feature, featureProps);
+        }
       }),
       combineLatestWith($symbol),
       tap(([[{ map, feature }, _], symbol]) => {

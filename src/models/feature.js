@@ -43,7 +43,7 @@ const useFeature = defineStore("feature", {
             return { remark: state.remark, ...state.textFeatureProps };
         }
       }
-      return { remark: state.remark };
+      return { noop: true };
     },
 
     textFeatureProps(state) {
