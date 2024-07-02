@@ -11,6 +11,18 @@ export const MARKER_TYPE_OPTS = [
 
 export const MARKER_STYLE_OPTS = [
   {
+    label: "汽车1",
+    value: "game-icons--f1-car",
+  },
+  {
+    label: "汽车2",
+    value: "hugeicons--car-03",
+  },
+  {
+    label: "汽车3",
+    value: "hugeicons--car-04",
+  },
+  {
     label: "坦克1",
     value: "carbon--tank",
   },
