@@ -11,7 +11,11 @@ export function hasNextStep(ctx) {
   return true;
 }
 
-export default function ($sketch, $feature, $symbol) {
+export function disposeWorkflow() {
+
+}
+
+export function setupWorkflow($sketch, $feature, $symbol) {
   $sketch
     .pipe(
       filter((x) => x != null),

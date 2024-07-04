@@ -90,14 +90,14 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
+import { computed, watch, onUnmounted } from "vue";
 import FeatureEditor from "@/components/overlay/SimpleDrawing/FeatureEditor.vue";
 import FeatureStyler from "@/components/overlay/SymbolStyler/FeatureStyler.vue";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
 import { useSketch } from "@/models/sketch.js";
 import { useFeatureProps } from "./useFeatureProps.js";
 import { useFeatureStyler } from "../SymbolStyler/useFeatureStyler.js";
-import setupWorkflow from "./workflow.js";
+import { setupWorkflow, disposeWorkflow } from "./workflow.js";
 
 const sketchStore = useSketch();
 
@@ -147,6 +147,10 @@ watch(completeFeature, (value) => {
   if (value) {
     sketchStore.onCompleteDrawFeature(value);
   }
+});
+
+onUnmounted(() => {
+  disposeWorkflow();
 });
 </script>
 
