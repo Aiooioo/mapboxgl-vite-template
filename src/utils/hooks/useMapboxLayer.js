@@ -6,44 +6,59 @@ const useMapboxLayer = (item) => {
   const layerRef = ref(null);
   const mapStore = useMap();
 
-  function addToMap() {
-    if (!mapStore.map) return;
-
+  function addToMap(info) {
     const map = mapStore.map;
+    if (!map) return;
 
-    map.addSource("wms-source", {
-      type: "raster",
-      tiles: [
-        "http://192.168.0.239:8080/geoserver/gwc/service/wmts?layer=whgis%3Acar&style=&tilematrixset=WebMercatorQuad&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}",
-        // "http://192.168.0.239:8080/geoserver/gwc/service/wmts?layer=whgis%3Acar&style=&tilematrixset=WebMercatorQuad&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix=22&TileCol=3426017&TileRow=1826204",
-      ],
-      tileSize: 256,
-    });
-    map.addLayer({
-      id: "wms-layer",
-      type: "raster",
-      source: "wms-source",
-      paint: {
-        "raster-opacity": 0.9,
-      },
-    });
+    // console.log("add to map--info", info);
+
+    map.addLayer(info);
+
+    // map.addLayer({
+    //   id: "wms-layer",
+    //   type: "raster",
+    //   source: {
+    //     type: "raster",
+    //     tiles: [
+    //       // "http://192.168.0.239:8080/geoserver/gwc/service/wmts?layer=whgis%3Acar&style=&tilematrixset=WebMercatorQuad&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}",
+    //       "https://whps.gis.test/geoserver/gwc/service/wmts?layer=whgis%3Acar&style=&tilematrixset=WebMercatorQuad&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}",
+    //     ],
+    //     tileSize: 256,
+    //   },
+    //   paint: {
+    //     "raster-opacity": 0.9,
+    //   },
+    // });
+
+    // map.addLayer({
+    //   id: "wms-test-layer",
+    //   type: "raster",
+    //   source: {
+    //     type: "raster",
+    //     tiles: [
+    //       "https://whps.gis.test/geoserver/whgis/wms?service=WMS&version=1.1.0&request=GetMap&layers=whgis%3Acar_target&bbox={bbox-epsg-3857}&width=663&height=768&srs=EPSG%3A3857&styles=&format=image/png&transparent=true",
+    //     ],
+    //     tileSize: 256,
+    //   },
+    //   paint: {},
+    // });
   }
 
-  function toogelLayerVisibility(isVisiable) {
-    if (!mapStore.map) return;
-
+  function toogelLayerVisibility(isVisiable, info) {
     const map = mapStore.map;
+    if (!map) return;
 
-    const source = map.getSource("wms-source");
+    const layerId = info.id;
+    const source = map.getSource(layerId);
 
     if (source) {
       map.setLayoutProperty(
-        "wms-layer",
+        layerId,
         "visibility",
         isVisiable ? "visible" : "none"
       );
     } else {
-      addToMap();
+      addToMap(info);
     }
   }
 
@@ -52,12 +67,11 @@ const useMapboxLayer = (item) => {
 
     const map = mapStore.map;
 
-    map.setLayoutProperty("wms-layer", "visibility", "none");
+    // map.setLayoutProperty("wms-layer", "visibility", "none"); // hide layer
   }
 
   function onMapReady() {
     //
-    addToMap();
   }
 
   watch(() => !!mapStore.ready, onMapReady, {

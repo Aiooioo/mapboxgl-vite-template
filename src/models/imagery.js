@@ -159,7 +159,7 @@ export const useImageryStore = defineStore("imagery", {
     addPoint(geometry) {
       const id = nanoid();
       const point = turf.point(geometry.coordinates);
-      const feature = turf.buffer(point, 0.01, { units: "miles" });
+      const feature = turf.buffer(point, 0.002, { units: "miles" });
       feature.id = id;
 
       this.imagerGeojson.features.push(feature);

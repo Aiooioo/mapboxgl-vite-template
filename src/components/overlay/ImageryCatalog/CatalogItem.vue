@@ -1,25 +1,63 @@
 <template>
-  <div class="imagery-catalog__item">
-    <div class="imagery-catalog__item-check">
-      <input type="checkbox" v-model="added" @change="handleItemAddRemove" />
-    </div>
-    <div class="imagery-catalog__item-label">{{ props.item.label }}</div>
+  <div class="imagery-catalog__item flex items-center justify-between">
+    <n-checkbox
+      size="small"
+      :checked="originChecked"
+      @update:checked="handleCheckedOrigin"
+    >
+      <span class="text-[12px] text-gray-400">
+        {{ item.label }}
+      </span>
+    </n-checkbox>
+
+    <n-tooltip trigger="hover">
+      <template #trigger>
+        <n-button quaternary circle size="small">
+          <template #icon>
+            <i-mdi-help-circle-outline />
+          </template>
+        </n-button>
+      </template>
+
+      <n-checkbox
+        size="small"
+        :checked="resultChecked"
+        @update:checked="handleCheckedResult"
+      >
+        查看影像已识别结果
+      </n-checkbox>
+    </n-tooltip>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import { NCheckbox, NTooltip, NButton } from "naive-ui";
 import { useMapboxLayer } from "@/utils/hooks/useMapboxLayer.js";
 
 const props = defineProps({
   item: {},
 });
-const added = ref(false);
+
+const originChecked = ref(false);
+const resultChecked = ref(false);
 
 const { toogelLayerVisibility } = useMapboxLayer(props.item);
 
-function handleItemAddRemove() {
-  toogelLayerVisibility(added.value);
+// 原始影像
+function handleCheckedOrigin(checked) {
+  originChecked.value = checked;
+
+  // console.log(props.item);
+
+  toogelLayerVisibility(checked, props.item.origin);
+}
+
+// 已识别结果
+function handleCheckedResult(checked) {
+  resultChecked.value = checked;
+
+  toogelLayerVisibility(checked, props.item.result);
 }
 </script>
 
