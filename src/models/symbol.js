@@ -29,6 +29,7 @@ const useTextSymbol = defineStore("symbol-text", {
       fontSize: defaults.DefaultTextFontSize,
       haloColor: defaults.DefaultTextHaloColor,
       haloSize: defaults.DefaultTextHaloSize,
+      textRotate: defaults.DefaultTextRotateDegree,
     };
   },
 });
@@ -110,6 +111,7 @@ const useSymbol = defineStore("symbol", {
         fontSize: text.fontSize,
         haloColor: text.haloColor,
         haloSize: text.haloSize,
+        rotate: text.textRotate,
       };
     },
   },

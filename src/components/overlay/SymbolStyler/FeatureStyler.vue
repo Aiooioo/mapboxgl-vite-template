@@ -24,6 +24,7 @@
         </div>
 
         <div
+          v-if="canBeRotated"
           :class="[
             'feature-symbol__styler-type',
             { selected: currentType === 'rotate' },
@@ -41,15 +42,20 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import FeatureColorStyler from "@/components/overlay/SymbolStyler/FeatureColorStyler.vue";
 import FeatureSizeStyler from "@/components/overlay/SymbolStyler/FeatureSizeStyler.vue";
 import FeatureRotateStyler from "@/components/overlay/SymbolStyler/FeatureRotateStyler.vue";
 import { useSymbol } from "@/models/symbol.js";
+import { useSketch } from "@/models/sketch.js";
 
+const sketchStore = useSketch();
 const symbolStore = useSymbol();
 
 const currentType = ref("color");
+const canBeRotated = computed(() => {
+  return sketchStore.context.geometryType === "text";
+});
 
 const editors = {
   color: FeatureColorStyler,

@@ -5,6 +5,7 @@
         'mapbox-viewer__basemap-item',
         { selected: mapStore.currentBasemapId === 'arcgis-imagery' },
       ]"
+      @click="() => mapStore.switchBasemap('arcgis-imagery')"
     >
       <img alt="" :src="'./imgs/basemap-arcgis.png'" />
       <span class="mapbox-viewer__basemap-item-overlay">
@@ -16,6 +17,7 @@
         'mapbox-viewer__basemap-item',
         { selected: mapStore.currentBasemapId === 'topo' },
       ]"
+      @click="() => mapStore.switchBasemap('topo')"
     >
       <img alt="" :src="'./imgs/basemap-topo.png'" />
       <span class="mapbox-viewer__basemap-item-overlay">
@@ -27,6 +29,7 @@
         'mapbox-viewer__basemap-item',
         { selected: mapStore.currentBasemapId === 'cover' },
       ]"
+      @click="() => mapStore.switchBasemap('cover')"
     >
       <img alt="" :src="'./imgs/terrain.jpg'" />
       <span class="mapbox-viewer__basemap-item-overlay">
@@ -38,6 +41,7 @@
         'mapbox-viewer__basemap-item',
         { selected: mapStore.currentBasemapId === 'road' },
       ]"
+      @click="() => mapStore.switchBasemap('road')"
     >
       <img alt="" :src="'./imgs/streets-navigation.jpg'" />
       <span class="mapbox-viewer__basemap-item-overlay">

@@ -9,6 +9,7 @@ export function generateTextSymbolLayers(layer, feature) {
   layer.layout = {
     "text-field": ["get", "text"],
     "text-size": defaults.DefaultTextFontSize,
+    "text-rotate": defaults.DefaultTextRotateDegree,
   };
   layer.paint = {
     "text-color": defaults.DefaultTextFillColor,
@@ -60,6 +61,7 @@ export function updateTextSymbolPaint(map, feature, symbolSettings) {
       symbolSettings.haloSize,
     );
 
+    map.setLayoutProperty(textLayer.id, "text-rotate", symbolSettings.rotate);
     map.setLayoutProperty(textLayer.id, "text-size", symbolSettings.fontSize);
   }
 }
