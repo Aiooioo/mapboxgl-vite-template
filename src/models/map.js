@@ -30,6 +30,12 @@ const useMap = defineStore("map", {
       this.ready = true;
     },
 
+    switchBasemap(basemapId) {
+      this.currentBasemapId = basemapId;
+
+
+    },
+
     switchActiveTool(toolName) {
       this.activeBar = toolName;
     },
