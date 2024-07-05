@@ -11,7 +11,12 @@
     <div class="route-planning-view__editor-row">
       <span class="route-planning-view__editor-row-label">任务名称</span>
       <span class="route-planning-view__editor-row-wrapper">
-        <n-input round size="small" placeholder="请输入定向越野任务标识" />
+        <n-input
+          v-model:value="taskName"
+          round
+          size="small"
+          placeholder="请输入定向越野任务标识"
+        />
       </span>
     </div>
     <div class="route-planning-view__editor-row">
@@ -70,7 +75,9 @@
           >
         </span>
       </span>
-      <span class="route-planning-view__editor-row-wrapper"> </span>
+      <span class="route-planning-view__editor-row-wrapper">
+        <RouteCheckPointsList :route-name="taskName" />
+      </span>
     </div>
 
     <div class="route-planning-view__editor-row">
@@ -82,6 +89,7 @@
               'route-planning-view__editor-rate very-easy',
               { selected: singleDifficulty === 'very-easy' },
             ]"
+            @click="() => (singleDifficulty = 'very-easy')"
           >
             <span class="route-planning-view__editor-rate-inner">非常简单</span>
           </span>
@@ -90,29 +98,28 @@
               'route-planning-view__editor-rate easy',
               { selected: singleDifficulty === 'easy' },
             ]"
+            @click="() => (singleDifficulty = 'easy')"
           >
-            <span class="route-planning-view__editor-rate-inner"
-              >简单</span
-            ></span
-          >
+            <span class="route-planning-view__editor-rate-inner">简单</span>
+          </span>
           <span
             :class="[
               'route-planning-view__editor-rate medium',
               { selected: singleDifficulty === 'medium' },
             ]"
-            ><span class="route-planning-view__editor-rate-inner"
-              >中等</span
-            ></span
+            @click="() => (singleDifficulty = 'medium')"
           >
+            <span class="route-planning-view__editor-rate-inner">中等</span>
+          </span>
           <span
             :class="[
               'route-planning-view__editor-rate hard',
               { selected: singleDifficulty === 'hard' },
             ]"
-            ><span class="route-planning-view__editor-rate-inner"
-              >困难</span
-            ></span
+            @click="() => (singleDifficulty = 'hard')"
           >
+            <span class="route-planning-view__editor-rate-inner">困难</span>
+          </span>
         </span>
       </span>
     </div>
@@ -123,6 +130,7 @@
 import { ref, watch, toValue } from "vue";
 import { NInput, NRadioGroup, NRadio, NRate } from "naive-ui";
 import RoutePointSelect from "./RoutePointSelect.vue";
+import RouteCheckPointsList from "./RouteCheckPointsList.vue";
 import { useMap } from "@/models/map.js";
 import { useMapper } from "@/models/mapper.js";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
@@ -132,7 +140,9 @@ import {
   renderEndPointSymbol,
   clearEndPointSymbol,
 } from "./utils/render-start-end.js";
+import { useRouteCheckPoints } from "./useRouteCheckPoints.js";
 
+const taskName = ref("");
 const singleDifficulty = ref("medium");
 const routeLineMode = ref("manual");
 const selectedStart = ref(null);
@@ -142,6 +152,7 @@ const { createPoint, completeFeature } = useMapboxSketch();
 
 const mapStore = useMap();
 const mapperStore = useMapper();
+const { checkPoints, removeCheckPointAt } = useRouteCheckPoints();
 
 function switchRouteLineMode(mode) {
   routeLineMode.value = mode;

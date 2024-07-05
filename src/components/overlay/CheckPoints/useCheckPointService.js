@@ -6,6 +6,9 @@ import { useMap } from "@/models/map.js";
 import { request } from "@/utils/api/request.ts";
 import { toAbsoluteUrl } from "@/utils/url-utils.js";
 
+export const LAYER_CHECK_POINT = "check-point-layer";
+export const LAYER_CHECK_POINT_HIGHLIGHT = "check-point-layer-highlight";
+
 const useCheckPointService = () => {
   const checkPoints = ref(null);
   const selectedId = ref(null);
@@ -78,7 +81,7 @@ const useCheckPointService = () => {
     });
 
     map.addLayer({
-      id: "check-point-layer",
+      id: LAYER_CHECK_POINT,
       source: "check-points",
       // type: "circle",
       // paint: {
@@ -93,7 +96,7 @@ const useCheckPointService = () => {
     });
 
     map.addLayer({
-      id: "check-point-layer-highlight",
+      id: LAYER_CHECK_POINT_HIGHLIGHT,
       source: "check-points",
       filter: ["==", ["id"], "point.5"],
       type: "symbol",
@@ -138,26 +141,35 @@ const useCheckPointService = () => {
     (value) => {
       if (value) {
         if (!mapStore.checkPointIconLoaded) {
-          mapStore.map.loadImage(
-            toAbsoluteUrl("./imgs/icons/check-point.png"),
-            (error, image) => {
-              if (error) {
-                throw error;
-              }
-
-              mapStore.map.addImage("check-point", image);
-              mapStore.checkPointIconLoaded = true;
-
-              addCheckPointsDataAndSymbol();
+          const images2Load = [
+            { key: "check-point", url: "./imgs/icons/check-point.png" },
+            {
+              key: "check-point-highlight",
+              url: "./imgs/icons/check-point-highlight.png",
             },
-          );
-
-          mapStore.map.loadImage(
-            toAbsoluteUrl("./imgs/icons/check-point-highlight.png"),
-            (error, image) => {
-              mapStore.map.addImage("check-point-highlight", image);
+            {
+              key: "check-point-selected",
+              url: "./imgs/icons/check-point-online.png",
             },
-          );
+          ];
+
+          Promise.all(
+            images2Load.map((img) => {
+              return new Promise((res) => {
+                mapStore.map.loadImage(
+                  toAbsoluteUrl(img.url),
+                  (error, image) => {
+                    mapStore.map.addImage(img.key, image);
+                    res();
+                  },
+                );
+              });
+            }),
+          ).then(() => {
+            mapStore.checkPointIconLoaded = true;
+
+            addCheckPointsDataAndSymbol();
+          });
         } else {
           addCheckPointsDataAndSymbol();
         }
