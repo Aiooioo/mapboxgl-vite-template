@@ -22,14 +22,14 @@ export default {
 
         basemapSources[layerSrcId] = layerSrc.layer;
 
-        if (
-          !!cfg.default &&
-          !_.find(basemapLayers, (l) => l.id === layerSrcId)
-        ) {
+        if (!_.find(basemapLayers, (l) => l.id === layerSrcId)) {
           basemapLayers.push({
             id: layerSrc.key,
             type: layerSrc.layer.type,
             source: layerSrcId,
+            layout: {
+              visibility: !!cfg.default ? "visible" : "none",
+            },
           });
         }
       });

@@ -85,6 +85,13 @@ export default {
           tiles: [agolImageryWmtsUrl],
           tileSize: 256,
         };
+      case "ArcGIS-World-Basemap-V2":
+        return {
+          type: "vector",
+          tiles: [
+            "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer/tile/{z}/{y}/{x}.pbf",
+          ],
+        };
       default:
         break;
     }

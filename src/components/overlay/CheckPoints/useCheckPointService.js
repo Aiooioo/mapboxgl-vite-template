@@ -1,6 +1,7 @@
 import { ref, watch, toValue, onMounted, onUnmounted } from "vue";
 import _ from "lodash";
 import proj4 from "proj4";
+import * as mapboxgl from "mapbox-gl";
 import { useMap } from "@/models/map.js";
 import { request } from "@/utils/api/request.ts";
 import { toAbsoluteUrl } from "@/utils/url-utils.js";
@@ -46,6 +47,29 @@ const useCheckPointService = () => {
     loadCheckPoints();
   }
 
+  function fitBoundsToCheckPoints() {
+    const map = toValue(mapStore.map);
+
+    if (checkPoints.value) {
+      const features = checkPoints.value.features;
+      if (features && features.length > 0) {
+        const first = features[0];
+        const bounds = new mapboxgl.LngLatBounds(
+          first.geometry.coordinates,
+          first.geometry.coordinates,
+        );
+
+        _.each(features, (ft) => {
+          bounds.extend(ft.geometry.coordinates);
+        });
+
+        map.fitBounds(bounds, {
+          padding: 80,
+        });
+      }
+    }
+  }
+
   function addCheckPointsDataAndSymbol() {
     const map = toValue(mapStore.map);
     map.addSource("check-points", {
@@ -78,6 +102,8 @@ const useCheckPointService = () => {
         "icon-size": 0.5,
       },
     });
+
+    fitBoundsToCheckPoints();
   }
 
   function removeCheckPointsDataAndSymbol() {

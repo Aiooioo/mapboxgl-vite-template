@@ -9,34 +9,183 @@
       </span>
     </div>
     <div class="route-planning-view__editor-row">
-      <span class="route-planning-view__editor-row-label">线路名称</span>
+      <span class="route-planning-view__editor-row-label">任务名称</span>
       <span class="route-planning-view__editor-row-wrapper">
-        <n-input round size="small" placeholder="请输入线路标识" />
+        <n-input round size="small" placeholder="请输入定向越野任务标识" />
       </span>
     </div>
     <div class="route-planning-view__editor-row">
-      <span class="route-planning-view__editor-row-label">途经点</span>
+      <span class="route-planning-view__editor-row-label">任务起点</span>
       <span class="route-planning-view__editor-row-wrapper">
-        <n-radio-group size="small">
-          <n-radio>手动选取</n-radio>
-          <n-radio>随机选取</n-radio>
-        </n-radio-group>
+        <img
+          alt=""
+          :src="'./imgs/icons/start-point.png'"
+          height="24"
+          width="24"
+        />
+        <RoutePointSelect
+          style="flex: 1; margin-left: 10px"
+          :point="selectedStart"
+          @select="beginSelectStart"
+          @clear="clearSelectedStart"
+        />
       </span>
     </div>
+    <div class="route-planning-view__editor-row">
+      <span class="route-planning-view__editor-row-label">任务终点</span>
+      <span class="route-planning-view__editor-row-wrapper">
+        <img
+          alt=""
+          :src="'./imgs/icons/end-point.png'"
+          height="24"
+          width="24"
+        />
+        <RoutePointSelect
+          style="flex: 1; margin-left: 10px"
+          :point="selectedEnd"
+          @select="beginSelectEnd"
+          @clear="clearSelectedEnd"
+        />
+      </span>
+    </div>
+    <div class="route-planning-view__editor-row">
+      <span class="route-planning-view__editor-row-label flex justify-between">
+        <strong>线路规划</strong>
+        <span class="route-planning-view__editor-modes">
+          <span
+            :class="[
+              'route-planning-view__editor-mode',
+              { selected: routeLineMode === 'manual' },
+            ]"
+            @click="() => switchRouteLineMode('manual')"
+            >手动</span
+          >
+          <span
+            :class="[
+              'route-planning-view__editor-mode',
+              { selected: routeLineMode === 'auto' },
+            ]"
+            @click="() => switchRouteLineMode('auto')"
+            >自动</span
+          >
+        </span>
+      </span>
+      <span class="route-planning-view__editor-row-wrapper"> </span>
+    </div>
+
     <div class="route-planning-view__editor-row">
       <span class="route-planning-view__editor-row-label">路线难度</span>
       <span class="route-planning-view__editor-row-wrapper">
-        <n-rate size="small" />
+        <span class="route-planning-view__editor-rates">
+          <span
+            :class="[
+              'route-planning-view__editor-rate very-easy',
+              { selected: singleDifficulty === 'very-easy' },
+            ]"
+          >
+            <span class="route-planning-view__editor-rate-inner">非常简单</span>
+          </span>
+          <span
+            :class="[
+              'route-planning-view__editor-rate easy',
+              { selected: singleDifficulty === 'easy' },
+            ]"
+          >
+            <span class="route-planning-view__editor-rate-inner"
+              >简单</span
+            ></span
+          >
+          <span
+            :class="[
+              'route-planning-view__editor-rate medium',
+              { selected: singleDifficulty === 'medium' },
+            ]"
+            ><span class="route-planning-view__editor-rate-inner"
+              >中等</span
+            ></span
+          >
+          <span
+            :class="[
+              'route-planning-view__editor-rate hard',
+              { selected: singleDifficulty === 'hard' },
+            ]"
+            ><span class="route-planning-view__editor-rate-inner"
+              >困难</span
+            ></span
+          >
+        </span>
       </span>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref, watch, toValue } from "vue";
 import { NInput, NRadioGroup, NRadio, NRate } from "naive-ui";
+import RoutePointSelect from "./RoutePointSelect.vue";
+import { useMap } from "@/models/map.js";
 import { useMapper } from "@/models/mapper.js";
+import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
+import {
+  renderStartPointSymbol,
+  clearStartPointSymbol,
+  renderEndPointSymbol,
+  clearEndPointSymbol,
+} from "./utils/render-start-end.js";
 
+const singleDifficulty = ref("medium");
+const routeLineMode = ref("manual");
+const selectedStart = ref(null);
+const selectedEnd = ref(null);
+const currentSelectionPoint = ref("");
+const { createPoint, completeFeature } = useMapboxSketch();
+
+const mapStore = useMap();
 const mapperStore = useMapper();
+
+function switchRouteLineMode(mode) {
+  routeLineMode.value = mode;
+}
+
+function beginSelectStart() {
+  currentSelectionPoint.value = "start";
+
+  createPoint();
+}
+
+function clearSelectedStart() {
+  selectedStart.value = null;
+
+  clearStartPointSymbol(toValue(mapStore.map));
+}
+
+function beginSelectEnd() {
+  currentSelectionPoint.value = "end";
+
+  createPoint();
+}
+
+function clearSelectedEnd() {
+  selectedEnd.value = null;
+
+  clearEndPointSymbol(toValue(mapStore.map));
+}
+
+watch(completeFeature, (value) => {
+  if (value) {
+    if (currentSelectionPoint.value === "start") {
+      selectedStart.value = value;
+
+      renderStartPointSymbol(toValue(mapStore.map), value);
+    } else if (currentSelectionPoint.value === "end") {
+      selectedEnd.value = value;
+
+      renderEndPointSymbol(toValue(mapStore.map), value);
+    }
+
+    currentSelectionPoint.value = "";
+  }
+});
 </script>
 
 <style scoped lang="scss">
@@ -56,6 +205,70 @@ const mapperStore = useMapper();
     grid-template-columns: 18px 1fr;
   }
 
+  &-modes {
+    width: 80px;
+    height: 24px;
+    border-radius: 4px;
+    background: $minor_bg_color;
+    display: flex;
+    color: $primary_text_color;
+    font-size: 12px;
+    overflow: hidden;
+  }
+  &-mode {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    &.selected {
+      background: $secondary_bg_color;
+    }
+  }
+
+  &-rates {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  &-rate {
+    height: 32px;
+    width: 72px;
+    display: flex;
+    border: 2px solid transparent;
+    color: #121212;
+    font-size: 12px;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &-inner {
+      flex: 1;
+      margin: 2px;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &.very-easy &-inner {
+      background: white;
+    }
+    &.easy &-inner {
+      background: #ffff00;
+    }
+    &.medium &-inner {
+      background: #ed7d31;
+    }
+    &.hard &-inner {
+      background: #7f6000;
+    }
+
+    &.selected {
+      border-color: $primary_bg_color;
+    }
+  }
+
   &-row {
     padding: 0 6px;
     display: flex;
@@ -67,10 +280,13 @@ const mapperStore = useMapper();
       margin-bottom: 4px;
       font-size: 13px;
       color: $primary_text_color;
-      font-weight: 600;
+      font-weight: 500;
     }
 
     &-wrapper {
+      display: flex;
+      align-items: center;
+
       :global(.n-input),
       :global(.n-radio-group) {
         font-size: 13px;
