@@ -8,6 +8,8 @@ import { toAbsoluteUrl } from "@/utils/url-utils.js";
 
 export const LAYER_CHECK_POINT = "check-point-layer";
 export const LAYER_CHECK_POINT_HIGHLIGHT = "check-point-layer-highlight";
+export const LAYER_CHECK_POINT_SELECTION_HIGHLIGHT =
+  "check-point-layer-selection-highlight";
 
 const useCheckPointService = () => {
   const checkPoints = ref(null);
@@ -106,17 +108,32 @@ const useCheckPointService = () => {
       },
     });
 
+    map.addLayer({
+      id: LAYER_CHECK_POINT_SELECTION_HIGHLIGHT,
+      source: "check-points",
+      filter: ["==", ["id"], "point.5"],
+      type: "symbol",
+      layout: {
+        "icon-image": "check-point-selected",
+        "icon-size": 0.5,
+      },
+    });
+
     fitBoundsToCheckPoints();
   }
 
   function removeCheckPointsDataAndSymbol() {
     const map = toValue(mapStore.map);
-    if (map.getLayer("check-point-layer")) {
-      map.removeLayer("check-point-layer");
+    if (map.getLayer(LAYER_CHECK_POINT)) {
+      map.removeLayer(LAYER_CHECK_POINT);
     }
 
-    if (map.getLayer("check-point-layer-highlight")) {
-      map.removeLayer("check-point-layer-highlight");
+    if (map.getLayer(LAYER_CHECK_POINT_HIGHLIGHT)) {
+      map.removeLayer(LAYER_CHECK_POINT_HIGHLIGHT);
+    }
+
+    if (map.getLayer(LAYER_CHECK_POINT_SELECTION_HIGHLIGHT)) {
+      map.removeLayer(LAYER_CHECK_POINT_SELECTION_HIGHLIGHT);
     }
 
     if (map.getSource("check-points")) {
@@ -126,13 +143,13 @@ const useCheckPointService = () => {
 
   function highlightCheckPointById(id) {
     const map = toValue(mapStore.map);
-    const layer = map.getLayer("check-point-layer");
-    const highlightLayer = map.getLayer("check-point-layer-highlight");
+    const layer = map.getLayer(LAYER_CHECK_POINT);
+    const highlightLayer = map.getLayer(LAYER_CHECK_POINT_HIGHLIGHT);
     if (highlightLayer) {
-      map.setFilter("check-point-layer-highlight", ["==", ["id"], id]);
+      map.setFilter(LAYER_CHECK_POINT_HIGHLIGHT, ["==", ["id"], id]);
     }
     if (layer) {
-      map.setFilter("check-point-layer", ["!=", ["id"], id]);
+      map.setFilter(LAYER_CHECK_POINT, ["!=", ["id"], id]);
     }
   }
 
