@@ -10,7 +10,7 @@
       </span>
     </n-checkbox>
 
-    <n-tooltip trigger="hover">
+    <n-popover trigger="hover" placement="right">
       <template #trigger>
         <n-button quaternary circle size="small">
           <template #icon>
@@ -26,13 +26,13 @@
       >
         查看影像已识别结果
       </n-checkbox>
-    </n-tooltip>
+    </n-popover>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { NCheckbox, NTooltip, NButton } from "naive-ui";
+import { NCheckbox, NPopover, NButton } from "naive-ui";
 import { useMapboxLayer } from "@/utils/hooks/useMapboxLayer.js";
 
 const props = defineProps({

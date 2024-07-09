@@ -33,8 +33,9 @@
         type="warning"
         :disabled="isCanCompare"
         @click="handleCompare"
+        v-show="locationInfo.result === undefined"
       >
-        验证地物判读结果
+        验证
       </n-button>
 
       <n-button
@@ -58,12 +59,12 @@
             v-if="locationInfo.result === 1"
           >
             <i-gg-check-o />
-            正确
+            <span>地物判读结果正确</span>
           </div>
 
           <div class="flex gap-1 items-center justify-center" v-else>
             <i-codicon-error />
-            错误
+            <span>地物判读结果错误</span>
           </div>
         </template>
       </n-tag>
@@ -103,7 +104,7 @@ import * as turf from "@turf/turf";
 import { MARKER_TYPE_OPTS, MARKER_STYLE_OPTS } from "./conf";
 
 const imageryStore = useImageryStore();
-const { changeMarkerType, changeMarkerStyle, removeMarker, updateCurMarkerId } =
+const { changeMarkerType, changeMarkerStyle, removeMarker, updateCurMarker } =
   imageryStore;
 
 const locationInfo = reactive({
@@ -203,7 +204,14 @@ const handleCompare = async () => {
   console.log("$comparePlot--res", res);
 
   if (res.code === 200) {
-    locationInfo.result = res.data[0].result;
+    const { id, result } = res.data[0];
+    const params = {
+      id,
+      result,
+    };
+    updateCurMarker(params);
+
+    locationInfo.result = result;
   }
 };
 
@@ -232,7 +240,7 @@ const handleSave = async () => {
   console.log("$createPlot--res", res);
 
   if (res.code === 200) {
-    updateCurMarkerId(res.data.id);
+    updateCurMarker(res.data.id);
   }
 };
 
