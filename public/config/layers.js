@@ -12,7 +12,8 @@
               type: "raster",
               tiles: [
                 // "http://192.168.0.239:8080/geoserver/gwc/service/wmts?layer=whgis%3Acar&style=&tilematrixset=WebMercatorQuad&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}",
-                "https://whps.gis.test/geoserver/gwc/service/wmts?layer=whgis%3Acar&style=&tilematrixset=WebMercatorQuad&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}",
+                // "https://whps.gis.test/geoserver/gwc/service/wmts?layer=whgis%3Acar&style=&tilematrixset=WebMercatorQuad&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}",
+                "https://whps.gis.test/geoserver/gwc/service/wmts?layer=whgis%3Acar&style=&tilematrixset=EPSG%3A3857&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix=EPSG%3A3857%3A18&TileCol={x}&TileRow={y}",
               ],
               tileSize: 256,
             },
