@@ -5,13 +5,29 @@ import { LAYER_CHECK_POINT } from "../../CheckPoints/useCheckPointService.js";
 export const DATA_SOURCE_ROUTE_LINE = "data-source-route-line";
 export const LAYER_ROUTE_LINE = "layer-route-line";
 
-let speedFactor = 30;
+let speedFactor = 1500;
 let animation;
+let totalDistance;
+let totalLine;
 let startTime = 0;
 let progress = 0;
 let resetTime = false;
+let globalMap;
 
-export function clearAndStopAnimation() {}
+export function clearAndStopAnimation() {
+  if (animation) {
+    cancelAnimationFrame(animation);
+  }
+
+  animation = null;
+  totalLine = null;
+  totalDistance = null;
+  startTime = 0;
+  progress = 0;
+  resetTime = false;
+
+  globalMap = null;
+}
 
 export function prepareAnimationLineSource(map) {
   map.addSource(DATA_SOURCE_ROUTE_LINE, {
@@ -56,10 +72,29 @@ function doAnimate(timestamp) {
     startTime = performance.now() - progress;
     resetTime = false;
   } else {
-    progress = timestamp - startTime;
+    progress = timestamp ? timestamp - startTime : 0;
   }
 
-  animation = requestAnimationFrame(doAnimate);
+  const x = progress / speedFactor;
+  if (x <= 1) {
+    const len = x * totalDistance;
+
+    if (len > 0) {
+      const curr = turf.lineSliceAlong(totalLine, 0, len, {
+        units: "kilometers",
+      });
+
+      const layerSrc = globalMap.getSource(DATA_SOURCE_ROUTE_LINE);
+      if (layerSrc) {
+        layerSrc.setData({
+          type: "FeatureCollection",
+          features: [curr],
+        });
+      }
+    }
+
+    animation = requestAnimationFrame(doAnimate);
+  }
 }
 
 export function animateLineSymbol(map, startPoint, endPoint, checkPoints) {
@@ -71,15 +106,12 @@ export function animateLineSymbol(map, startPoint, endPoint, checkPoints) {
     endPoint.geometry.coordinates,
   ]);
 
+  totalLine = line;
+  totalDistance = turf.length(line);
+
   startTime = performance.now();
 
-  doAnimate();
+  globalMap = map;
 
-  const layerSrc = map.getSource(DATA_SOURCE_ROUTE_LINE);
-  if (layerSrc) {
-    layerSrc.setData({
-      type: "FeatureCollection",
-      features: [line],
-    });
-  }
+  doAnimate();
 }

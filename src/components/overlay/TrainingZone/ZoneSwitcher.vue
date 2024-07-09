@@ -11,17 +11,17 @@
         </span>
       </div>
       <div
-        v-for="(item, index) in zones"
+        v-for="(item, index) in list"
         :key="`zone-item-${index}`"
-        :class="['app-zone__switcher-item', { active: zone === item }]"
+        :class="['app-zone__switcher-item', { active: currentId === item.id }]"
       >
         <div class="app-zone__switcher-item-icon">
-          <img alt="" :src="'./imgs/zone.png'" />
+          <img alt="" :src="item.thumbnail || './imgs/zone.png'" />
         </div>
         <div class="app-zone__switcher-item-content">
-          <div class="app-zone__switcher-item-title">{{ item }}</div>
+          <div class="app-zone__switcher-item-title">{{ item.name }}</div>
           <div class="app-zone__switcher-item-desc">
-            关于当前训练场地的详细描述
+            {{ item.description }}
           </div>
         </div>
       </div>
@@ -30,14 +30,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useMap } from "@/models/map.js";
+import { useZone } from "@/models/zone.js";
+import { useTrainingZone } from "./useTrainingZone.js";
 
 const mapStore = useMap();
-const { zone } = storeToRefs(mapStore);
-
-const zones = ref(["长沙市", "衡阳市"]);
+const zoneStore = useZone();
+const { state } = useTrainingZone();
+const { currentId, list, total, pageNo, pageSize } = storeToRefs(zoneStore);
 </script>
 
 <style scoped lang="scss">
