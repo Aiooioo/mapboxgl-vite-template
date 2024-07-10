@@ -52,11 +52,19 @@ import { useZone } from "@/models/zone.js";
 import { useTrainingZone } from "./useTrainingZone.js";
 
 import { useMapper } from "@/store/useMapper.js";
-const mapperStore = useMapper();
 const mapStore = useMap();
-const { zone } = storeToRefs(mapStore);
-const { siteList, siteId } = storeToRefs(mapperStore);
-const { getSiteList } = mapperStore;
+const zoneStore = useZone();
+const { state } = useTrainingZone();
+const {
+  currentId: siteId,
+  list: siteList,
+  total,
+  pageNo,
+  pageSize,
+} = storeToRefs(zoneStore);
+const { loadZoneList: getSiteList } = zoneStore;
+
+const mapperStore = useMapper();
 
 const keyword = ref("");
 function search() {
@@ -81,9 +89,6 @@ getSiteList().then((res) => {
     siteClick(siteList.value[0]);
   }
 });
-const zoneStore = useZone();
-const { state } = useTrainingZone();
-const { currentId, list, total, pageNo, pageSize } = storeToRefs(zoneStore);
 </script>
 
 <style scoped lang="scss">

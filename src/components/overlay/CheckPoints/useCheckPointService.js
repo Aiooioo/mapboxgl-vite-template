@@ -7,8 +7,10 @@ import { request } from "@/utils/api/request.ts";
 import { toAbsoluteUrl } from "@/utils/url-utils.js";
 import { useMapper } from "@/store/useMapper.js";
 import { storeToRefs } from "pinia";
+import { useZone } from "@/models/zone.js";
+const zoneStore = useZone();
 const mapperStore = useMapper();
-const { siteId } = storeToRefs(mapperStore);
+const { currentId: siteId } = storeToRefs(zoneStore);
 
 export const LAYER_CHECK_POINT = "check-point-layer";
 export const LAYER_CHECK_POINT_HIGHLIGHT = "check-point-layer-highlight";

@@ -132,10 +132,12 @@ import { storeToRefs } from "pinia";
 import { useMessage } from "naive-ui";
 import TooltipCustom from "@/components/TooltipCustom.vue";
 import EditPoint from "@/components/pointManage/EditPoint.vue";
+import { useZone } from "@/models/zone.js";
 
 const $message = useMessage();
 const mapperStore = useMapper();
-const { siteId } = storeToRefs(mapperStore);
+const zoneStore = useZone();
+const { currentId: siteId } = storeToRefs(zoneStore);
 const imageryStore = useImageryStore();
 const sketchStore = useSketch();
 const { $channel: $feature } = useFeatureProps(sketchStore.context);
@@ -186,9 +188,7 @@ const options = [
 function handleSelect(key) {
   switch (key) {
     case "add":
-      // mapperStore.addCheckPoint();
       createPoint();
-      // checkCurrentStatus().then(createPoint);
       break;
     case "batch":
       // mapperStore.batchAddCheckPoint();
@@ -255,7 +255,6 @@ function deleteSite(row) {
   });
 }
 function fileChange({ file, fileList, event }) {
-  console.log(file, fileList, event);
   if (fileList?.length) {
     importFormModel.file = file.file;
   } else {
