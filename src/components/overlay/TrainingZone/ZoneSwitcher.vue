@@ -51,7 +51,6 @@ import { useMap } from "@/models/map.js";
 import { useZone } from "@/models/zone.js";
 import { useTrainingZone } from "./useTrainingZone.js";
 
-import { useMapper } from "@/store/useMapper.js";
 const mapStore = useMap();
 const zoneStore = useZone();
 const { state } = useTrainingZone();
@@ -64,14 +63,12 @@ const {
 } = storeToRefs(zoneStore);
 const { loadZoneList: getSiteList } = zoneStore;
 
-const mapperStore = useMapper();
-
 const keyword = ref("");
 function search() {
   let params = {
     name: keyword.value,
   };
-  mapperStore.getSiteList(params);
+  getSiteList(params);
 }
 function siteClick(item) {
   siteId.value = item.id;

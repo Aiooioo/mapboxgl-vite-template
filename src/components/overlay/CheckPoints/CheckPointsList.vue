@@ -127,7 +127,6 @@ import { setupWorkflow } from "@/components/overlay/SimpleDrawing/workflow.js";
 import { useFeatureProps } from "@/components/overlay/SimpleDrawing/useFeatureProps.js";
 import { useFeatureStyler } from "../SymbolStyler/useFeatureStyler.js";
 import { useImageryStore } from "@/models/imagery.js";
-import { useMapper } from "@/store/useMapper.js";
 import { storeToRefs } from "pinia";
 import { useMessage } from "naive-ui";
 import TooltipCustom from "@/components/TooltipCustom.vue";
@@ -135,7 +134,6 @@ import EditPoint from "@/components/pointManage/EditPoint.vue";
 import { useZone } from "@/models/zone.js";
 
 const $message = useMessage();
-const mapperStore = useMapper();
 const zoneStore = useZone();
 const { currentId: siteId } = storeToRefs(zoneStore);
 const imageryStore = useImageryStore();

@@ -5,11 +5,9 @@ import * as mapboxgl from "mapbox-gl";
 import { useMap } from "@/models/map.js";
 import { request } from "@/utils/api/request.ts";
 import { toAbsoluteUrl } from "@/utils/url-utils.js";
-import { useMapper } from "@/store/useMapper.js";
 import { storeToRefs } from "pinia";
 import { useZone } from "@/models/zone.js";
 const zoneStore = useZone();
-const mapperStore = useMapper();
 const { currentId: siteId } = storeToRefs(zoneStore);
 
 export const LAYER_CHECK_POINT = "check-point-layer";
