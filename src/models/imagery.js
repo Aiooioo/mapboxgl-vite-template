@@ -112,8 +112,9 @@ export const useImageryStore = defineStore("imagery", {
       this.loMarkers.push(loMarker);
     },
 
-    updateCurMarkerId(id) {
+    updateCurMarker({ id, result }) {
       if (this.curEditMarker) {
+        this.curEditMarker.result = result;
         this.curEditMarker.id = id;
       }
     },

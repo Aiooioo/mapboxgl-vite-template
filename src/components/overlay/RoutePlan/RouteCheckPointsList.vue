@@ -12,49 +12,39 @@
       </span>
     </div>
     <div class="route-planning__points-list-row">
-      <span>1</span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span>
-        <i-mdi-close />
-      </span>
+      <RouteCheckPointRow
+        :display-index="1"
+        :point="points[0]"
+        @remove="removeRow"
+      />
     </div>
     <div class="route-planning__points-list-row">
-      <span>2</span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span>
-        <i-mdi-close />
-      </span>
+      <RouteCheckPointRow
+        :display-index="2"
+        :point="points[1]"
+        @remove="removeRow"
+      />
     </div>
     <div class="route-planning__points-list-row">
-      <span>3</span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span>
-        <i-mdi-close />
-      </span>
+      <RouteCheckPointRow
+        :display-index="3"
+        :point="points[2]"
+        @remove="removeRow"
+      />
     </div>
     <div class="route-planning__points-list-row">
-      <span>4</span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span>
-        <i-mdi-close />
-      </span>
+      <RouteCheckPointRow
+        :display-index="4"
+        :point="points[3]"
+        @remove="removeRow"
+      />
     </div>
     <div class="route-planning__points-list-row">
-      <span>5</span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span>
-        <i-mdi-close />
-      </span>
+      <RouteCheckPointRow
+        :display-index="5"
+        :point="points[4]"
+        @remove="removeRow"
+      />
     </div>
     <div class="route-planning__points-list-row">
       <span>
@@ -70,11 +60,17 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, defineEmits, computed } from "vue";
+import RouteCheckPointRow from "./support/RouteCheckPointRow.vue";
 import { useMap } from "@/models/map.js";
 
-const props = defineProps(["routeName"]);
+const props = defineProps(["routeName", "points"]);
+const emit = defineEmits(["removePoint"]);
 const mapStore = useMap();
+
+function removeRow(rowIndex) {
+  emit("removePoint", rowIndex);
+}
 </script>
 
 <style scoped lang="scss">
@@ -100,32 +96,16 @@ const mapStore = useMap();
     height: 24px;
     display: flex;
 
-    > span {
+    span {
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    > span:nth-child(1) {
+    span:nth-child(1) {
       flex: none;
       width: 32px;
       border-right: 1px solid $secondary_text_color;
-    }
-    > span:nth-child(2),
-    > span:nth-child(3) {
-      flex: none;
-      width: 64px;
-      border-right: 1px solid $secondary_text_color;
-    }
-    > span:nth-child(4) {
-      flex: 1;
-      border-right: 1px solid $secondary_text_color;
-    }
-    > span:nth-child(5) {
-      flex: none;
-      width: 32px;
-      color: #d81e06;
-      cursor: pointer;
     }
 
     &:not(:last-child) {

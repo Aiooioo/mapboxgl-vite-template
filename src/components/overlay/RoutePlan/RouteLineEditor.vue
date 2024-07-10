@@ -76,7 +76,11 @@
         </span>
       </span>
       <span class="route-planning-view__editor-row-wrapper">
-        <RouteCheckPointsList :route-name="taskName" />
+        <RouteCheckPointsList
+          :route-name="taskName"
+          :points="checkPoints"
+          @remove-point="removeCheckPointAt"
+        />
       </span>
     </div>
 
@@ -127,7 +131,7 @@
 </template>
 
 <script setup>
-import { ref, watch, toValue } from "vue";
+import { ref, shallowRef, watch, toValue, onMounted, onUnmounted } from "vue";
 import { NInput, NRadioGroup, NRadio, NRate } from "naive-ui";
 import RoutePointSelect from "./RoutePointSelect.vue";
 import RouteCheckPointsList from "./RouteCheckPointsList.vue";
@@ -141,12 +145,17 @@ import {
   clearEndPointSymbol,
 } from "./utils/render-start-end.js";
 import { useRouteCheckPoints } from "./useRouteCheckPoints.js";
+import {
+  prepareAnimationLineSource,
+  animateLineSymbol,
+  clearAnimationLineSource,
+} from "./utils/render-route-line.js";
 
 const taskName = ref("");
 const singleDifficulty = ref("medium");
 const routeLineMode = ref("manual");
-const selectedStart = ref(null);
-const selectedEnd = ref(null);
+const selectedStart = shallowRef(null);
+const selectedEnd = shallowRef(null);
 const currentSelectionPoint = ref("");
 const { createPoint, completeFeature } = useMapboxSketch();
 
@@ -196,6 +205,34 @@ watch(completeFeature, (value) => {
 
     currentSelectionPoint.value = "";
   }
+});
+
+watch(
+  () => [selectedStart.value, selectedEnd.value, checkPoints.value],
+  () => {
+    if (
+      selectedStart.value &&
+      selectedEnd.value &&
+      checkPoints.value.length > 0
+    ) {
+      animateLineSymbol(
+        toValue(mapStore.map),
+        selectedStart.value,
+        selectedEnd.value,
+        checkPoints.value,
+      );
+    }
+  },
+  {
+    deep: true,
+  },
+);
+
+onMounted(() => {
+  prepareAnimationLineSource(toValue(mapStore.map));
+});
+onUnmounted(() => {
+  clearAnimationLineSource(toValue(mapStore.map));
 });
 </script>
 

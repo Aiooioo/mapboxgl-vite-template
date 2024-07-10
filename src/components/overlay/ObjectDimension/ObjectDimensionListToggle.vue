@@ -26,9 +26,16 @@
             <label>备注：</label>
             <span>{{ item.remark }}</span>
           </li>
-          <li>
+          <li class="flex items-center">
             <label>验证结果：</label>
-            <span>错误</span>
+            <!-- <span>{{ getResultText(item.result) }}</span> -->
+            <n-select
+              v-model:value="item.result"
+              :options="[
+                { label: '错误', value: 0 },
+                { label: '正确', value: 1 },
+              ]"
+            />
           </li>
         </ul>
       </n-card>
@@ -38,7 +45,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
-import { NDrawer, NDrawerContent, NCard } from "naive-ui";
+import { NDrawer, NDrawerContent, NCard, NSelect } from "naive-ui";
 import { $plotList } from "@/utils/api/location/identify";
 import { useImageryStore } from "@/models/imagery";
 import { useMap } from "@/models/map.js";
@@ -54,6 +61,14 @@ const active = ref(false);
 // onMounted(() => {
 //   getPlotList();
 // });
+
+const getResultText = (result) => {
+  if (result === 0) return "错误";
+
+  if (result === 1) return "正确";
+
+  return "-";
+};
 
 watch(
   () => mapStore.ready,

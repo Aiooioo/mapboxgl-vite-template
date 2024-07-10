@@ -45,10 +45,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { NInput } from "naive-ui";
+import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useMap } from "@/models/map.js";
+import { useZone } from "@/models/zone.js";
+import { useTrainingZone } from "./useTrainingZone.js";
+
 import { useMapper } from "@/store/useMapper.js";
 const mapperStore = useMapper();
 const mapStore = useMap();
@@ -79,6 +81,9 @@ getSiteList().then((res) => {
     siteClick(siteList.value[0]);
   }
 });
+const zoneStore = useZone();
+const { state } = useTrainingZone();
+const { currentId, list, total, pageNo, pageSize } = storeToRefs(zoneStore);
 </script>
 
 <style scoped lang="scss">
