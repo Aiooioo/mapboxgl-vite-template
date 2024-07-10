@@ -60,7 +60,7 @@
       size="huge"
       preset="dialog"
       style="width: 80%; max-width: 1024px; height: 60%"
-      title="学员分配"
+      title="分配学员"
       v-model:show="showApplyModal"
       role="dialog"
       positive-text="保存"

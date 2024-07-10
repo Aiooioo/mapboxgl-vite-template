@@ -28,23 +28,6 @@ const useRouteApply = () => {
     try {
       const res = await getRouteApplyListByZone(zoneStore.currentId);
       if (res && res.code === 200) {
-        res.data.list = [
-          {
-            createBy: 0,
-            createTime: "",
-            updateBy: 0,
-            updateTime: "",
-            createUser: "",
-            updateUser: "",
-            id: 0,
-            name: "",
-            siteId: 0,
-            difficulty: 0,
-            routeIds: [],
-            applyStudent: 0,
-          },
-        ];
-
         schemas.value = res.data.list;
         pagination.total = res.data.total;
 

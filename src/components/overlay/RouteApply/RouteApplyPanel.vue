@@ -11,6 +11,23 @@
       </div>
       <div class="route-apply__panel-schemas-list">
         <div
+          v-if="!!props.item.byHand"
+          class="route-apply__panel-schema selected"
+        >
+          <span class="route-apply__panel-schema-index">1</span>
+          <div class="route-apply__panel-schema-content">
+            <strong>手动创建的线路</strong>
+            <div class="route-apply__panel-schema-points">
+              <RouteSchemaPoints :item="item" />
+            </div>
+            <div class="route-apply__panel-schema-applied">
+              <RouteSchemaDifficulty :item="item" />
+              <RouteSchemaApplied :item="item" />
+            </div>
+          </div>
+        </div>
+        <div
+          v-else
           v-for="(item, index) in schemas"
           :key="`route-schema-${index}`"
           :class="[

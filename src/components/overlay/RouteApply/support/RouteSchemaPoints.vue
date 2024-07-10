@@ -1,8 +1,8 @@
 <template>
   <div class="route-apply__points">
     <span
-      v-for="(it, idx) in [1, 2, 3, 4, 5]"
-      :key="``"
+      v-for="(it, idx) in points"
+      :key="`${props.item.id}-${idx}`"
       class="route-apply__points-thumb"
     >
       {{ it }}
@@ -12,8 +12,19 @@
 
 <script setup>
 import { defineProps, computed } from "vue";
+import _ from "lodash";
 
 const props = defineProps(["item"]);
+
+const points = computed(() => {
+  if (props.item && props.item.byHand) {
+    if (props.item.pointList) {
+      return _.slice(props.item.pointList, 1, 6);
+    }
+  }
+
+  return [];
+});
 
 const applied = computed(() => {
   return (

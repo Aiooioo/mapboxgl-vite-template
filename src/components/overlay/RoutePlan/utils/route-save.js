@@ -1,15 +1,30 @@
 import _ from "lodash";
 import { request } from "@/utils/api/request.ts";
 
-function createRouteExamTask(siteId, taskName) {
+function createRouteExamTask(siteId, taskName, points) {
+  const data = {
+    siteId,
+    name: taskName,
+    // applyList:
+  };
+
+  if (points !== null) {
+    data.byHand = true;
+    data.pointList = [
+      `${points[0].geometry.coordinates[0]},${points[0].geometry.coordinates[1]}`,
+      `${points[1].id}`,
+      `${points[2].id}`,
+      `${points[3].id}`,
+      `${points[4].id}`,
+      `${points[5].id}`,
+      `${points[6].geometry.coordinates[0]},${points[6].geometry.coordinates[1]}`,
+    ];
+  }
+
   return request({
     url: "/exam/route/create",
     method: "POST",
-    data: JSON.stringify({
-      siteId,
-      name: taskName,
-      // applyList:
-    }),
+    data: JSON.stringify(data),
     headers: {
       "Content-Type": "application/json",
     },
@@ -47,24 +62,24 @@ export async function saveAddNewRoute(
 
   const promises = [];
 
-  for (let i = 0; i <= allPoints.length - 2; i++) {
-    promises.push(
-      createRouteSegment(
-        zoneId,
-        allPoints[i].geometry.coordinates,
-        allPoints[i + 1].geometry.coordinates,
-        threshold,
-      ),
-    );
-  }
+  // for (let i = 0; i <= allPoints.length - 2; i++) {
+  //   promises.push(
+  //     createRouteSegment(
+  //       zoneId,
+  //       allPoints[i].geometry.coordinates,
+  //       allPoints[i + 1].geometry.coordinates,
+  //       threshold,
+  //     ),
+  //   );
+  // }
 
   try {
-    const segmentResps = await Promise.all(promises);
-    const segIds = [];
+    // const segmentResps = await Promise.all(promises);
+    // const segIds = [];
+    //
+    // _.each(segmentResps, (segment) => {});
 
-    _.each(segmentResps, (segment) => {});
-
-    const examRes = await createRouteExamTask(zoneId, taskName, segIds);
+    const examRes = await createRouteExamTask(zoneId, taskName, allPoints);
     if (examRes && examRes.code === 200) {
       return true;
     } else {

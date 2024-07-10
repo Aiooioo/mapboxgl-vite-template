@@ -19,7 +19,12 @@
       <span class="route-planning-view__list-item-content">
         <span class="route-planning-view__list-item-title">
           {{ item.name }}
-          <n-tag size="small" round type="primary" style="font-size: 12px"
+          <n-tag
+            v-if="item.byHand === true"
+            size="small"
+            round
+            type="primary"
+            style="font-size: 12px"
             >手动</n-tag
           >
         </span>
@@ -29,6 +34,7 @@
         <span class="route-planning-view__list-item-actions">
           <span
             class="route-planning-view__list-item-action"
+            :data-routeId="item.id"
             @click="applyAction"
           >
             <i-mdi-user-multiple />
@@ -68,19 +74,21 @@ function switchCurrentRouteLine(routeId) {
 function applyAction(e) {
   e.stopPropagation();
 
-  emit("apply-user", item.id);
+  const { routeid } = e.target.dataset;
+
+  if (routeid) {
+    emit("apply-user", routeid);
+  }
 }
 
 function deleteAction(e) {
   e.stopPropagation();
 
-  const { routeId } = e.target.dataset;
+  const { routeid } = e.target.dataset;
 
-  alert(routeId);
-}
-
-function deleteRouteTask(id) {
-  deleteRouteLineById(id);
+  if (routeid) {
+    deleteRouteLineById(routeid);
+  }
 }
 </script>
 
