@@ -1,9 +1,11 @@
 <template>
+  <div class="route-apply__points-hint">途经检查点</div>
   <div class="route-apply__points">
     <span
       v-for="(it, idx) in points"
       :key="`${props.item.id}-${idx}`"
       class="route-apply__points-thumb"
+      :title="`检查点${idx + 1}:\n${it}号点`"
     >
       {{ it }}
     </span>
@@ -34,6 +36,11 @@ const applied = computed(() => {
 </script>
 
 <style scoped lang="scss">
+.route-apply__points-hint {
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: $secondary-text-color;
+}
 .route-apply__points {
   display: flex;
   align-items: center;
@@ -50,6 +57,11 @@ const applied = computed(() => {
     line-height: 20px;
     color: $primary_bg_color;
     text-align: center;
+
+    &:hover {
+      background: $secondary_bg_color;
+      color: $primary_text_color;
+    }
 
     &:not(:last-child)::after {
       position: absolute;

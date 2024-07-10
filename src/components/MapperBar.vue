@@ -13,6 +13,16 @@
       <div class="mapbox-mapper__bar-split"></div>
     </div>
     <div class="mapbox-mapper__bar-right">
+      <WebmapTitle />
+      <div class="mapbox-mapper__bar-split"></div>
+      <span class="mapbox-mapper__bar-btn">
+        <i-mdi-file-restore />
+      </span>
+      <div class="mapbox-mapper__bar-split"></div>
+      <span class="mapbox-mapper__bar-btn">
+        <i-mdi-content-save />
+      </span>
+      <div class="mapbox-mapper__bar-split"></div>
       <span class="mapbox-mapper__bar-btn" @click="showCheckPoints">
         <i-mdi-source-branch-check />
       </span>
@@ -36,6 +46,7 @@
 import ViewportNavi from "@/components/widgets/Navigation/ViewportNavi.vue";
 import Attribution from "@/components/widgets/Attribution/index.vue";
 import Home from "@/components/widgets/Navigation/Home.vue";
+import WebmapTitle from "@/components/widgets/Webmap/WebmapTitle.vue";
 import { useMap } from "@/models/map.js";
 
 const mapStore = useMap();

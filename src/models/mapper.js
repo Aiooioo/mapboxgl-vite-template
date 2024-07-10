@@ -90,9 +90,13 @@ const useMapper = defineStore("mapper", {
       if (map) {
         await ensureRouteLineSourceAndLayer(map);
 
-        const ft = JSON.parse(line.roads);
-
-        const source = map.getSource(DATA_SOURCE_ROUTE_LINE).setData(ft);
+        if (line.byHand) {
+          // 显示手动创建的线路
+          const ft = JSON.parse(line.roads);
+          map.getSource(DATA_SOURCE_ROUTE_LINE).setData(ft);
+        } else {
+          // 显示批量创建的其中一条线路
+        }
       }
     },
 

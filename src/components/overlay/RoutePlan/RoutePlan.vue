@@ -50,7 +50,14 @@
       class="route-planning__overlay"
       :style="{ display: isLoading ? 'flex' : 'none' }"
     >
-      <span>{{ loadingMsg }}</span>
+      <div class="route-planning__overlay-inner">
+        <n-spin size="large">
+          <template #icon>
+            <i-mdi-loading style="font-size: 36px" />
+          </template>
+        </n-spin>
+        <span>{{ loadingMsg }}</span>
+      </div>
     </div>
     <n-modal
       :mask-closable="false"
@@ -75,7 +82,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { NModal } from "naive-ui";
+import { NModal, NSpin } from "naive-ui";
 import { useMapper } from "@/models/mapper.js";
 import { useZone } from "@/models/zone.js";
 import RouteList from "./RouteList.vue";
@@ -169,13 +176,39 @@ function handleSave() {
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
     z-index: 1;
   }
   &__overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.75);
     z-index: 2;
+
+    &-inner {
+      width: 50%;
+      height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      color: $primary_text_color;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.3);
+
+      > span:nth-child(2) {
+        max-width: 80%;
+        display: flex;
+        letter-spacing: normal;
+        word-break: break-all;
+      }
+    }
   }
 
   &__view {
