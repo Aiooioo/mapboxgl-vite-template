@@ -3,7 +3,7 @@
     <i-mdi-user-multiple
       style="color: #a78bfa; margin-right: 4px; font-size: 16px"
     />
-    {{ props.item.applyStudent }}
+    {{ props.item.applyUsers.length }}
   </span>
 </template>
 

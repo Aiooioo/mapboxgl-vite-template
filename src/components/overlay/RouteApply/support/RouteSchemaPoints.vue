@@ -42,25 +42,25 @@ const applied = computed(() => {
   &-thumb {
     position: relative;
     flex: none;
-    height: 16px;
-    width: 16px;
+    height: 20px;
+    width: 20px;
     border-radius: 50%;
     background: $hint_text_color;
     font-size: 12px;
-    line-height: 16px;
-    color: $secondary_bg_color;
+    line-height: 20px;
+    color: $primary_bg_color;
     text-align: center;
 
     &:not(:last-child)::after {
       position: absolute;
-      left: 16px;
-      bottom: 7px;
+      left: 20px;
+      bottom: 10px;
       content: " ";
       display: flex;
       height: 2px;
       width: 12px;
       margin-left: 4px;
-      background: $secondary_bg_color;
+      background: $primary_bg_color;
       opacity: 0.5;
     }
   }

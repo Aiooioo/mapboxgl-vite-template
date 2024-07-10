@@ -25,7 +25,7 @@ const useRoutePlan = () => {
 
   function deleteRouteLineById(id) {
     deleteRouteExam(id).then((res) => {
-      if (res && res.code === 200 && res.data === true) {
+      if (res && res.code === 200) {
         loadRouteListPaged(1);
       }
     });

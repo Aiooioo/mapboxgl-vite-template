@@ -40,14 +40,25 @@
             <i-mdi-user-multiple />
             分配学员
           </span>
-          <span
-            class="route-planning-view__list-item-action"
-            :data-routeId="item.id"
-            @click="deleteAction"
+          <n-popconfirm
+            positive-text="删除"
+            negative-text="取消"
+            @positive-click="() => deleteAction(item.id)"
           >
-            <i-mdi-delete-outline />
-            删除计划
-          </span>
+            <template #icon>
+              <i-mdi-delete-variant style="color: crimson" />
+            </template>
+            <template #trigger>
+              <span
+                class="route-planning-view__list-item-action"
+                :data-routeId="item.id"
+              >
+                <i-mdi-delete-outline />
+                删除计划
+              </span>
+            </template>
+            确认删除该任务计划?
+          </n-popconfirm>
         </span>
       </span>
     </div>
@@ -56,7 +67,7 @@
 
 <script setup>
 import { ref, defineEmits } from "vue";
-import { NTag } from "naive-ui";
+import { NTag, NPopconfirm } from "naive-ui";
 import { useMapper } from "@/models/mapper.js";
 import { useMap } from "@/models/map.js";
 import { useRoutePlan } from "./useRoutePlan.js";
@@ -81,14 +92,8 @@ function applyAction(e) {
   }
 }
 
-function deleteAction(e) {
-  e.stopPropagation();
-
-  const { routeid } = e.target.dataset;
-
-  if (routeid) {
-    deleteRouteLineById(routeid);
-  }
+function deleteAction(id) {
+  deleteRouteLineById(id);
 }
 </script>
 

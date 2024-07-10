@@ -68,7 +68,7 @@
       @positive-click="saveApplyUsers"
       @negative-click="cancelApplyUsers"
     >
-      <RouteApplyPanel ref="applyPanel" :item="mapperStore.lineInEdit" />
+      <RouteApplyPanel ref="applyPanel" />
     </n-modal>
   </div>
 </template>
@@ -101,8 +101,8 @@ function startAddLine() {
   mapperStore.goToAddNewLine();
 }
 
-function onApplyUsers(line) {
-  mapperStore.lineInEdit = line;
+function onApplyUsers(lineId) {
+  mapperStore.lineInEdit = mapperStore.lines.find((l) => `${l.id}` === lineId);
 
   showApplyModal.value = true;
 }

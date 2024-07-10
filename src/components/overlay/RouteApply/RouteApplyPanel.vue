@@ -11,44 +11,47 @@
       </div>
       <div class="route-apply__panel-schemas-list">
         <div
-          v-if="!!props.item.byHand"
+          v-if="!!mapperStore.lineInEdit.byHand"
           class="route-apply__panel-schema selected"
         >
           <span class="route-apply__panel-schema-index">1</span>
           <div class="route-apply__panel-schema-content">
-            <strong>手动创建的线路</strong>
-            <div class="route-apply__panel-schema-points">
-              <RouteSchemaPoints :item="item" />
-            </div>
-            <div class="route-apply__panel-schema-applied">
-              <RouteSchemaDifficulty :item="item" />
-              <RouteSchemaApplied :item="item" />
-            </div>
-          </div>
-        </div>
-        <div
-          v-else
-          v-for="(item, index) in schemas"
-          :key="`route-schema-${index}`"
-          :class="[
-            'route-apply__panel-schema',
-            { selected: schema === item.id },
-          ]"
-        >
-          <span class="route-apply__panel-schema-index">{{ index + 1 }}</span>
-          <div class="route-apply__panel-schema-content">
             <div class="route-apply__panel-schema-title">
-              <strong>线路 #</strong> {{ item.name || item.id }}
+              <strong>手动创建的线路</strong>
             </div>
             <div class="route-apply__panel-schema-points">
-              <RouteSchemaPoints :item="item" />
+              <RouteSchemaPoints :item="mapperStore.lineInEdit" />
             </div>
             <div class="route-apply__panel-schema-applied">
-              <RouteSchemaDifficulty :item="item" />
-              <RouteSchemaApplied :item="item" />
+              <!--              <RouteSchemaDifficulty :item="mapperStore.lineInEdit" />-->
+              <RouteSchemaApplied :item="mapperStore.lineInEdit" />
             </div>
           </div>
         </div>
+        <template v-else>
+          <div
+            v-for="(item, index) in schemas"
+            :key="`route-schema-${index}`"
+            :class="[
+              'route-apply__panel-schema',
+              { selected: schema === item.id },
+            ]"
+          >
+            <span class="route-apply__panel-schema-index">{{ index + 1 }}</span>
+            <div class="route-apply__panel-schema-content">
+              <div class="route-apply__panel-schema-title">
+                <strong>线路 #</strong> {{ item.name || item.id }}
+              </div>
+              <div class="route-apply__panel-schema-points">
+                <RouteSchemaPoints :item="item" />
+              </div>
+              <div class="route-apply__panel-schema-applied">
+                <!--                <RouteSchemaDifficulty :item="item" />-->
+                <RouteSchemaApplied :item="item" />
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
     </div>
     <div class="route-apply__panel-bar">
@@ -98,6 +101,7 @@
 <script setup>
 import { ref, defineProps, defineExpose, onMounted } from "vue";
 import { NDivider, NInput, NSelect, NDataTable, NButton } from "naive-ui";
+import { useMapper } from "@/models/mapper.js";
 import { useRouteApply } from "./hooks/useRouteApply.js";
 import { useUserList } from "./hooks/useUserList.js";
 import RouteSchemaPoints from "./support/RouteSchemaPoints.vue";
@@ -105,12 +109,14 @@ import RouteSchemaDifficulty from "./support/RouteSchemaDifficuty.vue";
 import RouteSchemaApplied from "./support/RouteSchemaApplied.vue";
 import { timeout } from "@/utils/promise-utils.js";
 
-const props = defineProps(["item"]);
 const isDirty = ref(false);
 const appliedUserIds = ref([]);
 const inputUserKeywords = ref("");
 const searchUserKeywords = ref("");
 const currentGrade = ref(2024);
+
+const mapperStore = useMapper();
+
 const { schema, schemas, pagination } = useRouteApply();
 const { users } = useUserList(currentGrade, searchUserKeywords);
 
@@ -164,8 +170,8 @@ function handleSave() {
 }
 
 onMounted(() => {
-  if (props.item) {
-    appliedUserIds.value = props.item.applyUsers || [];
+  if (mapperStore.lineInEdit) {
+    appliedUserIds.value = mapperStore.lineInEdit.applyUsers || [];
   }
 });
 
@@ -183,12 +189,12 @@ defineExpose({ handleSave });
   &-schema {
     margin-bottom: 6px;
     border-radius: 6px;
-    padding: 6px;
+    padding: 8px;
     background: $minor_bg_color;
     border: 1px solid transparent;
     display: grid;
     grid-template-columns: 20px 1fr;
-    gap: 10px;
+    gap: 6px;
     cursor: pointer;
 
     &.selected {
@@ -196,19 +202,19 @@ defineExpose({ handleSave });
     }
 
     &-index {
-      height: 18px;
-      width: 18px;
+      height: 20px;
+      width: 20px;
       border-radius: 50%;
       font-size: 12px;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: $secondary_bg_color;
+      background: $primary_bg_color;
       color: $primary_text_color;
     }
     &-title {
       margin-bottom: 8px;
-      font-size: 16px;
+      font-size: 13px;
       font-weight: 500;
       line-height: 20px;
     }
