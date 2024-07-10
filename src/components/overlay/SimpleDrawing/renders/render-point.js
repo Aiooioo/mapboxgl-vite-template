@@ -40,7 +40,7 @@ export function generatePointSymbolLayers(layer, feature) {
 
 export function updatePointSymbolPaint(map, feature, symbolSettings) {
   const symbolLayers = generateLayerStyle(feature);
-
+  console.log(symbolLayers, "--symbolLayers");
   const fillLayer = symbolLayers.find((symbol) =>
     symbol.layer.id.startsWith("draw-render-point-inner-"),
   );

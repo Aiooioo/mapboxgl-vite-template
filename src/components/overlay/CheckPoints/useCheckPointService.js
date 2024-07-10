@@ -5,6 +5,10 @@ import * as mapboxgl from "mapbox-gl";
 import { useMap } from "@/models/map.js";
 import { request } from "@/utils/api/request.ts";
 import { toAbsoluteUrl } from "@/utils/url-utils.js";
+import { useMapper } from "@/store/useMapper.js";
+import { storeToRefs } from "pinia";
+const mapperStore = useMapper();
+const { siteId } = storeToRefs(mapperStore);
 
 export const LAYER_CHECK_POINT = "check-point-layer";
 export const LAYER_CHECK_POINT_HIGHLIGHT = "check-point-layer-highlight";
@@ -22,6 +26,7 @@ const useCheckPointService = () => {
           url: "/map/data/getGeojson",
           params: {
             tableName: "point",
+            where: `site_id in('${siteId.value}')`,
           },
         });
 
@@ -68,6 +73,7 @@ const useCheckPointService = () => {
 
         map.fitBounds(bounds, {
           padding: 80,
+          duration: 1000,
         });
       }
     }
@@ -139,6 +145,7 @@ const useCheckPointService = () => {
   watch(
     checkPoints,
     (value) => {
+      removeCheckPointsDataAndSymbol();
       if (value) {
         if (!mapStore.checkPointIconLoaded) {
           const images2Load = [
@@ -181,8 +188,7 @@ const useCheckPointService = () => {
   );
 
   onMounted(() => {
-    initCheckPointSourceAndLayer();
-
+    // initCheckPointSourceAndLayer();
     // const map = toValue(mapStore.map);
     //
     // map.addSource("check-point", {
@@ -206,11 +212,18 @@ const useCheckPointService = () => {
   onUnmounted(() => {
     removeCheckPointsDataAndSymbol();
   });
-
+  watch(
+    siteId,
+    () => {
+      initCheckPointSourceAndLayer();
+    },
+    { immediate: true },
+  );
   return {
     selectedId,
     checkPoints,
     highlightCheckPointById,
+    initCheckPointSourceAndLayer,
   };
 };
 

@@ -155,6 +155,7 @@ const useMapboxSketch = () => {
     activeTool.value = "point";
 
     sketchRef.value.changeMode("draw_point");
+    console.log(123);
   }
 
   function createPolyline() {

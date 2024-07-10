@@ -6,22 +6,37 @@
     </div>
     <div class="app-zone__switcher-content">
       <div class="app-zone__switcher-content-search">
-        <span class="app-zone__switcher-content-search-icon">
+        <!--        <span class="app-zone__switcher-content-search-icon">
           <i-mdi-search />
-        </span>
+        </span>-->
+        <n-input
+          clearable
+          v-model:value="keyword"
+          @update:value="search"
+          placeholder="搜索"
+        ></n-input>
       </div>
+
       <div
-        v-for="(item, index) in zones"
+        v-for="(item, index) in siteList"
         :key="`zone-item-${index}`"
-        :class="['app-zone__switcher-item', { active: zone === item }]"
+        :class="['app-zone__switcher-item', { active: siteId === item.id }]"
+        @click="siteClick(item)"
       >
         <div class="app-zone__switcher-item-icon">
-          <img alt="" :src="'./imgs/zone.png'" />
+          <img
+            alt=""
+            :src="
+              item.thumbnail
+                ? 'data:image/png;base64,' + item.thumbnail
+                : './imgs/zone.png'
+            "
+          />
         </div>
         <div class="app-zone__switcher-item-content">
-          <div class="app-zone__switcher-item-title">{{ item }}</div>
+          <div class="app-zone__switcher-item-title">{{ item.name }}</div>
           <div class="app-zone__switcher-item-desc">
-            关于当前训练场地的详细描述
+            {{ item.description }}
           </div>
         </div>
       </div>
@@ -31,13 +46,39 @@
 
 <script setup>
 import { ref } from "vue";
+import { NInput } from "naive-ui";
 import { storeToRefs } from "pinia";
 import { useMap } from "@/models/map.js";
-
+import { useMapper } from "@/store/useMapper.js";
+const mapperStore = useMapper();
 const mapStore = useMap();
 const { zone } = storeToRefs(mapStore);
+const { siteList, siteId } = storeToRefs(mapperStore);
+const { getSiteList } = mapperStore;
 
-const zones = ref(["长沙市", "衡阳市"]);
+const keyword = ref("");
+function search() {
+  let params = {
+    name: keyword.value,
+  };
+  mapperStore.getSiteList(params);
+}
+function siteClick(item) {
+  siteId.value = item.id;
+  const { centerX, centerY, zoom } = item;
+  if (centerX && centerY) {
+    mapStore.map.flyTo({
+      maxDuration: 1200,
+      center: [centerX, centerY], // 中心点
+      zoom: zoom || mapStore.map.getZoom(), // 缩放比例
+    });
+  }
+}
+getSiteList().then((res) => {
+  if (siteList.value.length > 0) {
+    siteClick(siteList.value[0]);
+  }
+});
 </script>
 
 <style scoped lang="scss">
@@ -83,8 +124,8 @@ const zones = ref(["长沙市", "衡阳市"]);
     overflow-y: auto;
 
     &-search {
-      height: 40px;
-      padding: 0 15px;
+      //height: 40px;
+      //padding: 0 15px;
       margin-bottom: 8px;
       border-radius: 6px;
       display: flex;
