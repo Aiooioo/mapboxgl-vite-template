@@ -2,7 +2,14 @@
   <div class="route-planning">
     <div class="route-planning__inner">
       <div class="route-planning__view">
-        <component :is="views[mapperStore.currentView]" ref="compRef" />
+        <RouteList
+          v-if="mapperStore.currentView === 'list'"
+          @apply-user="onApplyUsers"
+        />
+        <RouteLineEditor
+          v-else-if="mapperStore.currentView === 'editor'"
+          ref="compRef"
+        />
       </div>
       <div class="route-planning__actions">
         <span
@@ -42,16 +49,23 @@
     <div
       class="route-planning__overlay"
       :style="{ display: isLoading ? 'flex' : 'none' }"
-    ></div>
+    >
+      <span>{{ loadingMsg }}</span>
+    </div>
     <n-modal
+      :show-icon="false"
       size="huge"
       preset="dialog"
       style="width: 80%; max-width: 900px; height: 60%"
-      title="test"
-      :show="showApplyModal"
+      title="学员分配"
+      v-model:show="showApplyModal"
       role="dialog"
+      positive-text="保存"
+      negative-text="取消"
+      @positive-click="saveApplyUsers"
+      @negative-click="cancelApplyUsers"
     >
-      <RouteApplyPanel />
+      <RouteApplyPanel :item="mapperStore.lineInEdit" />
     </n-modal>
   </div>
 </template>
@@ -65,50 +79,69 @@ import RouteList from "./RouteList.vue";
 import RouteLineEditor from "./RouteLineEditor.vue";
 import RouteApplyPanel from "@/components/overlay/RouteApply/RouteApplyPanel.vue";
 import { useCheckPointService } from "../CheckPoints/useCheckPointService.js";
-import { useRoutePlan } from "./useRoutePlan.js";
+
 import { saveAddNewRoute } from "./utils/route-save.js";
 
 const showApplyModal = ref(false);
 const isLoading = ref(false);
+const loadingMsg = ref("");
 const hasValidationError = ref(false);
 const compRef = ref(null);
 const { checkPoints } = useCheckPointService();
-useRoutePlan();
+
 const mapperStore = useMapper();
 const zoneStore = useZone();
-
-const views = {
-  list: RouteList,
-  editor: RouteLineEditor,
-};
 
 function startAddLine() {
   mapperStore.goToAddNewLine();
 }
 
+function onApplyUsers(line) {
+  mapperStore.lineInEdit = line;
+
+  showApplyModal.value = true;
+}
+
+function saveApplyUsers() {}
+
+function cancelApplyUsers() {
+  mapperStore.lineInEdit = null;
+  showApplyModal.value = false;
+}
+
 function handleSave() {
   hasValidationError.value = false;
+
+  isLoading.value = true;
 
   if (mapperStore.currentView === "editor") {
     const valid = compRef.value.validateNow();
     if (valid !== false) {
       const { data, mode } = valid;
       if (mode === "single") {
+        loadingMsg.value = "正在为当前定向越野创建任务计划";
+
         saveAddNewRoute(
           zoneStore.currentId,
+          data.name,
           data.start,
           data.end,
           data.points,
           data.threshold,
-        );
+        )
+          .then(() => {
+            mapperStore.saveCurrentLine();
+          })
+          .finally(() => {
+            isLoading.value = false;
+          });
       }
     } else {
       hasValidationError.value = true;
+      isLoading.value = false;
     }
   }
 }
-
-
 </script>
 
 <style scoped lang="scss">

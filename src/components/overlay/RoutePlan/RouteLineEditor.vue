@@ -270,7 +270,10 @@ onMounted(() => {
   prepareAnimationLineSource(toValue(mapStore.map));
 });
 onUnmounted(() => {
-  clearAnimationLineSource(toValue(mapStore.map));
+  const map = toValue(mapStore.map);
+  clearAnimationLineSource(map);
+  clearStartPointSymbol(map);
+  clearEndPointSymbol(map);
 });
 
 defineExpose({ validateNow });

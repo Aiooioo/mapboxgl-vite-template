@@ -19,12 +19,28 @@
       <span class="route-planning-view__list-item-content">
         <span class="route-planning-view__list-item-title">
           {{ item.name }}
-          <span @click="() => emit('apply-user', item.id)">
-            <i-mdi-table-user />
-          </span>
+          <n-tag size="small" round type="primary" style="font-size: 12px"
+            >手动</n-tag
+          >
         </span>
         <span class="route-planning-view__list-item-desc">
-          这是一个简要描述该线路的分布和途径点情况的文字
+          该定向越野任务计划共包含可分配线路 1 条。
+        </span>
+        <span class="route-planning-view__list-item-actions">
+          <span
+            class="route-planning-view__list-item-action"
+            @click="() => emit('apply-user', item.id)"
+          >
+            <i-mdi-user-multiple />
+            分配学员
+          </span>
+          <span
+            class="route-planning-view__list-item-action"
+            @click="() => deleteRouteTask(item.id)"
+          >
+            <i-mdi-delete-outline />
+            删除计划
+          </span>
         </span>
       </span>
     </div>
@@ -33,17 +49,23 @@
 
 <script setup>
 import { ref, defineEmits } from "vue";
-import { NRate } from "naive-ui";
+import { NTag } from "naive-ui";
 import { useMapper } from "@/models/mapper.js";
 import { useMap } from "@/models/map.js";
+import { useRoutePlan } from "./useRoutePlan.js";
 
 const emit = defineEmits(["apply-user"]);
 
 const mapStore = useMap();
 const mapperStore = useMapper();
+const { deleteRouteLineById } = useRoutePlan();
 
 function switchCurrentRouteLine(routeId) {
   mapperStore.switchDisplayRouteLine(routeId);
+}
+
+function deleteRouteTask(id) {
+  deleteRouteLineById(id);
 }
 </script>
 
@@ -90,6 +112,8 @@ function switchCurrentRouteLine(routeId) {
     }
     &-content {
       flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     &-title {
       margin-bottom: 4px;
@@ -101,9 +125,23 @@ function switchCurrentRouteLine(routeId) {
       font-weight: 600;
     }
     &-desc {
-      margin-bottom: 4px;
+      margin-bottom: 12px;
       font-size: 12px;
       color: $secondary_text_color;
+    }
+    &-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    &-action {
+      padding: 3px 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: $primary_bg_color;
+      cursor: pointer;
     }
   }
 }

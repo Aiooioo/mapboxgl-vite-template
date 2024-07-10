@@ -60,11 +60,14 @@
 </template>
 
 <script setup>
+import { defineProps } from 'vue'
 import { NInput, NSelect, NDataTable } from "naive-ui";
 import { useRouteApply } from "./hooks/useRouteApply.js";
 import RouteSchemaPoints from "./support/RouteSchemaPoints.vue";
 import RouteSchemaDifficulty from "./support/RouteSchemaDifficuty.vue";
 import RouteSchemaApplied from "./support/RouteSchemaApplied.vue";
+
+const props = defineProps(['item'])
 
 const { schema, schemas, pagination } = useRouteApply();
 

@@ -21,6 +21,8 @@ const useRouteCheckPoints = () => {
   }
 
   function onCheckPointClick(e) {
+    if (checkPoints.value.length === 5) return;
+
     const feature = e.features && e.features.length > 0 && e.features[0];
     if (feature) {
       checkPoints.value.push(feature);

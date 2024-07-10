@@ -1,10 +1,10 @@
 import _ from "lodash";
 import { request } from "@/utils/api/request.ts";
 
-function createRouteExamTask(siteId, taskName, ) {
+function createRouteExamTask(siteId, taskName) {
   return request({
-    url: '/exam/route/create',
-    method: 'POST',
+    url: "/exam/route/create",
+    method: "POST",
     data: JSON.stringify({
       siteId,
       name: taskName,
@@ -13,7 +13,7 @@ function createRouteExamTask(siteId, taskName, ) {
     headers: {
       "Content-Type": "application/json",
     },
-  })
+  });
 }
 
 function createRouteSegment(siteId, segStart, segEnd, threshold) {
@@ -35,7 +35,14 @@ function createRouteSegment(siteId, segStart, segEnd, threshold) {
   });
 }
 
-export function saveAddNewRoute(zoneId, start, end, checkPoints, threshold) {
+export async function saveAddNewRoute(
+  zoneId,
+  taskName,
+  start,
+  end,
+  checkPoints,
+  threshold,
+) {
   const allPoints = [start, ...checkPoints, end];
 
   const promises = [];
@@ -51,11 +58,19 @@ export function saveAddNewRoute(zoneId, start, end, checkPoints, threshold) {
     );
   }
 
-  Promise.all(promises).then(([...segments]) => {
+  try {
+    const segmentResps = await Promise.all(promises);
     const segIds = [];
 
-    _.each(segments, (segment) => {
+    _.each(segmentResps, (segment) => {});
 
-    })
-  });
+    const examRes = await createRouteExamTask(zoneId, taskName, segIds);
+    if (examRes && examRes.code === 200) {
+      return true;
+    } else {
+      return Promise.reject();
+    }
+  } catch (e) {
+    return Promise.reject(e);
+  }
 }
