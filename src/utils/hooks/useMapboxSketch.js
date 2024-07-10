@@ -198,6 +198,14 @@ const useMapboxSketch = () => {
     sketchRef.value.changeMode("draw_polygon");
   }
 
+  function createArrow() {
+    if (!checkAndPrepare()) return;
+
+    activeTool.value = "polygon";
+
+    sketchRef.value.changeMode("draw_attack_arrow");
+  }
+
   function cancelDraw() {
     if (!sketchRef.value || activeTool.value === "") return;
 
@@ -259,6 +267,7 @@ const useMapboxSketch = () => {
     createEllipse,
     createRect,
     createPolygon,
+    createArrow,
     cancelDraw,
     clear,
   };

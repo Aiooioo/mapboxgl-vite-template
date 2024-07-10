@@ -50,7 +50,11 @@
       >
         <i-mdi-format-text />
       </span>
-      <span title="箭头" :class="['simple-drawing__pane-bar-item']">
+      <span
+        title="箭头"
+        :class="['simple-drawing__pane-bar-item']"
+        @click="ensureCreateStatus(createArrow)"
+      >
         <i-mdi-arrow-top-right-bold-outline />
       </span>
     </div>
@@ -114,6 +118,7 @@ const {
   createEllipse,
   createCircle,
   createPoint,
+  createArrow,
 } = useMapboxSketch();
 
 const contentComps = {

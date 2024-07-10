@@ -4,6 +4,7 @@ import DrawIconPlugin from "@/utils/plugins/mapbox/DrawIconPlugin.js";
 import DrawTextPlugin from "@/utils/plugins/mapbox/DrawTextPlugin.js";
 import DrawCirclePlugin from "@/utils/plugins/mapbox/DrawCirclePlugin.js";
 import DrawEllipsePlugin from "@/utils/plugins/mapbox/DrawEllipsePlugin.js";
+import DrawAttackArrowPlugin from "./plugins/mapbox/DrawAttackArrowPlugin";
 
 const PluginsList = [
   DrawRectanglePlugin,
@@ -11,6 +12,7 @@ const PluginsList = [
   DrawTextPlugin,
   DrawCirclePlugin,
   DrawEllipsePlugin,
+  DrawAttackArrowPlugin,
 ];
 
 class PluginManager {
