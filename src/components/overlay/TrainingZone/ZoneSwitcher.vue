@@ -46,6 +46,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { NInput } from 'naive-ui'
 import { storeToRefs } from "pinia";
 import { useMap } from "@/models/map.js";
 import { useZone } from "@/models/zone.js";

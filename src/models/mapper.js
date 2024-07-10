@@ -56,12 +56,13 @@ const useMapper = defineStore("mapper", {
   },
 
   actions: {
-    async loadPagedLineList(pageNum, pageSize = 10) {
+    async loadPagedLineList(zoneId, pageNum, pageSize = 10) {
       try {
         const res = await request({
-          method: "POST",
-          url: "/map/route/list",
+          method: "GET",
+          url: "/exam/route/list",
           params: {
+            siteId: zoneId,
             pageSize,
             pageNum,
           },

@@ -131,8 +131,16 @@
 </template>
 
 <script setup>
-import { ref, shallowRef, watch, toValue, onMounted, onUnmounted } from "vue";
-import { NInput, NRadioGroup, NRadio, NRate } from "naive-ui";
+import {
+  ref,
+  shallowRef,
+  watch,
+  toValue,
+  onMounted,
+  onUnmounted,
+  defineExpose,
+} from "vue";
+import { NInput } from "naive-ui";
 import RoutePointSelect from "./RoutePointSelect.vue";
 import RouteCheckPointsList from "./RouteCheckPointsList.vue";
 import { useMap } from "@/models/map.js";
@@ -150,7 +158,10 @@ import {
   animateLineSymbol,
   clearAnimationLineSource,
 } from "./utils/render-route-line.js";
+import { validateSingleRoute } from "./utils/validator.js";
+import { RouteThresholds } from "./utils/thresholds.js";
 
+const errorMsg = ref("");
 const taskName = ref("");
 const singleDifficulty = ref("medium");
 const routeLineMode = ref("manual");
@@ -189,6 +200,33 @@ function clearSelectedEnd() {
   selectedEnd.value = null;
 
   clearEndPointSymbol(toValue(mapStore.map));
+}
+
+function clearValidationError() {
+  errorMsg.value = "";
+}
+
+function validateNow() {
+  clearValidationError();
+
+  try {
+    validateSingleRoute(taskName, selectedStart, selectedEnd, checkPoints);
+  } catch (e) {
+    errorMsg.value = e;
+
+    return false;
+  }
+
+  return {
+    mode: "single",
+    data: {
+      name: taskName.value,
+      start: selectedStart.value,
+      end: selectedEnd.value,
+      points: checkPoints.value,
+      threshold: RouteThresholds[singleDifficulty.value],
+    },
+  };
 }
 
 watch(completeFeature, (value) => {
@@ -234,6 +272,8 @@ onMounted(() => {
 onUnmounted(() => {
   clearAnimationLineSource(toValue(mapStore.map));
 });
+
+defineExpose({ validateNow });
 </script>
 
 <style scoped lang="scss">

@@ -5,10 +5,10 @@ function getZoneByPage(pageNo, pageSize) {
   return request({
     url: "/map/site/searchList",
     method: "POST",
-    data: JSON.stringify({
+    data: {
       pageNum: pageNo,
       pageSize: pageSize,
-    }),
+    },
     headers: {
       "Content-Type": "application/json",
     },

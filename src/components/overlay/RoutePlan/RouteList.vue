@@ -19,7 +19,9 @@
       <span class="route-planning-view__list-item-content">
         <span class="route-planning-view__list-item-title">
           {{ item.name }}
-          <n-rate size="small" allow-half readonly :value="2.5 + index" />
+          <span @click="() => emit('apply-user', item.id)">
+            <i-mdi-table-user />
+          </span>
         </span>
         <span class="route-planning-view__list-item-desc">
           这是一个简要描述该线路的分布和途径点情况的文字
@@ -30,16 +32,18 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, defineEmits } from "vue";
 import { NRate } from "naive-ui";
 import { useMapper } from "@/models/mapper.js";
 import { useMap } from "@/models/map.js";
+
+const emit = defineEmits(["apply-user"]);
 
 const mapStore = useMap();
 const mapperStore = useMapper();
 
 function switchCurrentRouteLine(routeId) {
-  mapperStore.switchDisplayRouteLine(routeId)
+  mapperStore.switchDisplayRouteLine(routeId);
 }
 </script>
 
