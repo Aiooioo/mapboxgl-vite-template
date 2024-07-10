@@ -15,6 +15,8 @@ const props = defineProps(["item"]);
 
 <style scoped lang="scss">
 .route-apply__users {
+  width: 48px;
+  flex: none;
   display: flex;
   align-items: center;
   font-size: 14px;

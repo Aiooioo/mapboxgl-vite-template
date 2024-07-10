@@ -21,7 +21,7 @@
           <span class="route-apply__panel-schema-index">{{ index + 1 }}</span>
           <div class="route-apply__panel-schema-content">
             <div class="route-apply__panel-schema-title">
-              <strong>#</strong> {{ item.name || item.id }}
+              <strong>线路 #</strong> {{ item.name || item.id }}
             </div>
             <div class="route-apply__panel-schema-points">
               <RouteSchemaPoints :item="item" />
@@ -43,33 +43,59 @@
           :options="grades"
         >
         </n-select>
-        <n-input size="small" style="width: 180px" placeholder="学员搜索">
+        <n-divider vertical></n-divider>
+        <n-input
+          v-model:value.trim="inputUserKeywords"
+          clearable
+          size="small"
+          style="width: 180px"
+          placeholder="学员搜索"
+          @clear="clearUserSearch"
+        >
           <template #prefix>
             <i-mdi-search />
           </template>
         </n-input>
+        <n-button type="info" size="small" @click="handleUserSearch">
+          <template #icon>
+            <i-mdi-search />
+          </template>
+          搜索
+        </n-button>
       </span>
-      <span class="route-apply__panel-bar-switch">
-
-      </span>
+      <span class="route-apply__panel-bar-switch"> </span>
     </div>
     <div class="route-apply__panel-table">
-      <n-data-table :columns="columns" :bordered="false" />
+      <n-data-table
+        :columns="columns"
+        :bordered="false"
+        :data="users"
+        :row-key="(row) => row.id"
+        :checked-row-keys="appliedUserIds"
+        @update:checked-row-keys="handleUserCheck"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-import { NInput, NSelect, NDataTable } from "naive-ui";
+import { ref, defineProps, defineExpose, onMounted } from "vue";
+import { NDivider, NInput, NSelect, NDataTable, NButton } from "naive-ui";
 import { useRouteApply } from "./hooks/useRouteApply.js";
+import { useUserList } from "./hooks/useUserList.js";
 import RouteSchemaPoints from "./support/RouteSchemaPoints.vue";
 import RouteSchemaDifficulty from "./support/RouteSchemaDifficuty.vue";
 import RouteSchemaApplied from "./support/RouteSchemaApplied.vue";
+import { timeout } from "@/utils/promise-utils.js";
 
-const props = defineProps(['item'])
-
+const props = defineProps(["item"]);
+const isDirty = ref(false);
+const appliedUserIds = ref([]);
+const inputUserKeywords = ref("");
+const searchUserKeywords = ref("");
+const currentGrade = ref(2024);
 const { schema, schemas, pagination } = useRouteApply();
+const { users } = useUserList(currentGrade, searchUserKeywords);
 
 const grades = [
   {
@@ -84,14 +110,49 @@ const columns = [
   },
   {
     title: "学员姓名",
+    key: "nickName",
   },
   {
     title: "学员学号",
+    key: "idCard",
+  },
+  {
+    title: "学员账号",
+    key: "username",
   },
   {
     title: "所属年级",
+    key: "deptName",
   },
 ];
+
+function clearUserSearch() {
+  searchUserKeywords.value = "";
+}
+
+function handleUserSearch() {
+  searchUserKeywords.value = inputUserKeywords.value;
+}
+
+function handleUserCheck(rowKeys) {
+  isDirty.value = true;
+
+  appliedUserIds.value = rowKeys;
+}
+
+function handleSave() {
+  return Promise.all([timeout(1000)]).then(() => {
+    isDirty.value = false;
+  });
+}
+
+onMounted(() => {
+  if (props.item) {
+    appliedUserIds.value = props.item.applyUsers || [];
+  }
+});
+
+defineExpose({ handleSave });
 </script>
 
 <style scoped lang="scss">
@@ -99,7 +160,7 @@ const columns = [
   width: 100%;
   height: 480px;
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 250px 1fr;
   grid-template-rows: 40px 1fr;
 
   &-schema {
@@ -118,9 +179,10 @@ const columns = [
     }
 
     &-index {
-      height: 20px;
-      width: 20px;
+      height: 18px;
+      width: 18px;
       border-radius: 50%;
+      font-size: 12px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -128,17 +190,18 @@ const columns = [
       color: $primary_text_color;
     }
     &-title {
-      margin-bottom: 4px;
+      margin-bottom: 8px;
       font-size: 16px;
       font-weight: 500;
       line-height: 20px;
     }
     &-points {
-      margin: 8px 0;
+      margin: 2px 0 16px;
     }
     &-applied {
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
   }
 
@@ -158,9 +221,9 @@ const columns = [
 
     &-title {
       margin-bottom: 16px;
-      font-size: 20px;
+      font-size: 16px;
       font-weight: 500;
-      line-height: 22px;
+      line-height: 1.5;
       color: $primary_text_color;
     }
 

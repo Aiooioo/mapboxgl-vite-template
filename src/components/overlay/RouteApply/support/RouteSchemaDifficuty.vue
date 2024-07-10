@@ -19,10 +19,10 @@ const displayDifficultyText = computed(() => {
 
 <style scoped>
 .route-apply__difficulty {
-  width: 64px;
-  height: 20px;
+  width: 56px;
+  height: 18px;
   border-radius: 3px;
-  font-size: 12px;
+  font-size: 11px;
   color: #121212;
   display: flex;
   justify-content: center;

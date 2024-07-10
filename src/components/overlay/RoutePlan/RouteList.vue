@@ -29,14 +29,15 @@
         <span class="route-planning-view__list-item-actions">
           <span
             class="route-planning-view__list-item-action"
-            @click="() => emit('apply-user', item.id)"
+            @click="applyAction"
           >
             <i-mdi-user-multiple />
             分配学员
           </span>
           <span
             class="route-planning-view__list-item-action"
-            @click="() => deleteRouteTask(item.id)"
+            :data-routeId="item.id"
+            @click="deleteAction"
           >
             <i-mdi-delete-outline />
             删除计划
@@ -62,6 +63,20 @@ const { deleteRouteLineById } = useRoutePlan();
 
 function switchCurrentRouteLine(routeId) {
   mapperStore.switchDisplayRouteLine(routeId);
+}
+
+function applyAction(e) {
+  e.stopPropagation();
+
+  emit("apply-user", item.id);
+}
+
+function deleteAction(e) {
+  e.stopPropagation();
+
+  const { routeId } = e.target.dataset;
+
+  alert(routeId);
 }
 
 function deleteRouteTask(id) {

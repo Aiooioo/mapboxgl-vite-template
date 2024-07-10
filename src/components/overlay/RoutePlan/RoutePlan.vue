@@ -53,10 +53,13 @@
       <span>{{ loadingMsg }}</span>
     </div>
     <n-modal
+      :mask-closable="false"
+      :close-on-esc="false"
+      v-model:loading="applyPanelLoading"
       :show-icon="false"
       size="huge"
       preset="dialog"
-      style="width: 80%; max-width: 900px; height: 60%"
+      style="width: 80%; max-width: 1024px; height: 60%"
       title="学员分配"
       v-model:show="showApplyModal"
       role="dialog"
@@ -65,7 +68,7 @@
       @positive-click="saveApplyUsers"
       @negative-click="cancelApplyUsers"
     >
-      <RouteApplyPanel :item="mapperStore.lineInEdit" />
+      <RouteApplyPanel ref="applyPanel" :item="mapperStore.lineInEdit" />
     </n-modal>
   </div>
 </template>
@@ -82,6 +85,8 @@ import { useCheckPointService } from "../CheckPoints/useCheckPointService.js";
 
 import { saveAddNewRoute } from "./utils/route-save.js";
 
+const applyPanel = ref(null);
+const applyPanelLoading = ref(false);
 const showApplyModal = ref(false);
 const isLoading = ref(false);
 const loadingMsg = ref("");
@@ -102,7 +107,16 @@ function onApplyUsers(line) {
   showApplyModal.value = true;
 }
 
-function saveApplyUsers() {}
+function saveApplyUsers() {
+  if (applyPanel.value) {
+    applyPanelLoading.value = true;
+    applyPanel.value.handleSave().then(() => {
+      applyPanelLoading.value = false;
+    });
+  }
+
+  return false;
+}
 
 function cancelApplyUsers() {
   mapperStore.lineInEdit = null;

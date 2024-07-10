@@ -11,9 +11,15 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, computed } from "vue";
 
 const props = defineProps(["item"]);
+
+const applied = computed(() => {
+  return (
+    (props.item && props.item.applyUsers && props.item.applyUsers.length) || 0
+  );
+});
 </script>
 
 <style scoped lang="scss">
