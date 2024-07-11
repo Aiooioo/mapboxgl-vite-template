@@ -51,11 +51,18 @@
         <i-mdi-format-text />
       </span>
       <span
-        title="箭头"
+        title="突击箭头"
         :class="['simple-drawing__pane-bar-item']"
-        @click="ensureCreateStatus(createArrow)"
+        @click="ensureCreateStatus(createAttackArrow)"
       >
         <i-mdi-arrow-top-right-bold-outline />
+      </span>
+      <span
+        title="钳击箭头"
+        :class="['simple-drawing__pane-bar-item']"
+        @click="ensureCreateStatus(createDoubleArrow)"
+      >
+        <i-mdi-chevron-double-right />
       </span>
     </div>
     <div
@@ -118,7 +125,8 @@ const {
   createEllipse,
   createCircle,
   createPoint,
-  createArrow,
+  createAttackArrow,
+  createDoubleArrow,
 } = useMapboxSketch();
 
 const contentComps = {

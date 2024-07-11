@@ -1,25 +1,18 @@
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import * as turf from "@turf/turf";
-import AttackArrow from "./ArrowPlot/AttackArrow";
+import DoubleArrow from "./ArrowPlot/DoubleArrow";
 
-const createAttackArrowFeature = function (coords) {
-  // const lineCoords = coords;
-  // lineCoords.push(lineCoords[0]);
-  // const feature = turf.polygon([lineCoords], {
-  //   name: "attack_arrow",
-  //   sketch: "arrow",
-  // });
-
+const createDoubleArrowFeature = function (coords) {
   const feature = turf.lineString(coords, {
-    name: "attack_arrow",
+    name: "double_arrow",
     sketch: "arrow",
   });
 
   return feature;
 };
 
-const DrawAttackArrow = {
-  onSetup: function (opts) {
+const DrawDoubleArrow = {
+  onSetup: function () {
     const clickCount = 0;
 
     return {
@@ -33,7 +26,7 @@ const DrawAttackArrow = {
     coordinates[state.clickCount] = [e.lngLat.lng, e.lngLat.lat];
     state.clickCount += 1;
 
-    if (state.clickCount === 3) {
+    if (state.clickCount === 4) {
       this.map.fire("draw.create", {
         features: [state.feature.toGeoJSON()],
       });
@@ -44,7 +37,7 @@ const DrawAttackArrow = {
     // console.log("onmousemove--state", state);
     const { clickCount, coordinates } = state;
 
-    if (clickCount == 2) {
+    if (clickCount > 1) {
       coordinates[clickCount] = [e.lngLat.lng, e.lngLat.lat];
     }
 
@@ -59,8 +52,8 @@ const DrawAttackArrow = {
     const { coordinates, feature } = state;
     if (coordinates.length < 3) return;
 
-    const coords = AttackArrow.generate(coordinates);
-    const arrowFeat = createAttackArrowFeature(coords);
+    const coords = DoubleArrow.generate(coordinates);
+    const arrowFeat = createDoubleArrowFeature(coords);
 
     if (feature) {
       feature.setCoordinates(arrowFeat.geometry.coordinates);
@@ -73,15 +66,15 @@ const DrawAttackArrow = {
   },
 };
 
-class DrawAttackArrowPlugin {
+class DrawDoubleArrowPlugin {
   constructor() {
     this.modes = MapboxDraw.modes;
   }
 
   attach() {
     const modes = MapboxDraw.modes;
-    modes.draw_attack_arrow = DrawAttackArrow;
+    modes.draw_double_arrow = DrawDoubleArrow;
   }
 }
 
-export default DrawAttackArrowPlugin;
+export default DrawDoubleArrowPlugin;
