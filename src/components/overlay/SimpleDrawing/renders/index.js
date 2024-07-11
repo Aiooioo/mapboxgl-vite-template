@@ -45,6 +45,7 @@ export function generateLayerStyle(feature) {
     case "rect":
     case "polygon":
     case "circle":
+    case "arrow":
     case "ellipse": {
       return generateFillSymbolLayers(layer, feature);
     }
@@ -117,6 +118,7 @@ export function render2Map(map, feature, symbol) {
     case "rect":
     case "polygon":
     case "circle":
+    case "arrow":
     case "ellipse": {
       updateFillSymbolPaint(map, feature, symbol);
       break;

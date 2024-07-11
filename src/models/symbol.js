@@ -57,6 +57,7 @@ const useSymbol = defineStore("symbol", {
         case "rect":
         case "polygon":
         case "circle":
+        case "arrow":
         case "ellipse": {
           return this.fillSymbol;
         }

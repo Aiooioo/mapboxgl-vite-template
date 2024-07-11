@@ -96,7 +96,14 @@ const headTailFactor = 0.8;
 
 const createAttackArrowFeature = function (coords) {
   // coords[0].push(coords[0][coords[0].length - 1]);
-  const feature = turf.lineString(coords[0], { name: "attack_arrow" });
+  // const feature = turf.lineString(coords[0], { name: "attack_arrow" });
+
+  const lineCoords = coords[0];
+  lineCoords.push(lineCoords[0]);
+  const feature = turf.polygon([lineCoords], {
+    name: "attack_arrow",
+    sketch: "arrow",
+  });
 
   return feature;
 };
@@ -117,33 +124,45 @@ const DrawAttackArrow = {
     state.clickCount += 1;
 
     if (state.clickCount === 3) {
-      const coords = this.generate(coordinates);
-      const feature = createAttackArrowFeature(coords);
-      const feat = this.newFeature(feature);
-      this.addFeature(feat);
-
-      this.changeMode("simple_select");
+      this.map.fire("draw.create", {
+        features: [state.feature.toGeoJSON()],
+      });
+      this.changeMode("simple_select", {}, { silent: true });
     }
   },
   onMouseMove: function (state, e) {
     // console.log("onmousemove--state", state);
-    // const { clickCount, coordinates } = state;
-    // if (clickCount == 2) {
-    //   coordinates[clickCount] = [e.lngLat.lng, e.lngLat.lat];
-    // }
-    // const coords = this.generate(coordinates);
-    // feature.updateCoordinate(coords);
-    // console.log("onMouseMove--state", state);
+    const { clickCount, coordinates } = state;
+
+    if (clickCount == 2) {
+      coordinates[clickCount] = [e.lngLat.lng, e.lngLat.lat];
+    }
+
+    this.updateFeature(state);
   },
 
   toDisplayFeatures: function (state, geojson, display) {
     display(geojson);
   },
 
-  generate: function (pnts) {
-    if (pnts.length < 3) {
-      return;
+  updateFeature: function (state) {
+    const { coordinates, feature } = state;
+    if (coordinates.length < 3) return;
+
+    const coords = this.generate(coordinates);
+    const arrowFeat = createAttackArrowFeature(coords);
+
+    if (feature) {
+      feature.setCoordinates(arrowFeat.geometry.coordinates);
+    } else {
+      const feat = this.newFeature(arrowFeat);
+      this.addFeature(feat);
+
+      state.feature = feat;
     }
+  },
+
+  generate: function (pnts) {
     // 计算箭尾
     var tailLeft = pnts[0];
     var tailRight = pnts[1];
@@ -177,10 +196,6 @@ const DrawAttackArrow = {
     rightPnts = getQBSplinePoints(rightPnts);
 
     const coords = [leftPnts.concat(headPnts, rightPnts.reverse())];
-
-    // console.log("draw_attack_arrow_--coords", coords);
-
-    // this.map.fire("draw.create", { features: [feature] });
 
     return coords;
   },

@@ -11,9 +11,7 @@ export function hasNextStep(ctx) {
   return true;
 }
 
-export function disposeWorkflow() {
-
-}
+export function disposeWorkflow() {}
 
 export function setupWorkflow($sketch, $feature, $symbol) {
   $sketch
@@ -33,7 +31,7 @@ export function setupWorkflow($sketch, $feature, $symbol) {
       combineLatestWith($symbol),
       tap(([[{ map, feature }, _], symbol]) => {
         ensureDrawingStylerLayerData(map, feature, symbol);
-      }),
+      })
     )
     .subscribe(([[{ map, feature }, _], symbol]) => {
       render2Map(map, feature, symbol);

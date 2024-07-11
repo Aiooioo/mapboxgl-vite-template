@@ -1,4 +1,4 @@
-import { generateLayerStyle } from './index.js'
+import { generateLayerStyle } from "./index.js";
 import * as defaults from "@/components/overlay/SymbolStyler/support/defaults.js";
 
 export function generateFillSymbolLayers(layer, feature) {
@@ -49,24 +49,24 @@ export function updateFillSymbolPaint(map, feature, symbolSettings) {
     map.setPaintProperty(
       fillLayer.id,
       "fill-opacity",
-      symbolSettings.fillOpacity,
+      symbolSettings.fillOpacity
     );
   }
 
   const strokeLayer = symbolLayers.find(
-    (symbol) => symbol.layer.type === "line",
+    (symbol) => symbol.layer.type === "line"
   );
   const strokeLayerOnMap = map.getLayer(strokeLayer.id);
   if (strokeLayerOnMap) {
     map.setPaintProperty(
       strokeLayer.id,
       "line-color",
-      symbolSettings.strokeColor,
+      symbolSettings.strokeColor
     );
     map.setPaintProperty(
       strokeLayer.id,
       "line-width",
-      symbolSettings.strokeWidth,
+      symbolSettings.strokeWidth
     );
   }
 }

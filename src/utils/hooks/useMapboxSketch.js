@@ -155,7 +155,6 @@ const useMapboxSketch = () => {
     activeTool.value = "point";
 
     sketchRef.value.changeMode("draw_point");
-    console.log(123);
   }
 
   function createPolyline() {
@@ -201,7 +200,7 @@ const useMapboxSketch = () => {
   function createArrow() {
     if (!checkAndPrepare()) return;
 
-    activeTool.value = "polygon";
+    activeTool.value = "arrow";
 
     sketchRef.value.changeMode("draw_attack_arrow");
   }

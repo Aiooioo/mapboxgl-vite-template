@@ -47,6 +47,8 @@ const displayNoteType = computed(() => {
         return "矩形";
       case "text":
         return "文本";
+      case "arrow":
+        return "箭头";
     }
   }
 
