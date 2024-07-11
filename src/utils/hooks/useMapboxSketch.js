@@ -197,12 +197,22 @@ const useMapboxSketch = () => {
     sketchRef.value.changeMode("draw_polygon");
   }
 
-  function createArrow() {
+  function createAttackArrow() {
     if (!checkAndPrepare()) return;
 
     activeTool.value = "arrow";
 
     sketchRef.value.changeMode("draw_attack_arrow");
+    // sketchRef.value.changeMode("draw_double_arrow");
+  }
+
+  function createDoubleArrow() {
+    if (!checkAndPrepare()) return;
+
+    activeTool.value = "arrow";
+
+    // sketchRef.value.changeMode("draw_attack_arrow");
+    sketchRef.value.changeMode("draw_double_arrow");
   }
 
   function cancelDraw() {
@@ -266,7 +276,8 @@ const useMapboxSketch = () => {
     createEllipse,
     createRect,
     createPolygon,
-    createArrow,
+    createAttackArrow,
+    createDoubleArrow,
     cancelDraw,
     clear,
   };
