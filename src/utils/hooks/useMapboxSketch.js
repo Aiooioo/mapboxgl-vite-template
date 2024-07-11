@@ -203,7 +203,6 @@ const useMapboxSketch = () => {
     activeTool.value = "arrow";
 
     sketchRef.value.changeMode("draw_attack_arrow");
-    // sketchRef.value.changeMode("draw_double_arrow");
   }
 
   function createDoubleArrow() {
@@ -213,6 +212,7 @@ const useMapboxSketch = () => {
 
     // sketchRef.value.changeMode("draw_attack_arrow");
     sketchRef.value.changeMode("draw_double_arrow");
+    // sketchRef.value.changeMode("draw_three_arrow");
   }
 
   function cancelDraw() {

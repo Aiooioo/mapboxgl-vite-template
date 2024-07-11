@@ -23,8 +23,8 @@ export function getBaseLength(points) {
 }
 
 export function wholeDistance(points) {
-  var distance = 0;
-  for (var i = 0; i < points.length - 1; i++)
+  let distance = 0;
+  for (let i = 0; i < points.length - 1; i++)
     distance += calcDistance(points[i], points[i + 1]);
   return distance;
 }
@@ -32,17 +32,18 @@ export function wholeDistance(points) {
 export function getQBSplinePoints(points) {
   if (points.length <= 2) return points;
 
-  var n = 2;
+  const n = 2;
 
-  var bSplinePoints = [];
-  var m = points.length - n - 1;
+  const bSplinePoints = [];
+  const m = points.length - n - 1;
   bSplinePoints.push(points[0]);
-  for (var i = 0; i <= m; i++) {
-    for (var t = 0; t <= 1; t += 0.05) {
-      var y = 0;
-      var x = 0;
-      for (var k = 0; k <= n; k++) {
-        var factor = getQuadricBSplineFactor(k, t);
+
+  for (let i = 0; i <= m; i++) {
+    for (let t = 0; t <= 1; t += 0.05) {
+      let y = 0;
+      let x = 0;
+      for (let k = 0; k <= n; k++) {
+        const factor = getQuadricBSplineFactor(k, t);
         x += factor * points[i + k][0];
         y += factor * points[i + k][1];
       }
@@ -61,23 +62,26 @@ export function getQuadricBSplineFactor(k, t) {
 }
 
 export function getThirdPoint(startPnt, endPnt, angle, distance, clockWise) {
-  var azimuth = getAzimuth(startPnt, endPnt);
-  var alpha = clockWise ? azimuth + angle : azimuth - angle;
-  var dx = distance * Math.cos(alpha);
-  var dy = distance * Math.sin(alpha);
+  const azimuth = getAzimuth(startPnt, endPnt);
+  const alpha = clockWise ? azimuth + angle : azimuth - angle;
+  const dx = distance * Math.cos(alpha);
+  const dy = distance * Math.sin(alpha);
+
   return [endPnt[0] + dx, endPnt[1] + dy];
 }
 
 export function getAngleOfThreePoints(pntA, pntB, pntC) {
-  var angle = getAzimuth(pntB, pntA) - getAzimuth(pntB, pntC);
+  const angle = getAzimuth(pntB, pntA) - getAzimuth(pntB, pntC);
   return angle < 0 ? angle + TWO_PI : angle;
 }
 
 export function getAzimuth(startPnt, endPnt) {
-  var azimuth;
-  var angle = Math.asin(
+  let azimuth;
+
+  const angle = Math.asin(
     Math.abs(endPnt[1] - startPnt[1]) / calcDistance(startPnt, endPnt)
   );
+
   if (endPnt[1] >= startPnt[1] && endPnt[0] >= startPnt[0])
     azimuth = angle + Math.PI;
   else if (endPnt[1] >= startPnt[1] && endPnt[0] < startPnt[0])
@@ -85,6 +89,7 @@ export function getAzimuth(startPnt, endPnt) {
   else if (endPnt[1] < startPnt[1] && endPnt[0] < startPnt[0]) azimuth = angle;
   else if (endPnt[1] < startPnt[1] && endPnt[0] >= startPnt[0])
     azimuth = Math.PI - angle;
+
   return azimuth;
 }
 
@@ -119,7 +124,8 @@ function getFactorial(n) {
   if (n == 3) return 6;
   if (n == 4) return 24;
   if (n == 5) return 120;
-  var result = 1;
-  for (var i = 1; i <= n; i++) result *= i;
+
+  let result = 1;
+  for (let i = 1; i <= n; i++) result *= i;
   return result;
 }

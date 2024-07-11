@@ -22,121 +22,124 @@ export default class DoubleArrow {
   constructor() {}
 
   static getArrowPoints(pnt1, pnt2, pnt3, clockWise) {
-    var midPnt = calcMid(pnt1, pnt2);
-    var len = calcDistance(midPnt, pnt3);
-    var midPnt1 = getThirdPoint(pnt3, midPnt, 0, len * 0.3, true);
-    var midPnt2 = getThirdPoint(pnt3, midPnt, 0, len * 0.5, true);
-    //var midPnt3=PlotUtils.getThirdPoint(pnt3, midPnt, 0, len * 0.7, true);
+    const midPnt = calcMid(pnt1, pnt2);
+    const len = calcDistance(midPnt, pnt3);
+    let midPnt1 = getThirdPoint(pnt3, midPnt, 0, len * 0.3, true);
+    let midPnt2 = getThirdPoint(pnt3, midPnt, 0, len * 0.5, true);
     midPnt1 = getThirdPoint(midPnt, midPnt1, HALF_PI, len / 5, clockWise);
     midPnt2 = getThirdPoint(midPnt, midPnt2, HALF_PI, len / 4, clockWise);
-    //midPnt3=PlotUtils.getThirdPoint(midPnt, midPnt3, Constants.HALF_PI, len / 5, clockWise);
 
-    var points = [midPnt, midPnt1, midPnt2, pnt3];
+    const points = [midPnt, midPnt1, midPnt2, pnt3];
+
     // 计算箭头部分
-    var arrowPnts = this.getArrowHeadPoints(
-      points,
-      this.headHeightFactor,
-      this.headWidthFactor,
-      this.neckHeightFactor,
-      this.neckWidthFactor
-    );
-    var neckLeftPoint = arrowPnts[0];
-    var neckRightPoint = arrowPnts[4];
+    const arrowPnts = this.getArrowHeadPoints(points);
+    const neckLeftPoint = arrowPnts[0];
+    const neckRightPoint = arrowPnts[4];
+
     // 计算箭身部分
-    var tailWidthFactor = calcDistance(pnt1, pnt2) / getBaseLength(points) / 2;
-    var bodyPnts = this.getArrowBodyPoints(
+    const tailWidthFactor =
+      calcDistance(pnt1, pnt2) / getBaseLength(points) / 2;
+    const bodyPnts = this.getArrowBodyPoints(
       points,
       neckLeftPoint,
       neckRightPoint,
       tailWidthFactor
     );
-    var n = bodyPnts.length;
-    var lPoints = bodyPnts.slice(0, n / 2);
-    var rPoints = bodyPnts.slice(n / 2, n);
+    const n = bodyPnts.length;
+    let lPoints = bodyPnts.slice(0, n / 2);
+    let rPoints = bodyPnts.slice(n / 2, n);
     lPoints.push(neckLeftPoint);
     rPoints.push(neckRightPoint);
     lPoints = lPoints.reverse();
     lPoints.push(pnt2);
     rPoints = rPoints.reverse();
     rPoints.push(pnt1);
+
     return lPoints.reverse().concat(arrowPnts, rPoints);
   }
 
-  static getArrowHeadPoints(points, tailLeft, tailRight) {
-    var len = getBaseLength(points);
-    var headHeight = len * this.headHeightFactor;
-    var headPnt = points[points.length - 1];
-    // var tailWidth = calcDistance(tailLeft, tailRight);
-    var headWidth = headHeight * this.headWidthFactor;
-    var neckWidth = headHeight * this.neckWidthFactor;
-    var neckHeight = headHeight * this.neckHeightFactor;
-    var headEndPnt = getThirdPoint(
+  static getArrowHeadPoints(points) {
+    const len = getBaseLength(points);
+    const headHeight = len * this.headHeightFactor;
+    const headPnt = points[points.length - 1];
+    const headWidth = headHeight * this.headWidthFactor;
+    const neckWidth = headHeight * this.neckWidthFactor;
+    const neckHeight = headHeight * this.neckHeightFactor;
+
+    const headEndPnt = getThirdPoint(
       points[points.length - 2],
       headPnt,
       0,
       headHeight,
       true
     );
-    var neckEndPnt = getThirdPoint(
+
+    const neckEndPnt = getThirdPoint(
       points[points.length - 2],
       headPnt,
       0,
       neckHeight,
       true
     );
-    var headLeft = getThirdPoint(
+
+    const headLeft = getThirdPoint(
       headPnt,
       headEndPnt,
       HALF_PI,
       headWidth,
       false
     );
-    var headRight = getThirdPoint(
+
+    const headRight = getThirdPoint(
       headPnt,
       headEndPnt,
       HALF_PI,
       headWidth,
       true
     );
-    var neckLeft = getThirdPoint(
+
+    const neckLeft = getThirdPoint(
       headPnt,
       neckEndPnt,
       HALF_PI,
       neckWidth,
       false
     );
-    var neckRight = getThirdPoint(
+
+    const neckRight = getThirdPoint(
       headPnt,
       neckEndPnt,
       HALF_PI,
       neckWidth,
       true
     );
+
     return [neckLeft, headLeft, headPnt, headRight, neckRight];
   }
 
   static getArrowBodyPoints(points, neckLeft, neckRight, tailWidthFactor) {
-    var allLen = wholeDistance(points);
-    var len = getBaseLength(points);
-    var tailWidth = len * tailWidthFactor;
-    var neckWidth = calcDistance(neckLeft, neckRight);
-    var widthDif = (tailWidth - neckWidth) / 2;
-    var tempLen = 0,
+    const allLen = wholeDistance(points);
+    const len = getBaseLength(points);
+    const tailWidth = len * tailWidthFactor;
+    const neckWidth = calcDistance(neckLeft, neckRight);
+    const widthDif = (tailWidth - neckWidth) / 2;
+    let tempLen = 0,
       leftBodyPnts = [],
       rightBodyPnts = [];
-    for (var i = 1; i < points.length - 1; i++) {
-      var angle =
+    for (let i = 1; i < points.length - 1; i++) {
+      let angle =
         getAngleOfThreePoints(points[i - 1], points[i], points[i + 1]) / 2;
       tempLen += calcDistance(points[i - 1], points[i]);
-      var w = (tailWidth / 2 - (tempLen / allLen) * widthDif) / Math.sin(angle);
-      var left = getThirdPoint(
+      const w =
+        (tailWidth / 2 - (tempLen / allLen) * widthDif) / Math.sin(angle);
+      const left = getThirdPoint(
         points[i - 1],
         points[i],
         Math.PI - angle,
         w,
         true
       );
-      var right = getThirdPoint(points[i - 1], points[i], angle, w, false);
+      const right = getThirdPoint(points[i - 1], points[i], angle, w, false);
       leftBodyPnts.push(left);
       rightBodyPnts.push(right);
     }
@@ -232,14 +235,6 @@ export default class DoubleArrow {
       lrBodyPnts
     );
 
-    // console.log("double arrow coords", coords);
-
     return coords;
   }
 }
-
-// P.Plot.DoubleArrow.prototype.finishDrawing = function () {
-//   if (this.getPointCount() == 3 && this.tempPoint4 != null)
-//     this.points.push(this.tempPoint4);
-//   if (this.connPoint != null) this.points.push(this.connPoint);
-// };
