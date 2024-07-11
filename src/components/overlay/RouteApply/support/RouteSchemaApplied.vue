@@ -3,14 +3,27 @@
     <i-mdi-user-multiple
       style="color: #a78bfa; margin-right: 4px; font-size: 16px"
     />
-    {{ props.item.applyUsers.length }}
+    {{ applied }}
   </span>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, computed } from "vue";
 
 const props = defineProps(["item"]);
+
+const applied = computed(() => {
+  if (props.item) {
+    if (props.item.byHand) {
+      return (props.item.applyUsers && props.item.applyUsers.length) || 0;
+    } else {
+      // is schema data struct
+      return props.item.applyUsers.length;
+    }
+  }
+
+  return 0;
+});
 </script>
 
 <style scoped lang="scss">

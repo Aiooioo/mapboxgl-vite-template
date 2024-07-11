@@ -1,7 +1,12 @@
 <template>
   <div class="route-apply__panel">
     <div class="route-apply__panel-schemas">
-      <div class="route-apply__panel-schemas-title">线路方案</div>
+      <div class="route-apply__panel-schemas-title">
+        <n-badge v-if="isDirtySchema" value="新">
+          <span>线路方案</span>
+        </n-badge>
+        <span v-else>线路方案</span>
+      </div>
       <div class="route-apply__panel-schemas-search">
         <n-input style="width: 100%" size="small" placeholder="请输入关键字">
           <template #prefix>
@@ -9,7 +14,7 @@
           </template>
         </n-input>
       </div>
-      <div class="route-apply__panel-schemas-list">
+      <div v-if="hasSchema" class="route-apply__panel-schemas-list">
         <div
           v-if="!!mapperStore.lineInEdit.byHand"
           class="route-apply__panel-schema selected"
@@ -40,7 +45,7 @@
             <span class="route-apply__panel-schema-index">{{ index + 1 }}</span>
             <div class="route-apply__panel-schema-content">
               <div class="route-apply__panel-schema-title">
-                <strong>线路 #</strong> {{ item.name || item.id }}
+                <strong>线路 #</strong> {{ item.id + 1 }}
               </div>
               <div class="route-apply__panel-schema-points">
                 <RouteSchemaPoints :item="item" />
@@ -51,6 +56,23 @@
               </div>
             </div>
           </div>
+        </template>
+      </div>
+      <div v-else class="route-apply__panel-schemas-noop">
+        <n-spin v-if="isGeneratingSchema" size="large">
+          <template #icon>
+            <i-mdi-loading style="font-size: 36px" />
+          </template>
+        </n-spin>
+        <template v-else>
+          <n-empty size="huge" description="当前任务计划还没有线路方案">
+            <template #icon>
+              <i-mdi-scatter-plot-outline />
+            </template>
+          </n-empty>
+          <a href="javascript:void(0)" @click="generateRandomSchema">
+            现在去生成
+          </a>
         </template>
       </div>
     </div>
@@ -99,8 +121,17 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineExpose, onMounted } from "vue";
-import { NDivider, NInput, NSelect, NDataTable, NButton } from "naive-ui";
+import { ref, computed, defineProps, defineExpose, onMounted } from "vue";
+import {
+  NBadge,
+  NEmpty,
+  NDivider,
+  NInput,
+  NSelect,
+  NDataTable,
+  NButton,
+  NSpin,
+} from "naive-ui";
 import { useMapper } from "@/models/mapper.js";
 import { useRouteApply } from "./hooks/useRouteApply.js";
 import { useUserList } from "./hooks/useUserList.js";
@@ -108,6 +139,10 @@ import RouteSchemaPoints from "./support/RouteSchemaPoints.vue";
 import RouteSchemaDifficulty from "./support/RouteSchemaDifficuty.vue";
 import RouteSchemaApplied from "./support/RouteSchemaApplied.vue";
 import { timeout } from "@/utils/promise-utils.js";
+
+const props = defineProps({
+  zonePoints: {},
+});
 
 const isDirty = ref(false);
 const appliedUserIds = ref([]);
@@ -117,7 +152,15 @@ const currentGrade = ref(2024);
 
 const mapperStore = useMapper();
 
-const { schema, schemas, pagination } = useRouteApply();
+const {
+  schema,
+  schemas,
+  hasSchema,
+  isGeneratingSchema,
+  isDirtySchema,
+  generateRouteSchemas,
+  updateRoutePlanSchemas,
+} = useRouteApply(props.zonePoints);
 const { users } = useUserList(currentGrade, searchUserKeywords);
 
 const grades = [
@@ -164,9 +207,19 @@ function handleUserCheck(rowKeys) {
 }
 
 function handleSave() {
+  const promises = [];
+
+  if (isDirtySchema.value) {
+    promises.push(updateRoutePlanSchemas());
+  }
+
   return Promise.all([timeout(1000)]).then(() => {
     isDirty.value = false;
   });
+}
+
+function generateRandomSchema() {
+  generateRouteSchemas();
 }
 
 onMounted(() => {
@@ -190,7 +243,7 @@ defineExpose({ handleSave });
     margin-bottom: 6px;
     border-radius: 6px;
     padding: 8px;
-    background: $minor_bg_color;
+    background: $global_bg_color;
     border: 1px solid transparent;
     display: grid;
     grid-template-columns: 20px 1fr;
@@ -229,6 +282,7 @@ defineExpose({ handleSave });
   }
 
   &-schemas {
+    height: 100%;
     padding: 10px;
     grid-column: 0;
     grid-row: 1 / span 2;
@@ -241,6 +295,7 @@ defineExpose({ handleSave });
       transparent 100%
     );
     border-image-slice: 1;
+    overflow-y: auto;
 
     &-title {
       margin-bottom: 16px;
@@ -252,6 +307,23 @@ defineExpose({ handleSave });
 
     &-search {
       margin-bottom: 10px;
+    }
+
+    &-noop {
+      padding-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+
+      :deep(.n-empty__description) {
+        margin-top: 40px !important;
+      }
+
+      a {
+        color: $primary_bg_color;
+        text-decoration: underline;
+      }
     }
   }
   &-bar {

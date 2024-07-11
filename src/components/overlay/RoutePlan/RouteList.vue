@@ -39,12 +39,14 @@
               >手动</n-tag
             >
           </span>
-          <span class="route-planning-view__list-item-desc">
-            该定向越野任务计划共包含可分配线路 1 条。
-          </span>
           <span class="route-planning-view__list-item-creator">
             <span>{{ item.createUser }}</span>
             <span>{{ item.updateTime }}</span>
+          </span>
+          <span class="route-planning-view__list-item-desc">
+            该定向越野任务计划共包含可分配线路
+            {{ item.pointList.filter((p) => p.split(",").length === 5).length }}
+            条。
           </span>
           <span class="route-planning-view__list-item-actions">
             <span
@@ -181,7 +183,7 @@ function deleteAction(id) {
     &-desc {
       margin-bottom: 6px;
       font-size: 12px;
-      color: $secondary_text_color;
+      color: $hint_text_color;
     }
     &-creator {
       margin-bottom: 12px;

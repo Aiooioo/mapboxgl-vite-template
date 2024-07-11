@@ -21,17 +21,14 @@ const props = defineProps(["item"]);
 const points = computed(() => {
   if (props.item && props.item.byHand) {
     if (props.item.pointList) {
-      return _.slice(props.item.pointList, 1, 6);
+      return props.item.pointList[1].split(",");
     }
+  } else {
+    // is schema data struct
+    return props.item.pointList;
   }
 
   return [];
-});
-
-const applied = computed(() => {
-  return (
-    (props.item && props.item.applyUsers && props.item.applyUsers.length) || 0
-  );
 });
 </script>
 

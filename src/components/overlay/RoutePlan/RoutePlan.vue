@@ -77,14 +77,15 @@
       @positive-click="saveApplyUsers"
       @negative-click="cancelApplyUsers"
     >
-      <RouteApplyPanel ref="applyPanel" />
+      <RouteApplyPanel ref="applyPanel" :zone-points="checkPoints" />
     </n-modal>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted, toValue } from "vue";
 import { NModal, NSpin } from "naive-ui";
+import { useMap } from "@/models/map.js";
 import { useMapper } from "@/models/mapper.js";
 import { useZone } from "@/models/zone.js";
 import RouteList from "./RouteList.vue";
@@ -93,6 +94,7 @@ import RouteApplyPanel from "@/components/overlay/RouteApply/RouteApplyPanel.vue
 import { useCheckPointService } from "../CheckPoints/useCheckPointService.js";
 
 import { saveAddNewRoute, saveBatchCreateRoute } from "./utils/route-save.js";
+import { prepareAnimationLineSource } from "./utils/render-route-line.js";
 
 const applyPanel = ref(null);
 const applyPanelLoading = ref(false);
@@ -103,6 +105,7 @@ const hasValidationError = ref(false);
 const compRef = ref(null);
 const { checkPoints } = useCheckPointService();
 
+const mapStore = useMap();
 const mapperStore = useMapper();
 const zoneStore = useZone();
 
@@ -187,7 +190,7 @@ watch(
     if (value) {
       const line = mapperStore.lines.find((l) => l.id === value);
       if (line) {
-        console.log(line);
+        // draw start & end
       }
     }
   },

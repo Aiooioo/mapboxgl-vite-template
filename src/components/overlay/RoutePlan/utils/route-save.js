@@ -12,11 +12,13 @@ function createRouteExamTask(siteId, taskName, points) {
     data.byHand = true;
     data.pointList = [
       `${points[0].geometry.coordinates[0]},${points[0].geometry.coordinates[1]}`,
-      `${points[1].id}`,
-      `${points[2].id}`,
-      `${points[3].id}`,
-      `${points[4].id}`,
-      `${points[5].id}`,
+      [
+        points[1].id,
+        points[2].id,
+        points[3].id,
+        points[4].id,
+        points[5].id,
+      ].join(","),
       `${points[6].geometry.coordinates[0]},${points[6].geometry.coordinates[1]}`,
     ];
   }

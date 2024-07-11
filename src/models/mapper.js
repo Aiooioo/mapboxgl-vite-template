@@ -48,7 +48,7 @@ const useMapper = defineStore("mapper", {
 
       currentView: "list",
 
-      selectedLine: "1",
+      selectedLine: null,
 
       lines: [],
       lineListPage: 1,
