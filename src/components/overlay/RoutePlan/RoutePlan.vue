@@ -4,6 +4,7 @@
       <div class="route-planning__view">
         <RouteList
           v-if="mapperStore.currentView === 'list'"
+          @select-line=""
           @apply-user="onApplyUsers"
         />
         <RouteLineEditor
@@ -62,6 +63,7 @@
     <n-modal
       :mask-closable="false"
       :close-on-esc="false"
+      display-directive="if"
       v-model:loading="applyPanelLoading"
       :show-icon="false"
       size="huge"
@@ -81,7 +83,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { NModal, NSpin } from "naive-ui";
 import { useMapper } from "@/models/mapper.js";
 import { useZone } from "@/models/zone.js";
@@ -90,7 +92,7 @@ import RouteLineEditor from "./RouteLineEditor.vue";
 import RouteApplyPanel from "@/components/overlay/RouteApply/RouteApplyPanel.vue";
 import { useCheckPointService } from "../CheckPoints/useCheckPointService.js";
 
-import { saveAddNewRoute } from "./utils/route-save.js";
+import { saveAddNewRoute, saveBatchCreateRoute } from "./utils/route-save.js";
 
 const applyPanel = ref(null);
 const applyPanelLoading = ref(false);
@@ -139,9 +141,9 @@ function handleSave() {
     const valid = compRef.value.validateNow();
     if (valid !== false) {
       const { data, mode } = valid;
-      if (mode === "single") {
-        loadingMsg.value = "正在为当前定向越野创建任务计划";
+      loadingMsg.value = "正在为当前定向越野创建任务计划";
 
+      if (mode === "single") {
         saveAddNewRoute(
           zoneStore.currentId,
           data.name,
@@ -156,6 +158,21 @@ function handleSave() {
           .finally(() => {
             isLoading.value = false;
           });
+      } else if (mode === "batch") {
+        saveBatchCreateRoute(
+          zoneStore.currentId,
+          data.name,
+          data.start,
+          data.end,
+          data.count,
+          data.strategy,
+        )
+          .then(() => {
+            mapperStore.saveCurrentLine();
+          })
+          .finally(() => {
+            isLoading.value = false;
+          });
       }
     } else {
       hasValidationError.value = true;
@@ -163,6 +180,18 @@ function handleSave() {
     }
   }
 }
+
+watch(
+  () => mapperStore.selectedLine,
+  (value) => {
+    if (value) {
+      const line = mapperStore.lines.find((l) => l.id === value);
+      if (line) {
+        console.log(line);
+      }
+    }
+  },
+);
 </script>
 
 <style scoped lang="scss">

@@ -57,6 +57,15 @@ export function prepareAnimationLineSource(map) {
   );
 }
 
+export function clearRouteLineData(map) {
+  if (map.getSource(DATA_SOURCE_ROUTE_LINE)) {
+    map.getSource(DATA_SOURCE_ROUTE_LINE).setData({
+      type: "FeatureCollection",
+      features: [],
+    });
+  }
+}
+
 export function clearAnimationLineSource(map) {
   if (map.getLayer(LAYER_ROUTE_LINE)) {
     map.removeLayer(LAYER_ROUTE_LINE);
@@ -99,6 +108,8 @@ function doAnimate(timestamp) {
 
 export function animateLineSymbol(map, startPoint, endPoint, checkPoints) {
   clearAndStopAnimation();
+
+  if (checkPoints.length === 0) return;
 
   const line = turf.lineString([
     startPoint.geometry.coordinates,

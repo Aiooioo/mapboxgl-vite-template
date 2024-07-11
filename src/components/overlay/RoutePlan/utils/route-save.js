@@ -31,6 +31,29 @@ function createRouteExamTask(siteId, taskName, points) {
   });
 }
 
+function createBatchRouteExamTask(siteId, taskName, startEnd, lineCount) {
+  const data = {
+    siteId,
+    name: taskName,
+  };
+
+  data.byHand = false;
+  data.pointList = [
+    `${startEnd[0].geometry.coordinates[0]},${startEnd[0].geometry.coordinates[1]}`,
+    `${lineCount}`,
+    `${startEnd[1].geometry.coordinates[0]},${startEnd[1].geometry.coordinates[1]}`,
+  ];
+
+  return request({
+    url: "/exam/route/create",
+    method: "POST",
+    data: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
+
 function createRouteSegment(siteId, segStart, segEnd, threshold) {
   return request({
     url: "/map/route/create",
@@ -80,6 +103,31 @@ export async function saveAddNewRoute(
     // _.each(segmentResps, (segment) => {});
 
     const examRes = await createRouteExamTask(zoneId, taskName, allPoints);
+    if (examRes && examRes.code === 200) {
+      return true;
+    } else {
+      return Promise.reject();
+    }
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
+
+export async function saveBatchCreateRoute(
+  zoneId,
+  taskName,
+  start,
+  end,
+  batchCount,
+  batchStrategy,
+) {
+  try {
+    const examRes = await createBatchRouteExamTask(
+      zoneId,
+      taskName,
+      [start, end],
+      batchCount,
+    );
     if (examRes && examRes.code === 200) {
       return true;
     } else {

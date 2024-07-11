@@ -20,6 +20,12 @@ const useRouteCheckPoints = () => {
     );
   }
 
+  function removeAllCheckPoints() {
+    checkPoints.value = [];
+
+    updateHighlightPoints(toValue(mapStore.map), []);
+  }
+
   function onCheckPointClick(e) {
     if (checkPoints.value.length === 5) return;
 
@@ -51,6 +57,7 @@ const useRouteCheckPoints = () => {
   return {
     checkPoints,
     removeCheckPointAt,
+    removeAllCheckPoints,
   };
 };
 

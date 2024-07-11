@@ -75,58 +75,23 @@
           >
         </span>
       </span>
-      <span class="route-planning-view__editor-row-wrapper">
-        <RouteCheckPointsList
-          :route-name="taskName"
-          :points="checkPoints"
-          @remove-point="removeCheckPointAt"
-        />
-      </span>
+      <span class="route-planning-view__editor-row-wrapper"></span>
     </div>
-
-    <div class="route-planning-view__editor-row">
-      <span class="route-planning-view__editor-row-label">路线难度</span>
-      <span class="route-planning-view__editor-row-wrapper">
-        <span class="route-planning-view__editor-rates">
-          <span
-            :class="[
-              'route-planning-view__editor-rate very-easy',
-              { selected: singleDifficulty === 'very-easy' },
-            ]"
-            @click="() => (singleDifficulty = 'very-easy')"
-          >
-            <span class="route-planning-view__editor-rate-inner">非常简单</span>
-          </span>
-          <span
-            :class="[
-              'route-planning-view__editor-rate easy',
-              { selected: singleDifficulty === 'easy' },
-            ]"
-            @click="() => (singleDifficulty = 'easy')"
-          >
-            <span class="route-planning-view__editor-rate-inner">简单</span>
-          </span>
-          <span
-            :class="[
-              'route-planning-view__editor-rate medium',
-              { selected: singleDifficulty === 'medium' },
-            ]"
-            @click="() => (singleDifficulty = 'medium')"
-          >
-            <span class="route-planning-view__editor-rate-inner">中等</span>
-          </span>
-          <span
-            :class="[
-              'route-planning-view__editor-rate hard',
-              { selected: singleDifficulty === 'hard' },
-            ]"
-            @click="() => (singleDifficulty = 'hard')"
-          >
-            <span class="route-planning-view__editor-rate-inner">困难</span>
-          </span>
-        </span>
-      </span>
-    </div>
+    <RouteLineManual
+      v-if="routeLineMode === 'manual'"
+      :task-name="taskName"
+      :check-points="checkPoints"
+      :start-point="selectedStart"
+      :end-point="selectedEnd"
+      :difficulty="singleDifficulty"
+      @remove-point="removeCheckPointAt"
+      @change-difficulty="(val) => (singleDifficulty = val)"
+    ></RouteLineManual>
+    <RouteLineBatch
+      v-else-if="routeLineMode === 'auto'"
+      v-model:batch-number="batchNumber"
+      v-model:batch-strategy="batchStrategy"
+    ></RouteLineBatch>
   </div>
 </template>
 
@@ -142,7 +107,8 @@ import {
 } from "vue";
 import { NInput } from "naive-ui";
 import RoutePointSelect from "./RoutePointSelect.vue";
-import RouteCheckPointsList from "./RouteCheckPointsList.vue";
+import RouteLineManual from "./support/RouteLineManual.vue";
+import RouteLineBatch from "./support/RouteLineBatch.vue";
 import { useMap } from "@/models/map.js";
 import { useMapper } from "@/models/mapper.js";
 import useMapboxSketch from "@/utils/hooks/useMapboxSketch.js";
@@ -157,14 +123,17 @@ import {
   prepareAnimationLineSource,
   animateLineSymbol,
   clearAnimationLineSource,
+  clearRouteLineData,
 } from "./utils/render-route-line.js";
-import { validateSingleRoute } from "./utils/validator.js";
+import { validateSingleRoute, validateBatchRoute } from "./utils/validator.js";
 import { RouteThresholds } from "./utils/thresholds.js";
 
 const errorMsg = ref("");
 const taskName = ref("");
 const singleDifficulty = ref("medium");
 const routeLineMode = ref("manual");
+const batchNumber = ref(1);
+const batchStrategy = ref(0);
 const selectedStart = shallowRef(null);
 const selectedEnd = shallowRef(null);
 const currentSelectionPoint = ref("");
@@ -172,9 +141,24 @@ const { createPoint, completeFeature } = useMapboxSketch();
 
 const mapStore = useMap();
 const mapperStore = useMapper();
-const { checkPoints, removeCheckPointAt } = useRouteCheckPoints();
+const { checkPoints, removeCheckPointAt, removeAllCheckPoints } =
+  useRouteCheckPoints();
 
 function switchRouteLineMode(mode) {
+  const map = toValue(mapStore.map);
+
+  // clear previous state
+  if (routeLineMode.value === "manual") {
+    // clear check points
+    removeAllCheckPoints();
+
+    // clear draw line
+    clearRouteLineData(map);
+  } else if (routeLineMode.value === "auto") {
+    batchNumber.value = 1;
+    batchStrategy.value = 0;
+  }
+
   routeLineMode.value = mode;
 }
 
@@ -210,23 +194,38 @@ function validateNow() {
   clearValidationError();
 
   try {
-    validateSingleRoute(taskName, selectedStart, selectedEnd, checkPoints);
+    if (routeLineMode.value === "manual") {
+      validateSingleRoute(taskName, selectedStart, selectedEnd, checkPoints);
+    } else {
+      validateBatchRoute(taskName, selectedStart, selectedEnd, batchNumber);
+    }
   } catch (e) {
     errorMsg.value = e;
 
     return false;
   }
 
-  return {
-    mode: "single",
-    data: {
-      name: taskName.value,
-      start: selectedStart.value,
-      end: selectedEnd.value,
-      points: checkPoints.value,
-      threshold: RouteThresholds[singleDifficulty.value],
-    },
-  };
+  return routeLineMode.value === "manual"
+    ? {
+        mode: "single",
+        data: {
+          name: taskName.value,
+          start: selectedStart.value,
+          end: selectedEnd.value,
+          points: checkPoints.value,
+          threshold: RouteThresholds[singleDifficulty.value],
+        },
+      }
+    : {
+        mode: "batch",
+        data: {
+          name: taskName.value,
+          start: selectedStart.value,
+          end: selectedEnd.value,
+          count: batchNumber.value,
+          strategy: batchStrategy.value,
+        },
+      };
 }
 
 watch(completeFeature, (value) => {
@@ -279,7 +278,7 @@ onUnmounted(() => {
 defineExpose({ validateNow });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .route-planning-view__editor {
   display: flex;
   flex-direction: column;
@@ -321,11 +320,11 @@ defineExpose({ validateNow });
   &-rates {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
   }
   &-rate {
     height: 32px;
-    width: 72px;
+    width: 70px;
     display: flex;
     border: 2px solid transparent;
     color: #121212;

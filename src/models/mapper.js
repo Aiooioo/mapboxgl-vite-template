@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 import { toValue } from "vue";
 import { useMap } from "./map.js";
+import {} from "@/components/overlay/RoutePlan/utils/render-start-end.js";
+import {} from "@/components/overlay/RoutePlan/utils/render-highlight-points.js";
+import {} from "@/components/overlay/RoutePlan/utils/render-route-line.js";
 import { request } from "@/utils/api/request.ts";
 
 export const DATA_SOURCE_ROUTE_LINE = "route-lines";
@@ -84,20 +87,7 @@ const useMapper = defineStore("mapper", {
 
       if (!line) return;
 
-      const mapStore = useMap();
-      const map = toValue(mapStore.map);
-
-      if (map) {
-        await ensureRouteLineSourceAndLayer(map);
-
-        if (line.byHand) {
-          // 显示手动创建的线路
-          const ft = JSON.parse(line.roads);
-          map.getSource(DATA_SOURCE_ROUTE_LINE).setData(ft);
-        } else {
-          // 显示批量创建的其中一条线路
-        }
-      }
+      this.selectedLine = line.id;
     },
 
     goToAddNewLine() {
