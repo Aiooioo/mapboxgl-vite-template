@@ -1,10 +1,34 @@
-import { ref, reactive, computed, watchEffect, toRaw, onMounted } from "vue";
+import {
+  ref,
+  reactive,
+  computed,
+  watchEffect,
+  toRaw,
+  toValue,
+  onMounted,
+} from "vue";
 import _ from "lodash";
 import { useMapper } from "@/models/mapper.js";
 import { useZone } from "@/models/zone.js";
 import { generateLineSchema } from "../utils/random-generate.js";
 import { request } from "@/utils/api/request.ts";
 import { timeout } from "@/utils/promise-utils.js";
+import RouteSchemaApplyUsers from "../data/RouteSchemaApplyUsers.js";
+
+function createRouteApply(zoneId, examId, subId, userId) {
+  return request({
+    url: "/map/routeApply/create",
+    method: "POST",
+    data: {
+      siteId: zoneId,
+      examId,
+      subId: `${subId}`,
+      applyStudent: userId,
+      routeIds: [],
+      difficulty: 0,
+    },
+  });
+}
 
 function getRouteApplyListByZone(zoneId) {
   return request({
@@ -39,7 +63,8 @@ function convertExam2Schemas(exam) {
       return {
         id: i,
         pointList: d.split(","),
-        applyUsers: [],
+        applyUsers: new RouteSchemaApplyUsers(exam.id, i),
+        isUsersDirty: false,
       };
     });
   }
@@ -47,11 +72,12 @@ function convertExam2Schemas(exam) {
   return [];
 }
 
-function convertCheckPoints2Schemas(checkPoints, groupIndex) {
+function convertCheckPoints2Schemas(exam, checkPoints, groupIndex) {
   return {
     id: groupIndex,
     pointList: checkPoints.map((p) => p.id),
-    applyUsers: [],
+    applyUsers: new RouteSchemaApplyUsers(exam.id, groupIndex),
+    isUsersDirty: true,
   };
 }
 
@@ -104,7 +130,11 @@ const useRouteApply = (allZonePoints) => {
     ])
       .then(([randomPoints]) => {
         schemas.value = _.map(randomPoints, (checkPoints, index) => {
-          return convertCheckPoints2Schemas(checkPoints, index);
+          return convertCheckPoints2Schemas(
+            mapperStore.lineInEdit,
+            checkPoints,
+            index,
+          );
         });
 
         mapperStore.lineInEdit.originPointList =
@@ -141,6 +171,40 @@ const useRouteApply = (allZonePoints) => {
     }
   }
 
+  function flushApplyUsers(schemaInst) {
+    const promises = [];
+
+    _.each(schemaInst.applyUsers.addedUsers, (add) => {
+      promises.push(
+        createRouteApply(
+          zoneStore.currentId,
+          mapperStore.lineInEdit.id,
+          schemaInst.id,
+          add,
+        ),
+      );
+    });
+
+    _.each(schemaInst.applyUsers.removeUsers, (remove) => {});
+
+    return promises;
+  }
+
+  function fulfillSchemasWithApplyUsers(applyData) {
+    const schemaData = _.groupBy(
+      _.filter(toValue(applyData), (d) => !!d.subId),
+      (d) => d.subId,
+    );
+    _.each(_.keys(schemaData), (k) => {
+      const idx = parseInt(k);
+
+      const uniqueUsers = _.groupBy(schemaData[k], (d) => d.applyStudent);
+      _.each(_.keys(uniqueUsers), (u) =>
+        schemas.value[idx].applyUsers.pushSavedUsers(parseInt(u)),
+      );
+    });
+  }
+
   // watchEffect(async () => {
   //   try {
   //     const res = await getRouteApplyListByZone(zoneStore.currentId);
@@ -162,6 +226,9 @@ const useRouteApply = (allZonePoints) => {
 
   onMounted(() => {
     schemas.value = convertExam2Schemas(mapperStore.lineInEdit);
+    if (schemas.value.length > 0) {
+      schema.value = 0;
+    }
   });
 
   return {
@@ -173,6 +240,8 @@ const useRouteApply = (allZonePoints) => {
     isGeneratingSchema,
     generateRouteSchemas,
     updateRoutePlanSchemas,
+    flushApplyUsers,
+    fulfillSchemasWithApplyUsers,
   };
 };
 
