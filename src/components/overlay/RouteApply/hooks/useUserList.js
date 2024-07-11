@@ -1,4 +1,5 @@
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
+import _ from "lodash";
 import { request } from "@/utils/api/request.ts";
 
 function loadUserListByGrade(grade, keywords) {
@@ -14,8 +15,21 @@ function loadUserListByGrade(grade, keywords) {
   });
 }
 
+function getAllRouteApplyListByExam(zoneId, examId) {
+  return request({
+    url: "/map/routeApply/listAll",
+    method: "GET",
+    params: {
+      siteId: zoneId,
+      examId,
+    },
+  });
+}
+
 const useUserList = (gradeRef, searchKeywords) => {
   const users = ref([]);
+  const appliedUsers = ref(null);
+  const savedApplyData = ref(null);
 
   watchEffect(async () => {
     try {
@@ -31,8 +45,21 @@ const useUserList = (gradeRef, searchKeywords) => {
     }
   });
 
+  onMounted(() => {
+    getAllRouteApplyListByExam().then((res) => {
+      if (res && res.code === 200) {
+        const allData = res.data;
+
+        savedApplyData.value = allData;
+        appliedUsers.value = _.keys(_.groupBy(allData, (d) => d.applyStudent));
+      }
+    });
+  });
+
   return {
     users,
+    appliedUsers,
+    savedApplyData,
   };
 };
 

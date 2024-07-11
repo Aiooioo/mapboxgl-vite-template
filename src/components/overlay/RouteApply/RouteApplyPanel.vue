@@ -41,11 +41,19 @@
               'route-apply__panel-schema',
               { selected: schema === item.id },
             ]"
+            @click="() => (schema = item.id)"
           >
             <span class="route-apply__panel-schema-index">{{ index + 1 }}</span>
             <div class="route-apply__panel-schema-content">
               <div class="route-apply__panel-schema-title">
-                <strong>线路 #</strong> {{ item.id + 1 }}
+                <span><strong>线路 #</strong> {{ item.id + 1 }}</span>
+                <n-badge
+                  dot
+                  v-if="
+                    item.applyUsers.addedUsers.length > 0 ||
+                    item.applyUsers.removeUsers.length > 0
+                  "
+                ></n-badge>
               </div>
               <div class="route-apply__panel-schema-points">
                 <RouteSchemaPoints :item="item" />
@@ -105,7 +113,7 @@
           搜索
         </n-button>
       </span>
-      <span class="route-apply__panel-bar-switch"> </span>
+      <span class="route-apply__panel-bar-switch"></span>
     </div>
     <div class="route-apply__panel-table">
       <n-data-table
@@ -121,7 +129,14 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineExpose, onMounted } from "vue";
+import {
+  ref,
+  computed,
+  watch,
+  defineProps,
+  defineExpose,
+  onMounted,
+} from "vue";
 import {
   NBadge,
   NEmpty,
@@ -132,6 +147,7 @@ import {
   NButton,
   NSpin,
 } from "naive-ui";
+import _ from "lodash";
 import { useMapper } from "@/models/mapper.js";
 import { useRouteApply } from "./hooks/useRouteApply.js";
 import { useUserList } from "./hooks/useUserList.js";
@@ -144,24 +160,34 @@ const props = defineProps({
   zonePoints: {},
 });
 
-const isDirty = ref(false);
-const appliedUserIds = ref([]);
 const inputUserKeywords = ref("");
 const searchUserKeywords = ref("");
 const currentGrade = ref(2024);
 
 const mapperStore = useMapper();
-
 const {
   schema,
   schemas,
   hasSchema,
   isGeneratingSchema,
   isDirtySchema,
+  flushApplyUsers,
   generateRouteSchemas,
   updateRoutePlanSchemas,
+  fulfillSchemasWithApplyUsers,
 } = useRouteApply(props.zonePoints);
-const { users } = useUserList(currentGrade, searchUserKeywords);
+const { users, savedApplyData, appliedUsers } = useUserList(
+  currentGrade,
+  searchUserKeywords,
+);
+
+const appliedUserIds = computed(() => {
+  if (schemas.value === null || schema.value === null) return [];
+
+  const currentSchema = schemas.value.find((s) => s.id === schema.value);
+
+  return currentSchema.applyUsers.applyUsers;
+});
 
 const grades = [
   {
@@ -200,27 +226,44 @@ function handleUserSearch() {
   searchUserKeywords.value = inputUserKeywords.value;
 }
 
-function handleUserCheck(rowKeys) {
-  isDirty.value = true;
+function handleUserCheck(rowKeys, rows, meta) {
+  const currentSchema = schemas.value.find((s) => s.id === schema.value);
 
-  appliedUserIds.value = rowKeys;
+  if (meta.action === "check") {
+    currentSchema.applyUsers.addUser(meta.row.id);
+  } else if (meta.action === "uncheck") {
+    currentSchema.applyUsers.removeUser(meta.row.id);
+  }
 }
 
 function handleSave() {
   const promises = [];
 
+  // 第一步先保存exam的变更
   if (isDirtySchema.value) {
     promises.push(updateRoutePlanSchemas());
   }
 
-  return Promise.all([timeout(1000)]).then(() => {
-    isDirty.value = false;
-  });
+  // 第二步更新所有的分配关系
+  _.each(
+    _.filter(schemas.value, (s) => s.applyUsers.isDirty()),
+    (s) => {
+      promises.push(...flushApplyUsers(s));
+    },
+  );
+
+  return Promise.all([...promises, timeout(1000)]).then(() => {});
 }
 
 function generateRandomSchema() {
   generateRouteSchemas();
 }
+
+watch(appliedUsers, (value) => {
+  if (Array.isArray(value)) {
+    fulfillSchemasWithApplyUsers(savedApplyData);
+  }
+});
 
 onMounted(() => {
   if (mapperStore.lineInEdit) {
@@ -266,7 +309,11 @@ defineExpose({ handleSave });
       color: $primary_text_color;
     }
     &-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 8px;
+      padding-right: 8px;
       font-size: 13px;
       font-weight: 500;
       line-height: 20px;

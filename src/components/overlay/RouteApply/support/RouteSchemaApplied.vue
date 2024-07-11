@@ -18,7 +18,7 @@ const applied = computed(() => {
       return (props.item.applyUsers && props.item.applyUsers.length) || 0;
     } else {
       // is schema data struct
-      return props.item.applyUsers.length;
+      return props.item.applyUsers.applyUsers.length;
     }
   }
 
