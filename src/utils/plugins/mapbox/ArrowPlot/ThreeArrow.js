@@ -1,14 +1,8 @@
 import {
-  calcDistance,
   calcMid,
-  getAngleOfThreePoints,
-  getBaseLength,
   getBezierPoints,
-  getThirdPoint,
   getTempPoint4,
-  HALF_PI,
   isClockWise,
-  wholeDistance,
 } from "./PlotUtil";
 import DoubleArrow from "./DoubleArrow";
 import AttackArrow from "./AttackArrow";
@@ -22,11 +16,6 @@ export default class ThreeArrow {
   constructor() {}
 
   static generate(pnts) {
-    const result = {
-      controlPoint: null,
-      polygonalPoint: null,
-    };
-
     const pnt1 = pnts[0];
     const pnt2 = pnts[1];
     const pnt3 = pnts[2];
@@ -87,7 +76,6 @@ export default class ThreeArrow {
 
     rlBodyPnts = getBezierPoints(rlBodyPnts);
     const centerPnts = rrBodyPnts.concat(llBodyPnts.slice(1));
-    // const bodyPnts = getBezierPoints(centerPnts);
     lrBodyPnts = getBezierPoints(lrBodyPnts);
 
     const centerArrowPnts = AttackArrow.generate([
@@ -113,7 +101,6 @@ export default class ThreeArrow {
     );
     const crPnts = getBezierPoints([
       crMid,
-
       centerArrowPnts[centerArowLen - 1],
       centerPnts[canterLen - 3],
       centerPnts[canterLen - 2],
@@ -121,15 +108,11 @@ export default class ThreeArrow {
     ]);
 
     const center = centerArrowPnts.slice(2, centerArowLen - 2);
-    console.log(center);
-
     const newCenterArrowPnts = [...clPnts, ...center, ...crPnts];
 
     const coords = rlBodyPnts.concat(
       rArrowPnts,
-      // bodyPnts,
       newCenterArrowPnts,
-      // centerArrowPnts,
       lArrowPnts,
       lrBodyPnts
     );

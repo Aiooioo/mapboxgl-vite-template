@@ -26,6 +26,7 @@ const useMapboxSketch = () => {
   const imageryStore = useImageryStore();
 
   function onCreateComplete(evt) {
+    console.log("onCreateComplete", evt);
     if (evt.features && evt.features.length > 0) {
       const clone = JSON.parse(JSON.stringify(evt.features[0]));
       const drawId = evt.features[0].id;
@@ -123,6 +124,12 @@ const useMapboxSketch = () => {
     mapboxMapInst.on("draw.text", onDrawTextComplete);
 
     mapboxMapInst.on("draw.selectionchange", onSelectionChange);
+
+    mapboxMapInst.on("click", (e) => {
+      console.log("click", e);
+      const features = mapboxMapInst.queryRenderedFeatures(e.point);
+      console.log(features);
+    });
   }
 
   function checkAndPrepare() {
