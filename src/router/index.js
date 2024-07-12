@@ -10,6 +10,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
+      name: "home",
       redirect: "/imagery",
     },
     {
@@ -18,10 +19,12 @@ const router = createRouter({
       children: [
         {
           path: "imagery",
+          name: "imagery",
           component: () => import("../pages/imagery.vue"),
         },
         {
           path: "mapper",
+          name: "mapper",
           component: () => import("../pages/mapper.vue"),
         },
       ],

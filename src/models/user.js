@@ -11,7 +11,9 @@ const useUser = defineStore("user", {
 
   actions: {
     userContextInit() {
-      return new Promise((resolve, reject) => {});
+      return new Promise((resolve, reject) => {
+        resolve();
+      });
     },
 
     sessionClear() {
