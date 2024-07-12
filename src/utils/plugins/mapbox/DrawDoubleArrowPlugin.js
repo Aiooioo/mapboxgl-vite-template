@@ -29,6 +29,8 @@ const DrawDoubleArrow = {
     if (state.clickCount === 4) {
       this.map.fire("draw.create", {
         features: [state.feature.toGeoJSON()],
+        type: "double_arrow",
+        control: state.coordinates,
       });
       this.changeMode("simple_select", {}, { silent: true });
     }
