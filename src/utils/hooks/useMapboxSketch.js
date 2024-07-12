@@ -210,6 +210,14 @@ const useMapboxSketch = () => {
 
     activeTool.value = "arrow";
 
+    sketchRef.value.changeMode("draw_double_arrow");
+  }
+
+  function createThreeArrow() {
+    if (!checkAndPrepare()) return;
+
+    activeTool.value = "arrow";
+
     // sketchRef.value.changeMode("draw_attack_arrow");
     // sketchRef.value.changeMode("draw_double_arrow");
     sketchRef.value.changeMode("draw_three_arrow");
@@ -292,6 +300,7 @@ const useMapboxSketch = () => {
     createPolygon,
     createAttackArrow,
     createDoubleArrow,
+    createThreeArrow,
     cancelDraw,
     clear,
   };
