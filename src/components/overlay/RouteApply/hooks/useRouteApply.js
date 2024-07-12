@@ -30,6 +30,13 @@ function createRouteApply(zoneId, examId, subId, userId) {
   });
 }
 
+function deleteRouteApply(applyId) {
+  return request({
+    url: `/map/routeApply/delete/${applyId}`,
+    method: 'POST'
+  })
+}
+
 function getRouteApplyListByZone(zoneId) {
   return request({
     url: "/map/routeApply/list",
@@ -181,11 +188,22 @@ const useRouteApply = (allZonePoints) => {
           mapperStore.lineInEdit.id,
           schemaInst.id,
           add,
-        ),
+        ).then(() => {
+          schemaInst.applyUsers.addedUsers.splice(
+            schemaInst.applyUsers.addedUsers.indexOf(add),
+            1,
+          );
+        }),
       );
     });
 
-    _.each(schemaInst.applyUsers.removeUsers, (remove) => {});
+    _.each(schemaInst.applyUsers.removeUsers, (remove) => {
+
+
+      promises.push(
+          deleteRouteApply()
+      )
+    });
 
     return promises;
   }

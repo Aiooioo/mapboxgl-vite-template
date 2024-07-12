@@ -8,6 +8,16 @@ import App from "./App.vue";
 import debugSupport from "./utils/debug-support.js";
 import pluginsManager from "./utils/plugins-manager.js";
 import "@/utils/api/initLogin.ts";
+
+const { appVersion } = navigator;
+if (appVersion.indexOf("Win") >= 0) {
+  document.body.classList.add("os-windows");
+} else if (appVersion.indexOf("Mac") >= 0) {
+  document.body.classList.add("os-mac");
+} else if (appVersion.indexOf("Linux") >= 0) {
+  document.body.classList.add("os-linux");
+}
+
 debugSupport.attach();
 
 const app = createApp(App);

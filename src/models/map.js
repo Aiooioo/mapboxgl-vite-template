@@ -1,11 +1,10 @@
+import { shallowRef } from "vue";
 import { defineStore } from "pinia";
-
-let mapInst= null;
 
 const useMap = defineStore("map", {
   state: () => {
     return {
-      map: null,
+      map: shallowRef(null),
 
       currentBasemapId: "arcgis-imagery",
 
@@ -18,8 +17,6 @@ const useMap = defineStore("map", {
       activeBar: "",
 
       showZones: true,
-
-      zone: "长沙市",
     };
   },
 
@@ -32,16 +29,10 @@ const useMap = defineStore("map", {
 
     switchBasemap(basemapId) {
       this.currentBasemapId = basemapId;
-
-
     },
 
     switchActiveTool(toolName) {
       this.activeBar = toolName;
-    },
-
-    switchCurrentZone(current) {
-      this.zone = current;
     },
   },
 });

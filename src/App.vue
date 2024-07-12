@@ -1,12 +1,94 @@
 <script setup>
-import { RouterView } from "vue-router";
+import { ref } from "vue";
+import { RouterView, useRouter, useRoute } from "vue-router";
 import { NConfigProvider, darkTheme, zhCN, NMessageProvider } from "naive-ui";
+import { useAuth } from "@/models/auth.js";
+import { useUser } from "@/models/user.js";
+import { useConfig } from "@/models/config.js";
+import { useBasemap } from "@/models/basemap.js";
+import { ensureClientAppContent } from "@/lib/clientApp.js";
+import { appTimingConst } from "@/common/system-const.js";
+
+const route = useRoute();
+const router = useRouter();
+
+const isAppInitialized = ref(false);
+
+const authStore = useAuth();
+const userStore = useUser();
+const configStore = useConfig();
+const basemapStore = useBasemap();
 
 const naiveThemeOverride = {
   common: {
     primaryColor: "#a78bfa",
   },
 };
+
+function routerSignIn() {}
+
+function sessionAuthRenewInterval() {
+  setTimeout(() => {
+    authStore.authConfirm().then((isUserValid) => {
+      return isUserValid
+        ? sessionAuthRenewInterval()
+        : userStore.sessionClear().then(() => {
+            // TODO: preserve current pathname
+          });
+    });
+  }, appTimingConst.sessionAuthPollMs);
+}
+
+function restoreFromSession() {
+  return authStore.authConfirm(true).then((isUserValid) => {
+    if (isUserValid) {
+      sessionAuthRenewInterval();
+
+      return router
+        .isReady()
+        .then(userStore.userContextInit)
+        .then((account) => {
+          const { name, params } = route;
+          const accountAccessDenied =
+            params.accountId && account !== params.accountId;
+
+          if (accountAccessDenied || !name) {
+            // TODO: router to user account page
+            return routerSignIn();
+          }
+        });
+    } else {
+      return Promise.all([userStore.sessionClear(), router.isReady()]).then(
+        () => {
+          const currentIsNotSignInPage = true;
+
+          if (currentIsNotSignInPage) {
+            // TODO: preserve current pathname
+
+            return routerSignIn();
+          }
+        },
+      );
+    }
+  });
+}
+
+// 1. global web socket init
+
+// 2. load application common config
+ensureClientAppContent()
+  .then(() => {
+    configStore.initGlobalConfig();
+
+    basemapStore.initGlobalBasemap();
+
+    return restoreFromSession();
+  })
+  .then(() => {
+    isAppInitialized.value = true;
+  });
+
+// 3. load from localStorage
 </script>
 
 <template>

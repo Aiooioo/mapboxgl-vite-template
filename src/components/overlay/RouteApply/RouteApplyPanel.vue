@@ -265,12 +265,6 @@ watch(appliedUsers, (value) => {
   }
 });
 
-onMounted(() => {
-  if (mapperStore.lineInEdit) {
-    appliedUserIds.value = mapperStore.lineInEdit.applyUsers || [];
-  }
-});
-
 defineExpose({ handleSave });
 </script>
 
