@@ -24,9 +24,11 @@ export default class AttackArrow {
     const headPnt = points[points.length - 1];
     len = calcDistance(headPnt, points[points.length - 2]);
     const tailWidth = calcDistance(tailLeft, tailRight);
+
     if (headHeight > tailWidth * this.headTailFactor) {
       headHeight = tailWidth * this.headTailFactor;
     }
+
     const headWidth = headHeight * this.headWidthFactor;
     const neckWidth = headHeight * this.neckWidthFactor;
     headHeight = headHeight > len ? len : headHeight;
