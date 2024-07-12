@@ -1,4 +1,7 @@
+import { nsLogger } from "@/utils/nsLogger.js";
 import { request } from "@/utils/api/request.ts";
+
+const logger = nsLogger.create("class.webmap.info");
 
 class WebmapInfo {
   static createFromRemote(data) {
@@ -33,8 +36,10 @@ class WebmapInfo {
         if (layersRes && layersRes.code === 200) {
           // TODO:
         }
+
+        this.loadingPromise = null;
       } catch (e) {
-        console.log("");
+        logger.error(e);
       }
     });
 

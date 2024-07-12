@@ -101,9 +101,9 @@ ensureClientAppContent()
 // 4. watch for browser tab navi
 window.addEventListener("visibilitychange", () => {
   if (document.hidden) {
-    console.log("切走了");
+    // console.log("切走了");
   } else {
-    console.log("我又切回来了");
+    // console.log("我又切回来了");
   }
 
   return Promise.resolve();

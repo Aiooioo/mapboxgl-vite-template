@@ -26,12 +26,20 @@ const useWebmap = defineStore("webmap", {
 
       id: "",
       name: "新的工程",
+
+      isWebmapLoaded: false,
     };
   },
 
   getters: {
     dirty(state) {
       const mapStore = useMap();
+
+      if (!state.info) return false;
+
+      const nameChanged = state.name !== state.info.name;
+
+      return nameChanged;
     },
   },
 
@@ -46,11 +54,15 @@ const useWebmap = defineStore("webmap", {
       );
 
       logger.log("Use default webmap.");
+
+      this.isWebmapLoaded = true;
       return Promise.resolve();
     },
 
     async initWebmapFromRemoteId(id) {
       const zoneStore = useZone();
+
+      this.isWebmapLoaded = false;
 
       try {
         const res = await loadWebmapDataById(id);
@@ -64,6 +76,8 @@ const useWebmap = defineStore("webmap", {
 
           const webmap = WebmapInfo.createFromRemote(data);
           await webmap.loadingPromise;
+
+          this.isWebmapLoaded = true;
         }
       } catch (e) {
         // TODO: toast info, reload failed
@@ -71,6 +85,11 @@ const useWebmap = defineStore("webmap", {
         await this.initDefaultWebmapTemplate();
       }
     },
+
+
+    saveWebmap() {
+
+    }
   },
 });
 
