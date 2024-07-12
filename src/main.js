@@ -8,6 +8,9 @@ import App from "./App.vue";
 import debugSupport from "./utils/debug-support.js";
 import pluginsManager from "./utils/plugins-manager.js";
 import "@/utils/api/initLogin.ts";
+import { nsLogger } from "@/utils/nsLogger.js";
+
+nsLogger.init(["*:CFG", "*:DBG", "*:LOG", "*:INF", "*:WRN", "*:ERR", "*:NOTE"]);
 
 const { appVersion } = navigator;
 if (appVersion.indexOf("Win") >= 0) {

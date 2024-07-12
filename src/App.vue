@@ -6,6 +6,7 @@ import { useAuth } from "@/models/auth.js";
 import { useUser } from "@/models/user.js";
 import { useConfig } from "@/models/config.js";
 import { useBasemap } from "@/models/basemap.js";
+import { useWebmap } from "@/models/webmap.js";
 import { ensureClientAppContent } from "@/lib/clientApp.js";
 import { appTimingConst } from "@/common/system-const.js";
 
@@ -18,6 +19,7 @@ const authStore = useAuth();
 const userStore = useUser();
 const configStore = useConfig();
 const basemapStore = useBasemap();
+const webmapStore = useWebmap();
 
 const naiveThemeOverride = {
   common: {
@@ -56,6 +58,12 @@ function restoreFromSession() {
             // TODO: router to user account page
             return routerSignIn();
           }
+
+          if (params.webmapId) {
+            return webmapStore.initWebmapFromRemoteId(params.webmapId);
+          } else {
+            return webmapStore.initDefaultWebmapTemplate();
+          }
         });
     } else {
       return Promise.all([userStore.sessionClear(), router.isReady()]).then(
@@ -89,6 +97,17 @@ ensureClientAppContent()
   });
 
 // 3. load from localStorage
+
+// 4. watch for browser tab navi
+window.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    console.log("切走了");
+  } else {
+    console.log("我又切回来了");
+  }
+
+  return Promise.resolve();
+});
 </script>
 
 <template>
