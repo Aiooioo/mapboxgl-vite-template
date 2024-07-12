@@ -55,6 +55,7 @@
         :class="['simple-drawing__pane-bar-item']"
         @click="ensureCreateStatus(createAttackArrow)"
       >
+        <!-- <i-game-icons-spine-arrow /> -->
         <i-mdi-arrow-top-right-bold-outline />
       </span>
       <span
@@ -62,7 +63,16 @@
         :class="['simple-drawing__pane-bar-item']"
         @click="ensureCreateStatus(createDoubleArrow)"
       >
-        <i-mdi-chevron-double-right />
+        <!-- <i-game-icons-fast-arrow /> -->
+        <i-mdi-arrow-top-right-bold-outline />
+      </span>
+      <span
+        title="三箭头"
+        :class="['simple-drawing__pane-bar-item']"
+        @click="ensureCreateStatus(createThreeArrow)"
+      >
+        <!-- <i-game-icons-paper-arrow /> -->
+        <i-mdi-arrow-top-right-bold-outline />
       </span>
     </div>
     <div
@@ -127,6 +137,7 @@ const {
   createPoint,
   createAttackArrow,
   createDoubleArrow,
+  createThreeArrow,
 } = useMapboxSketch();
 
 const contentComps = {

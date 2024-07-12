@@ -210,9 +210,31 @@ const useMapboxSketch = () => {
 
     activeTool.value = "arrow";
 
-    // sketchRef.value.changeMode("draw_attack_arrow");
     sketchRef.value.changeMode("draw_double_arrow");
-    // sketchRef.value.changeMode("draw_three_arrow");
+  }
+
+  function createThreeArrow() {
+    if (!checkAndPrepare()) return;
+
+    activeTool.value = "arrow";
+
+    // sketchRef.value.changeMode("draw_attack_arrow");
+    // sketchRef.value.changeMode("draw_double_arrow");
+    sketchRef.value.changeMode("draw_three_arrow");
+
+    // const map = mapStore.map;
+    // const bounds = map.getBounds();
+
+    // console.log("bounds", bounds);
+
+    // let maxWidth = 100; // mapbox源码中默认值为100
+    // let y = map._containerHeight / 2;
+    // let x = map._containerWidth / 2 - maxWidth / 2;
+    // let left = map.unproject([x, y]);
+    // let right = map.unproject([x + maxWidth, y]);
+    // let scale = Math.floor(left.distanceTo(right));
+
+    // console.log("scale", scale);
   }
 
   function cancelDraw() {
@@ -278,6 +300,7 @@ const useMapboxSketch = () => {
     createPolygon,
     createAttackArrow,
     createDoubleArrow,
+    createThreeArrow,
     cancelDraw,
     clear,
   };

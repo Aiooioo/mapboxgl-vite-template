@@ -70,6 +70,38 @@ export function getThirdPoint(startPnt, endPnt, angle, distance, clockWise) {
   return [endPnt[0] + dx, endPnt[1] + dy];
 }
 
+// 计算对称点
+export function getTempPoint4(linePnt1, linePnt2, point) {
+  const midPnt = calcMid(linePnt1, linePnt2);
+  const len = calcDistance(midPnt, point);
+  const angle = getAngleOfThreePoints(linePnt1, midPnt, point);
+  let symPnt, distance1, distance2, mid;
+
+  if (angle < HALF_PI) {
+    distance1 = len * Math.sin(angle);
+    distance2 = len * Math.cos(angle);
+    mid = getThirdPoint(linePnt1, midPnt, HALF_PI, distance1, false);
+    symPnt = getThirdPoint(midPnt, mid, HALF_PI, distance2, true);
+  } else if (angle >= HALF_PI && angle < Math.PI) {
+    distance1 = len * Math.sin(Math.PI - angle);
+    distance2 = len * Math.cos(Math.PI - angle);
+    mid = getThirdPoint(linePnt1, midPnt, HALF_PI, distance1, false);
+    symPnt = getThirdPoint(midPnt, mid, HALF_PI, distance2, false);
+  } else if (angle >= Math.PI && angle < Math.PI * 1.5) {
+    distance1 = len * Math.sin(angle - Math.PI);
+    distance2 = len * Math.cos(angle - Math.PI);
+    mid = getThirdPoint(linePnt1, midPnt, HALF_PI, distance1, true);
+    symPnt = getThirdPoint(midPnt, mid, HALF_PI, distance2, true);
+  } else {
+    distance1 = len * Math.sin(Math.PI * 2 - angle);
+    distance2 = len * Math.cos(Math.PI * 2 - angle);
+    mid = getThirdPoint(linePnt1, midPnt, HALF_PI, distance1, true);
+    symPnt = getThirdPoint(midPnt, mid, HALF_PI, distance2, false);
+  }
+
+  return symPnt;
+}
+
 export function getAngleOfThreePoints(pntA, pntB, pntC) {
   const angle = getAzimuth(pntB, pntA) - getAzimuth(pntB, pntC);
   return angle < 0 ? angle + TWO_PI : angle;
