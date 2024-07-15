@@ -1,6 +1,6 @@
 import jsCookie from "js-cookie";
 import { config } from "./initConfig";
-import { $login, $info } from "@/utils/api/survey-admin/admin";
+import { $login, $info } from "./survey-admin/admin.ts";
 
 /**
  * 验证token是否有效
@@ -23,7 +23,7 @@ export async function getToken(): Promise<{
   }
 
   const { username, password } = config.login;
-  const { data } = await $login(
+  return $login(
     {
       username,
       password,
@@ -31,8 +31,11 @@ export async function getToken(): Promise<{
     {
       content: "获取开发模式token",
     },
-  );
-  jsCookie.set("tk", data.token);
-  return getToken();
+  ).then(({ data }) => {
+    jsCookie.set("tk", data.token);
+    return getToken();
+  });
+
+  return Promise.resolve();
 }
-export const { token, user } = await getToken();
+// export const { token, user } = await getToken();
