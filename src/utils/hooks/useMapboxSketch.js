@@ -11,9 +11,12 @@ import {
 } from "@/utils/plugins/mapbox/draw-style-hotfix.js";
 import debugSupport from "@/utils/debug-support.js";
 import { useImageryStore } from "@/models/imagery";
+import PlotEdit from "../plugins/mapbox/ArrowPlot/PlotEdit";
 
 const useMapboxSketch = () => {
   const $channel = new BehaviorSubject(null);
+
+  let plotEdit = null;
 
   const sketchRef = shallowRef(null);
   const completeFeature = shallowRef(null);
@@ -22,6 +25,7 @@ const useMapboxSketch = () => {
 
   const activeTool = ref("");
   const mapStore = useMap();
+  const { addPlot } = mapStore;
 
   const imageryStore = useImageryStore();
 
@@ -50,6 +54,11 @@ const useMapboxSketch = () => {
         map: toValue(mapStore.map),
         feature: clone,
       });
+
+      if (evt.type.includes("draw")) {
+        addPlot(evt);
+        console.log(evt);
+      }
     }
 
     activeTool.value = "";
@@ -113,6 +122,8 @@ const useMapboxSketch = () => {
       userProperties: true,
     });
 
+    plotEdit = new PlotEdit(mapboxMapInst);
+
     debugSupport.set("mapbox-draw", sketchRef.value);
 
     mapboxMapInst.addControl(sketchRef.value);
@@ -125,11 +136,13 @@ const useMapboxSketch = () => {
 
     mapboxMapInst.on("draw.selectionchange", onSelectionChange);
 
-    mapboxMapInst.on("click", (e) => {
-      console.log("click", e);
-      const features = mapboxMapInst.queryRenderedFeatures(e.point);
-      console.log(features);
-    });
+    // mapboxMapInst.on("click", (e) => {
+    //   console.log("click", e);
+    //   const features = mapboxMapInst.queryRenderedFeatures(e.point);
+    //   console.log(features);
+
+    //   // plotEdit
+    // });
   }
 
   function checkAndPrepare() {

@@ -27,6 +27,11 @@ const router = createRouter({
           name: "mapper",
           component: () => import("../pages/mapper.vue"),
         },
+        {
+          path: "plotMap",
+          name: "PlotMap",
+          component: () => import("../pages/PlotMap/index.vue"),
+        },
       ],
     },
   ],
