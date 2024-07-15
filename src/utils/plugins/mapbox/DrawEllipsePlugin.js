@@ -1,5 +1,4 @@
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
-import * as turf from "@turf/turf";
 
 const doubleClickZoom = {
   enable: (ctx) => {
@@ -73,13 +72,13 @@ const DrawEllipse = {
     if (state.center) {
       const xRadius = Math.sqrt(
         (e.lngLat.lng - state.center[0]) ** 2 +
-          (e.lngLat.lat - state.center[1]) ** 2,
+          (e.lngLat.lat - state.center[1]) ** 2
       );
       const yRadius = xRadius * Math.sqrt(1 - this.eccentricity ** 2);
 
       const radian = Math.atan2(
         e.lngLat.lat - state.center[1],
-        e.lngLat.lng - state.center[0],
+        e.lngLat.lng - state.center[0]
       );
 
       const twoPi = Math.PI * 2;

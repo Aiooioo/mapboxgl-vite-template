@@ -4,9 +4,9 @@
       <HeadTool />
     </div>
     <div class="page-mapper-main">
-      <MapboxViewer>
+      <MainContent>
         <template #overlay-left>
-          <ZoneSwitcher
+          <PlotList
             class="page-mapper-main__zones"
             :style="{
               display: showZones ? 'flex' : 'none',
@@ -16,27 +16,34 @@
         <template #overlay-right>
           <div class="page-mapper-main-right">
             <div class="page-mapper-main-right-panel-holder">
-              <MapToolPane v-if="mapStore.activeBar !== ''" />
+              <FloatPanel
+                :title="curTool.title"
+                :component="curTool.component"
+                v-show="showPanel"
+              />
             </div>
             <BasemapToggle />
           </div>
         </template>
-      </MapboxViewer>
+      </MainContent>
     </div>
   </div>
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
+import { ref, shallowRef } from "vue";
 import HeadTool from "./HeadTool.vue";
-import MapboxViewer from "@/components/MapboxViewer.vue";
-import ZoneSwitcher from "@/components/overlay/TrainingZone/ZoneSwitcher.vue";
-import MapToolPane from "@/components/MapToolPane.vue";
+import MainContent from "./MainContent.vue";
+import FloatPanel from "./FloatPanel.vue";
+import PlotList from "./PlotList.vue";
 import BasemapToggle from "@/components/widgets/BasemapGallery/BasemapToggle.vue";
-import { useMap } from "@/models/map.js";
 
-const mapStore = useMap();
-const { showZones } = storeToRefs(mapStore);
+import { CUS_TOOL_COMPS } from "./conf";
+
+const curTool = shallowRef(CUS_TOOL_COMPS[0]);
+
+const showZones = ref(true);
+const showPanel = ref(true);
 </script>
 
 <style scoped lang="scss">
