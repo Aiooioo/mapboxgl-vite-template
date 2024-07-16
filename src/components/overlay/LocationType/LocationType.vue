@@ -98,7 +98,7 @@ import {
 } from "@/utils/api/location/plot";
 import { $comparePlot } from "@/utils/api/location/identify";
 
-import WKT from "terraformer-wkt-parser";
+import { geojsonToWKT } from "@terraformer/wkt"
 import * as turf from "@turf/turf";
 
 import { MARKER_TYPE_OPTS, MARKER_STYLE_OPTS } from "./conf";
@@ -187,7 +187,7 @@ const handleCompare = async () => {
   const typeInfo = typeOptions.value.find((item) => item.value === type);
   const { loGeometry } = imageryStore.curEditMarker;
   const mGeojson = turf.toMercator(loGeometry);
-  const loWkt = WKT.convert(mGeojson);
+  const loWkt = geojsonToWKT(mGeojson);
   // console.log("loWkt", loWkt);
 
   const params = [

@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 import { defineStore } from "pinia";
 import mapboxgl from "mapbox-gl";
 import * as turf from "@turf/turf";
-import WKT from "terraformer-wkt-parser";
+import { wktToGeoJSON } from "@terraformer/wkt"
 import { useMap } from "@/models/map.js";
 
 export const useImageryStore = defineStore("imagery", {
@@ -40,7 +40,7 @@ export const useImageryStore = defineStore("imagery", {
 
       list.forEach((item) => {
         const id = item.id;
-        const wGeometry = WKT.parse(item.geometry);
+        const wGeometry = wktToGeoJSON(item.geometry);
         const loGeometry = turf.toWgs84(wGeometry);
         const centerGeometry = turf.center(loGeometry).geometry;
 

@@ -9,6 +9,7 @@ import { DrawAttackArrow } from "./DrawAttackArrowPlugin";
 import { DrawDoubleArrow } from "./DrawDoubleArrowPlugin";
 import { DrawThreeArrow } from "./DrawThreeArrowPlugin";
 
+
 export const MapboxDrawExtends = {
   draw_rectangle: DrawRectangle,
   draw_icon: DrawIcon,
