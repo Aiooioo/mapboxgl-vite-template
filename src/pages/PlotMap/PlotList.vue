@@ -1,3 +1,26 @@
+<script setup>
+import { ref } from "vue";
+import { NInput, NCollapse, NCollapseItem } from "naive-ui";
+import { PLOT_LIST } from "./conf";
+import { usePlotMapStore } from "@/models/plotMap";
+
+const plotMapStore = usePlotMapStore();
+const { changePlotMode } = plotMapStore;
+
+const keyword = ref("");
+const list = ref(PLOT_LIST);
+
+const handleUpdate = (val) => {
+  console.log("keyword", keyword.value);
+  // console.log("update", val);
+};
+
+const handleClick = (item) => {
+  // console.log("click", item);
+  changePlotMode(item.mode);
+};
+</script>
+
 <template>
   <div class="app-zone__switcher">
     <div class="app-zone__switcher-header">
@@ -30,6 +53,7 @@
               class="border border-gray-600 rounded p-1 text-center text-[12px] hover:bg-[#414143] cursor-pointer"
               v-for="child in item.children"
               :key="child.name"
+              @click="handleClick(child)"
             >
               {{ child.title }}
             </li>
@@ -39,20 +63,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref } from "vue";
-import { NInput, NCollapse, NCollapseItem } from "naive-ui";
-import { PLOT_LIST } from "./conf";
-
-const keyword = ref("");
-const list = ref(PLOT_LIST);
-
-const handleUpdate = (val) => {
-  console.log("keyword", keyword.value);
-  // console.log("update", val);
-};
-</script>
 
 <style scoped lang="scss">
 .app-zone__switcher {

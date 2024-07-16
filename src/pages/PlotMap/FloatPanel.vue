@@ -7,9 +7,7 @@
       </div>
     </div>
     <div class="viewer-tools__pane-content">
-      <keep-alive>
-        <component :is="component" />
-      </keep-alive>
+      <component :is="component" />
     </div>
   </div>
 </template>
