@@ -11,7 +11,7 @@ const createDoubleArrowFeature = function (coords) {
   return feature;
 };
 
-const DrawDoubleArrow = {
+export const DrawDoubleArrow = {
   onSetup: function () {
     const clickCount = 0;
 

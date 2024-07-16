@@ -1,6 +1,6 @@
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 
-const DrawIcon = {
+export const DrawIcon = {
   onSetup: function (opts) {
     const state = {};
 

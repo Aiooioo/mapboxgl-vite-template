@@ -6,6 +6,7 @@ import {
 } from "@/utils/plugins/mapbox/draw-style-hotfix.js";
 import debugSupport from "@/utils/debug-support.js";
 import PlotEdit from "@/utils/plugins/mapbox/ArrowPlot/PlotEdit";
+import { MapboxDrawExtends } from "@/utils/plugins/mapbox/MapboxDrawExtends";
 import { usePlotMapStore } from "@/models/plotMap";
 
 export const usePlotMap = () => {
@@ -23,7 +24,6 @@ export const usePlotMap = () => {
 
         plotMap.on("load", () => {
           initPlotTool();
-
           initPlotEdit();
         });
       }
@@ -40,6 +40,7 @@ export const usePlotMap = () => {
       userProperties: true,
       modes: {
         ...MapboxDraw.modes,
+        ...MapboxDrawExtends,
       },
     });
 
@@ -93,6 +94,8 @@ export const usePlotMap = () => {
 
       plotMap.off("draw.create", onCreateComplete);
       plotMap.off("draw.text", onDrawTextComplete);
+
+      plotTool = null;
     }
   }
 

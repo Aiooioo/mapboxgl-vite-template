@@ -22,7 +22,7 @@ function createCircleFeature(startPos, endPos) {
   return turf.circle(startPos, radius, options);
 }
 
-const DrawCircle = {
+export const DrawCircle = {
   onSetup: function (opts) {
     const state = { clickState: false };
     return state;
@@ -35,7 +35,7 @@ const DrawCircle = {
     } else {
       this.deleteFeature("draw_circle_temp");
       let circle = this.newFeature(
-        createCircleFeature(state.coordinates, [e.lngLat.lng, e.lngLat.lat]),
+        createCircleFeature(state.coordinates, [e.lngLat.lng, e.lngLat.lat])
       );
       this.addFeature(circle);
 
@@ -50,7 +50,7 @@ const DrawCircle = {
             properties: {},
             coordinates,
           },
-        }),
+        })
       );
 
       this.map.fire("draw.create", { features: [feature] });
@@ -70,9 +70,9 @@ const DrawCircle = {
               ]),
               {
                 id: "draw_circle_temp",
-              },
-            ),
-          ),
+              }
+            )
+          )
         );
       } else {
         const newFeat = createCircleFeature(state.coordinates, [

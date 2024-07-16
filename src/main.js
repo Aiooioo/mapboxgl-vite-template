@@ -7,7 +7,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import App from "./App.vue";
 import debugSupport from "./utils/debug-support.js";
-import pluginsManager from "./utils/plugins-manager.js";
+// import pluginsManager from "./utils/plugins-manager.js";
 import { nsLogger } from "@/utils/nsLogger.js";
 
 nsLogger.init(["*:CFG", "*:DBG", "*:LOG", "*:INF", "*:WRN", "*:ERR", "*:NOTE"]);
@@ -25,7 +25,7 @@ debugSupport.attach();
 getToken().then((res) => {
   const app = createApp(App);
 
-  pluginsManager.registerAll();
+  // pluginsManager.registerAll();
 
   app.use(createPinia());
   app.use(router);

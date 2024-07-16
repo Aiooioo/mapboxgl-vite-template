@@ -30,6 +30,7 @@ export default class PlotEdit {
     this.plotEditLayer.on("click", this.handleClick);
 
     // console.log("PlotEdit layer added", this.plotEditLayer);
+    // 选中要素
   }
 
   updatePlotEditSource(points) {

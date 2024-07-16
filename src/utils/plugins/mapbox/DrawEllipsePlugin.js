@@ -27,7 +27,7 @@ const doubleClickZoom = {
   },
 };
 
-const DrawEllipse = {
+export const DrawEllipse = {
   onSetup: function (opts) {
     this.eccentricity =
       opts.eccentricity >= 0 && opts.eccentricity < 1 ? opts.eccentricity : 0.8;

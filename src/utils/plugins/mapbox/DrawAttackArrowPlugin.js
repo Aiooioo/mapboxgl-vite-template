@@ -18,7 +18,7 @@ const createAttackArrowFeature = function (coords) {
   return feature;
 };
 
-const DrawAttackArrow = {
+export const DrawAttackArrow = {
   onSetup: function (opts) {
     const clickCount = 0;
 

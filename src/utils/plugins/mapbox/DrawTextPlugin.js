@@ -1,6 +1,6 @@
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 
-const DrawText = {
+export const DrawText = {
   onSetup: function (opts) {
     const state = {};
     const { onDraw, onCancel } = opts;

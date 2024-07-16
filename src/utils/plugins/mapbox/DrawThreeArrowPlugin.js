@@ -11,7 +11,7 @@ const createThreeArrowFeature = function (coords) {
   return feature;
 };
 
-const DrawThreeArrow = {
+export const DrawThreeArrow = {
   onSetup: function () {
     const clickCount = 0;
 

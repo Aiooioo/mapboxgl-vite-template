@@ -12,6 +12,7 @@ import {
 import debugSupport from "@/utils/debug-support.js";
 import { useImageryStore } from "@/models/imagery";
 import PlotEdit from "../plugins/mapbox/ArrowPlot/PlotEdit";
+import { MapboxDrawExtends } from "../plugins/mapbox/MapboxDrawExtends";
 
 const useMapboxSketch = () => {
   const $channel = new BehaviorSubject(null);
@@ -25,7 +26,6 @@ const useMapboxSketch = () => {
 
   const activeTool = ref("");
   const mapStore = useMap();
-  const { addPlot } = mapStore;
 
   const imageryStore = useImageryStore();
 
@@ -54,11 +54,6 @@ const useMapboxSketch = () => {
         map: toValue(mapStore.map),
         feature: clone,
       });
-
-      if (evt.type.includes("draw")) {
-        addPlot(evt);
-        console.log(evt);
-      }
     }
 
     activeTool.value = "";
@@ -120,6 +115,10 @@ const useMapboxSketch = () => {
     sketchRef.value = new Draw({
       displayControlsDefault: false,
       userProperties: true,
+      modes: {
+        ...Draw.modes,
+        ...MapboxDrawExtends,
+      },
     });
 
     plotEdit = new PlotEdit(mapboxMapInst);
