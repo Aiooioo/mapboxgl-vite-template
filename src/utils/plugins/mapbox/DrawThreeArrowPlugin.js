@@ -29,7 +29,7 @@ export const DrawThreeArrow = {
     if (state.clickCount === 5) {
       this.map.fire("draw.create", {
         features: [state.feature.toGeoJSON()],
-        type: "three_arrow",
+        mode: "three_arrow",
         control: state.coordinates,
       });
       this.changeMode("simple_select", {}, { silent: true });

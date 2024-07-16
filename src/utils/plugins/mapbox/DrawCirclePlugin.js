@@ -53,7 +53,10 @@ export const DrawCircle = {
         })
       );
 
-      this.map.fire("draw.create", { features: [feature] });
+      this.map.fire("draw.create", {
+        features: [feature],
+        mode: "draw_circle",
+      });
       return this.changeMode("simple_select");
     }
   },

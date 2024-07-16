@@ -35,7 +35,7 @@ export const DrawAttackArrow = {
 
     if (state.clickCount === 3) {
       this.map.fire("draw.create", {
-        plotType: "attack_arrow",
+        mode: "attack_arrow",
         id: state.feature.id,
         features: [state.feature.toGeoJSON()],
         controlPnts: state.coordinates,

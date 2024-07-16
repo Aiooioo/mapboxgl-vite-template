@@ -1,4 +1,4 @@
-export default class PlotEdit {
+export default class MapboxDrawEdit {
   constructor(map) {
     this.map = map;
     this.plotEditLayer = null;

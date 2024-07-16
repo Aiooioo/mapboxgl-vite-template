@@ -121,6 +121,7 @@ export const DrawEllipse = {
     if (state.ellipse.isValid()) {
       this.map.fire("draw.create", {
         features: [state.ellipse.toGeoJSON()],
+        mode: "draw_ellipse",
       });
     } else {
       this.deleteFeature([state.ellipse.id], { silent: true });

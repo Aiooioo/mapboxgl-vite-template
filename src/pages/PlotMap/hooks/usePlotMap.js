@@ -5,7 +5,8 @@ import {
   patchMapboxDraw,
 } from "@/utils/plugins/mapbox/draw-style-hotfix.js";
 import debugSupport from "@/utils/debug-support.js";
-import PlotEdit from "@/utils/plugins/mapbox/PlotEdit";
+import MapboxDrawEdit from "@/utils/plugins/mapbox/MapboxDrawEdit";
+import MapboxDraw2 from "@/utils/plugins/mapbox/MapboxDraw2";
 import { MapboxDrawExtends } from "@/utils/plugins/mapbox/MapboxDrawExtends";
 import { usePlotMapStore } from "@/models/plotMap";
 
@@ -35,25 +36,27 @@ export const usePlotMap = () => {
   });
 
   const initPlotTool = () => {
-    plotTool = new MapboxDraw({
-      displayControlsDefault: true,
-      userProperties: true,
-      modes: {
-        ...MapboxDraw.modes,
-        ...MapboxDrawExtends,
-      },
-    });
+    plotTool = new MapboxDraw2({ map: plotMap });
+
+    // plotTool = new MapboxDraw({
+    //   displayControlsDefault: true,
+    //   userProperties: true,
+    //   modes: {
+    //     ...MapboxDraw.modes,
+    //     ...MapboxDrawExtends,
+    //   },
+    // });
 
     setPlotTool(plotTool);
 
-    plotMap.addControl(plotTool);
+    // plotMap.addControl(plotTool);
 
-    debugSupport.set("mapbox-draw", plotTool);
+    // debugSupport.set("mapbox-draw", plotTool);
 
-    patchMapboxDraw(plotMap);
+    // patchMapboxDraw(plotMap);
 
-    plotMap.on("draw.create", onCreateComplete);
-    plotMap.on("draw.text", onDrawTextComplete);
+    // plotMap.on("draw.create", onCreateComplete);
+    // plotMap.on("draw.text", onDrawTextComplete);
 
     // plotMap.on("click", (e) => {
     //   console.log("click", e);
@@ -65,7 +68,7 @@ export const usePlotMap = () => {
   };
 
   const initPlotEdit = () => {
-    const plotEdit = new PlotEdit(plotMap);
+    const plotEdit = new MapboxDrawEdit(plotMap);
     setPlotEdit(plotEdit);
   };
 

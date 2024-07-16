@@ -50,6 +50,7 @@ export const DrawText = {
       else {
         this.map.fire("draw.text", {
           features: [f.toGeoJSON()],
+          mode: "draw_text",
         });
       }
     }
