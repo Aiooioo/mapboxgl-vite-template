@@ -30,7 +30,7 @@ export const DrawThreeArrow = {
       this.map.fire("draw.create", {
         features: [state.feature.toGeoJSON()],
         mode: "three_arrow",
-        control: state.coordinates,
+        controlPnts: state.coordinates,
       });
       this.changeMode("simple_select", {}, { silent: true });
     }

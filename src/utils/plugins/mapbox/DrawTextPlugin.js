@@ -16,7 +16,7 @@ export const DrawText = {
     const point = this.newFeature({
       type: "Feature",
       properties: {
-        text: "123",
+        text: "文字标注",
       },
       geometry: {
         type: "Point",

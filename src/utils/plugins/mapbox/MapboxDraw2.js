@@ -6,19 +6,14 @@ import { renderFeatureLayer } from "./renders/index";
 export default class MapboxDraw2 {
   constructor({ map, canEdit }) {
     this.map = map;
-    this.canEdit = canEdit;
+    this.canEdit = canEdit || true;
     this.draw = null;
-    this.store = null;
+    this.store = {};
     this.mode = null;
     this.edit = null;
     this.clickFunc = null;
 
     this.init();
-    this.bindEvents();
-
-    if (canEdit) {
-      this.edit = new MapboxDrawEdit(map);
-    }
   }
 
   init() {
@@ -30,9 +25,14 @@ export default class MapboxDraw2 {
         ...MapboxDrawExtends,
       },
     });
+    this.draw = draw;
 
     this.map.addControl(draw);
-    this.draw = draw;
+    this.map.on("draw.create", this.onCreateComplete.bind(this));
+
+    if (this.canEdit) {
+      this.edit = new MapboxDrawEdit(this.map);
+    }
   }
 
   changeMode(mode) {
@@ -43,38 +43,55 @@ export default class MapboxDraw2 {
     this.draw.changeMode(mode);
     this.mode = mode;
 
-    console.log("change-mode", mode);
     this.map.off("click", this.clickFunc);
   }
 
-  bindEvents() {
-    this.map.on("draw.create", this.onCreateComplete.bind(this));
-  }
-
   onCreateComplete(values) {
-    console.log("onCreateComplete--values", values);
-
     // 移除默认的绘制要素
     const featureId = values.features[0].id;
     this.draw.delete(featureId);
 
+    this.store[featureId] = values;
+
+    // 绘制自定义要素
     const params = {
       map: this.map,
       mode: this.mode,
       features: values.features,
     };
-
     renderFeatureLayer(params);
 
-    const clickFunc = this.onClickFeature.bind(this);
-    this.map.on("click", clickFunc);
-
-    this.clickFunc = clickFunc;
+    // 绑定点击事件
+    if (this.canEdit) {
+      const clickFunc = this.onClickFeature.bind(this);
+      this.map.on("click", clickFunc);
+      this.clickFunc = clickFunc;
+    }
   }
 
   onClickFeature(evt) {
     //   console.log("click", e);
     const features = this.map.queryRenderedFeatures(evt.point);
-    console.log(features);
+    // console.log(features);
+
+    if (features.length > 0) {
+      const ids = Object.keys(this.store);
+      const idsFilter = ids.filter((id) => {
+        const feats = features.filter((feat) => feat.source.includes(id));
+        return feats.length;
+      });
+
+      // console.log("idsFilter", idsFilter);
+      // console.log("this.store", this.store);
+
+      for (let i = 0; i < idsFilter.length; i++) {
+        const controlPnts = this.store[idsFilter[i]].controlPnts;
+        if (controlPnts) {
+          this.edit.updateEditSource(controlPnts);
+          // this.edit.updateEditSource(features[0].geometry.coordinates);
+          return;
+        }
+      }
+    }
   }
 }

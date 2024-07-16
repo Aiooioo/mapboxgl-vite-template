@@ -30,7 +30,7 @@ export const DrawDoubleArrow = {
       this.map.fire("draw.create", {
         features: [state.feature.toGeoJSON()],
         mode: "double_arrow",
-        control: state.coordinates,
+        controlPnts: state.coordinates,
       });
       this.changeMode("simple_select", {}, { silent: true });
     }
