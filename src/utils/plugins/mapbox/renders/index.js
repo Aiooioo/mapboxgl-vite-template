@@ -1,26 +1,24 @@
 import { PLG_MODES, generatePolygonLayer } from "./polygon";
+import { PT_MODES, generatePointLayer } from "./point";
+import { LINE_MODES, generateLineLayer } from "./line";
+import { TEXT_MODES, generateTextLayer } from "./text";
 
-export function renderFeatureLayer({ mode, map, features }) {
-  const pointsMode = ["draw_point"];
-  const linesMode = ["draw_line_string"];
-  const textsMode = ["draw_text"];
+export function renderFeatureLayer(params) {
+  const { mode } = params;
 
-  if (pointsMode.includes(mode)) {
+  if (PT_MODES.includes(mode)) {
+    generatePointLayer(params);
   }
 
-  if (linesMode.includes(mode)) {
+  if (LINE_MODES.includes(mode)) {
+    generateLineLayer(params);
   }
 
   if (PLG_MODES.includes(mode)) {
-    generatePolygonLayer({ map, mode, features });
+    generatePolygonLayer(params);
   }
 
-  if (textsMode.includes(mode)) {
+  if (TEXT_MODES.includes(mode)) {
+    generateTextLayer(params);
   }
 }
-
-function generatePointLayer() {}
-
-function generateLineLayer() {}
-
-function generateTextLayer() {}

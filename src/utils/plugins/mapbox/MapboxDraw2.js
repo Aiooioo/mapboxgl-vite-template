@@ -11,6 +11,7 @@ export default class MapboxDraw2 {
     this.store = null;
     this.mode = null;
     this.edit = null;
+    this.clickFunc = null;
 
     this.init();
     this.bindEvents();
@@ -42,14 +43,12 @@ export default class MapboxDraw2 {
     this.draw.changeMode(mode);
     this.mode = mode;
 
-    if (mode === "simple_select") {
-      this.map.on("click", this.onClickFeature);
-    }
+    console.log("change-mode", mode);
+    this.map.off("click", this.clickFunc);
   }
 
   bindEvents() {
     this.map.on("draw.create", this.onCreateComplete.bind(this));
-    this.map.on("draw.text", this.onDrawTextComplete.bind(this));
   }
 
   onCreateComplete(values) {
@@ -66,10 +65,11 @@ export default class MapboxDraw2 {
     };
 
     renderFeatureLayer(params);
-  }
 
-  onDrawTextComplete(values) {
-    console.log("onDrawTextComplete--values", values);
+    const clickFunc = this.onClickFeature.bind(this);
+    this.map.on("click", clickFunc);
+
+    this.clickFunc = clickFunc;
   }
 
   onClickFeature(evt) {

@@ -19,7 +19,7 @@ export const DrawIcon = {
       },
       geometry: {
         type: "Point",
-        coordinates: [e.lngLat.lng, e.lnglat.lat],
+        coordinates: [e.lngLat.lng, e.lngLat.lat],
       },
     });
 

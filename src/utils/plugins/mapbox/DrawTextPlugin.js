@@ -52,6 +52,11 @@ export const DrawText = {
           features: [f.toGeoJSON()],
           mode: "draw_text",
         });
+
+        this.map.fire("draw.create", {
+          features: [f.toGeoJSON()],
+          mode: "draw_text",
+        });
       }
     }
 

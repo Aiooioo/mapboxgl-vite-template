@@ -22,12 +22,20 @@ if (appVersion.indexOf("Win") >= 0) {
 }
 
 debugSupport.attach();
-getToken().then((res) => {
-  const app = createApp(App);
+// getToken().then((res) => {
+//   const app = createApp(App);
 
-  // pluginsManager.registerAll();
+//   // pluginsManager.registerAll();
 
-  app.use(createPinia());
-  app.use(router);
-  app.mount("#app");
-});
+//   app.use(createPinia());
+//   app.use(router);
+//   app.mount("#app");
+// });
+
+const app = createApp(App);
+
+// pluginsManager.registerAll();
+
+app.use(createPinia());
+app.use(router);
+app.mount("#app");
