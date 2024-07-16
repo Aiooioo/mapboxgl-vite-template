@@ -1,6 +1,6 @@
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import * as turf from "@turf/turf";
-import ThreeArrow from "./ArrowPlot/ThreeArrow";
+import ThreeArrow from "./ArrowGenerate/ThreeArrow";
 
 const createThreeArrowFeature = function (coords) {
   const feature = turf.lineString(coords, {

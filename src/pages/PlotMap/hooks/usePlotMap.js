@@ -5,7 +5,7 @@ import {
   patchMapboxDraw,
 } from "@/utils/plugins/mapbox/draw-style-hotfix.js";
 import debugSupport from "@/utils/debug-support.js";
-import PlotEdit from "@/utils/plugins/mapbox/ArrowPlot/PlotEdit";
+import PlotEdit from "@/utils/plugins/mapbox/PlotEdit";
 import { MapboxDrawExtends } from "@/utils/plugins/mapbox/MapboxDrawExtends";
 import { usePlotMapStore } from "@/models/plotMap";
 

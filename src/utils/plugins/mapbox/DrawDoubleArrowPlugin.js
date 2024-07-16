@@ -1,6 +1,6 @@
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import * as turf from "@turf/turf";
-import DoubleArrow from "./ArrowPlot/DoubleArrow";
+import DoubleArrow from "./ArrowGenerate/DoubleArrow";
 
 const createDoubleArrowFeature = function (coords) {
   const feature = turf.lineString(coords, {

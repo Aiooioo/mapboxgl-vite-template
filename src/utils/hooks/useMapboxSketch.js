@@ -11,7 +11,7 @@ import {
 } from "@/utils/plugins/mapbox/draw-style-hotfix.js";
 import debugSupport from "@/utils/debug-support.js";
 import { useImageryStore } from "@/models/imagery";
-import PlotEdit from "../plugins/mapbox/ArrowPlot/PlotEdit";
+import PlotEdit from "../plugins/mapbox/PlotEdit";
 import { MapboxDrawExtends } from "../plugins/mapbox/MapboxDrawExtends";
 
 const useMapboxSketch = () => {

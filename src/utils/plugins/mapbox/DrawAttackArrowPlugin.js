@@ -1,6 +1,6 @@
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import * as turf from "@turf/turf";
-import AttackArrow from "./ArrowPlot/AttackArrow";
+import AttackArrow from "./ArrowGenerate/AttackArrow";
 
 const createAttackArrowFeature = function (coords) {
   // const lineCoords = coords;
