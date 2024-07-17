@@ -6,6 +6,7 @@ import PointSetting from "./PointSetting.vue";
 import PolygonSetting from "./PolygonSetting.vue";
 import TextSetting from "./TextSetting.vue";
 import { usePlotMapStore } from "@/models/plotMap";
+import { $addProjectPlot } from "@/utils/api/plotMap/plot";
 
 const plotMapStore = usePlotMapStore();
 
@@ -16,6 +17,31 @@ const COMPONET_DICT = {
   line: LineSetting,
   polygon: PolygonSetting,
   text: TextSetting,
+};
+
+const handleSave = () => {
+  addProjectPlotAsync();
+};
+
+const addProjectPlotAsync = async () => {
+  const featurId = plotMapStore.selectedIds[0];
+  const plot = plotMapStore.plotTool.store[featurId];
+
+  console.log("addProjectPlotAsync--feature", feature);
+
+  const geojson = {
+    type: "FeatureCollection",
+    features: plot.features,
+  };
+
+  const params = {
+    projectId: plotMapStore.curProject.id,
+    content: geojson,
+    code: plot.mode,
+  };
+
+  const res = await $addProjectPlot(params);
+  console.log("onDrawComplete--res", res);
 };
 </script>
 
@@ -42,7 +68,7 @@ const COMPONET_DICT = {
     <component :is="COMPONET_DICT[plotType]"></component>
 
     <div class="mt-2 flex items-center justify-center gap-2">
-      <n-button>保存</n-button>
+      <n-button @click="handleSave">保存</n-button>
       <n-button>删除</n-button>
       <n-button>取消</n-button>
     </div>

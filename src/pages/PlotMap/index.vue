@@ -32,7 +32,7 @@
 
 <script setup>
 import { ref, shallowRef } from "vue";
-import HeadTool from "./HeadTool.vue";
+import HeadTool from "./HeadTool/index.vue";
 import MainContent from "./MainContent.vue";
 import FloatPanel from "./FloatPanel.vue";
 import PlotList from "./PlotList.vue";

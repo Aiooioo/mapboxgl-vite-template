@@ -13,6 +13,8 @@
       <div class="mapbox-mapper__bar-split"></div>
     </div>
     <div class="mapbox-mapper__bar-right">
+      <PlotProject />
+      <div class="mapbox-mapper__bar-split"></div>
       <span class="mapbox-mapper__bar-btn" @click="startMapDrawing">
         <i-mdi-drawing />
       </span>
@@ -28,6 +30,7 @@
 import ViewportNavi from "@/components/widgets/Navigation/ViewportNavi.vue";
 import Attribution from "@/components/widgets/Attribution/index.vue";
 import Home from "@/components/widgets/Navigation/Home.vue";
+import PlotProject from "./PlotProject.vue";
 import { useMap } from "@/models/map.js";
 
 const mapStore = useMap();

@@ -14,6 +14,8 @@ export default class MapboxDraw2 {
     this.clickFunc = null;
     this.selectedIds = [];
 
+    this.events = [];
+
     this.init();
   }
 
@@ -29,10 +31,30 @@ export default class MapboxDraw2 {
     this.draw = draw;
 
     this.map.addControl(draw);
-    this.map.on("draw.create", this.onCreateComplete.bind(this));
 
     if (this.canEdit) {
       this.edit = new MapboxDrawEdit(this.map);
+    }
+  }
+
+  bindEvents(eventName, callback) {
+    if (eventName === "draw.create") {
+      const func = this.onCreateComplete.bind(this, callback);
+      this.map.on("draw.create", func);
+
+      this.events.push({
+        eventName: "draw.create",
+        func: func,
+      });
+    }
+
+    if (eventName === "draw.select") {
+      this.map.on("draw.select", callback);
+
+      this.events.push({
+        eventName: "draw.select",
+        func: callback,
+      });
     }
   }
 
@@ -47,18 +69,20 @@ export default class MapboxDraw2 {
     this.map.off("click", this.clickFunc);
   }
 
-  onCreateComplete(values) {
+  onCreateComplete(callback, evt) {
+    // console.log("onCreateComplete--call", evt, callback);
     // 移除默认的绘制要素
-    const featureId = values.features[0].id;
+    const featureId = evt.features[0].id;
     this.draw.delete(featureId);
 
-    this.store[featureId] = values;
+    evt.mode = this.mode;
+    this.store[featureId] = evt;
 
     // 绘制自定义要素
     const params = {
       map: this.map,
       mode: this.mode,
-      features: values.features,
+      features: evt.features,
     };
     renderFeatureLayer(params);
 
@@ -70,8 +94,15 @@ export default class MapboxDraw2 {
       // 绘制完成时会立即触发 click 事件，需要延迟绑定
       setTimeout(() => {
         this.map.on("click", clickFunc);
+
+        this.events.push({
+          eventName: "click",
+          func: clickFunc,
+        });
       }, 500);
     }
+
+    callback({ ...evt, mode: this.mode });
   }
 
   onClickFeature(evt) {
@@ -79,10 +110,14 @@ export default class MapboxDraw2 {
     const features = this.map.queryRenderedFeatures(evt.point);
     // console.log(features);
 
+    let mode = "simple_select";
     if (features.length > 0) {
       const ids = Object.keys(this.store);
       const idsFilter = ids.filter((id) => {
         const feats = features.filter((feat) => feat.source.includes(id));
+        if (feats.length > 0) {
+          mode = feats[0].source.split("-")[0];
+        }
         return feats.length;
       });
 
@@ -101,13 +136,17 @@ export default class MapboxDraw2 {
     }
 
     // 借用 mapbox 事件系统，注册选中事件
-    this.map.fire("draw.select", { selectedIds: this.selectedIds });
+    this.map.fire("draw.select", { selectedIds: this.selectedIds, mode });
   }
 
   destroy() {
-    if (this.canEdit) {
-      this.map.off("click", this.clickFunc);
-    }
+    // if (this.canEdit) {
+    //   this.map.off("click", this.clickFunc);
+    // }
+
+    this.events.forEach((eventName, func) => {
+      this.map.off(eventName, func);
+    });
 
     this.map.removeControl(this.draw);
 

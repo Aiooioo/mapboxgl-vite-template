@@ -28,11 +28,16 @@ export const usePlotMap = () => {
 
   const initPlotTool = () => {
     plotTool = new MapboxDraw2({ map: plotMap });
-
-    plotMap.on("draw.select", onDrawSelect);
+    plotTool.bindEvents("draw.create", onDrawComplete);
+    plotTool.bindEvents("draw.select", onDrawSelect);
 
     setPlotTool(plotTool);
   };
+
+  function onDrawComplete(evt) {
+    // console.log("onDrawComplete--evt", evt);
+    setSelectedIds([evt.features[0].id]);
+  }
 
   function onDrawSelect(val) {
     console.log("draw.select--val", val);
@@ -46,7 +51,6 @@ export const usePlotMap = () => {
 
   function destroyPlotTool() {
     if (plotTool && plotMap) {
-      plotMap.off("draw.select", onDrawSelect);
       plotTool.destroy();
       plotTool = null;
     }

@@ -4,8 +4,7 @@ import ThreeArrow from "./ArrowGenerate/ThreeArrow";
 
 const createThreeArrowFeature = function (coords) {
   const feature = turf.lineString(coords, {
-    name: "three_arrow",
-    sketch: "arrow",
+    mode: "draw_three_arrow",
   });
 
   return feature;
