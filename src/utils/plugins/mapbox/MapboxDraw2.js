@@ -128,11 +128,12 @@ export default class MapboxDraw2 {
         const controlPnts = this.store[idsFilter[i]].controlPnts;
         if (controlPnts) {
           this.edit.updateEditSource(controlPnts);
-          return;
+          break;
         }
       }
     } else {
       this.selectedIds = [];
+      this.edit.updateEditSource([]);
     }
 
     // 借用 mapbox 事件系统，注册选中事件

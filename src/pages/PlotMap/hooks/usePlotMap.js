@@ -40,7 +40,7 @@ export const usePlotMap = () => {
   }
 
   function onDrawSelect(val) {
-    console.log("draw.select--val", val);
+    // console.log("draw.select--val", val);
     setSelectedIds(val.selectedIds);
   }
 
@@ -56,5 +56,7 @@ export const usePlotMap = () => {
     }
   }
 
-  return {};
+  return {
+    cancelDraw,
+  };
 };
