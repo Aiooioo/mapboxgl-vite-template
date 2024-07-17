@@ -58,12 +58,6 @@ function restoreFromSession() {
             // TODO: router to user account page
             return routerSignIn();
           }
-
-          if (params.webmapId) {
-            return webmapStore.initWebmapFromRemoteId(params.webmapId);
-          } else {
-            return webmapStore.initDefaultWebmapTemplate();
-          }
         });
     } else {
       return Promise.all([userStore.sessionClear(), router.isReady()]).then(

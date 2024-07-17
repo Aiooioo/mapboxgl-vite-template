@@ -548,6 +548,11 @@
   dependencies:
     "@tanstack/virtual-core" "3.5.0"
 
+"@terraformer/wkt@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@terraformer/wkt/-/wkt-2.2.1.tgz#91fdfe1fa93c66ca1d1abfd526f6480c3a60f24b"
+  integrity sha512-XDUsW/lvbMzFi7GIuRD9+UqR4QyP+5C+TugeJLMDczKIRbaHoE9J3N8zLSdyOGmnJL9B6xTS3YMMlBnMU0Ar5A==
+
 "@turf/along@^7.0.0":
   version "7.0.0"
   resolved "https://registry.npmmirror.com/@turf/along/-/along-7.0.0.tgz#5a6f5fcc0ed11ea6a64359e8af3e032a3b99e78b"
@@ -1874,16 +1879,6 @@
   version "7946.0.8"
   resolved "https://registry.npmmirror.com/@types/geojson/-/geojson-7946.0.8.tgz#30744afdb385e2945e22f3b033f897f76b1f12ca"
   integrity sha512-1rkryxURpr6aWP7R786/UQOkJ3PcpQiWkAXBmdWc7ryFWqN6a4xfK7BtjXvFBKO9LjQ+MWQSWxYeZX1OApnArA==
-
-"@types/geojson@^1.0.0":
-  version "1.0.6"
-  resolved "https://registry.npmmirror.com/@types/geojson/-/geojson-1.0.6.tgz#3e02972728c69248c2af08d60a48cbb8680fffdf"
-  integrity sha512-Xqg/lIZMrUd0VRmSRbCAewtwGZiAk3mEUDvV4op1tGl+LvyPcb/MIOSxTl9z+9+J+R4/vpjiCAT4xeKzH9ji1w==
-
-"@types/geojson@^7946.0.0 || ^1.0.0":
-  version "7946.0.14"
-  resolved "https://registry.npmmirror.com/@types/geojson/-/geojson-7946.0.14.tgz#319b63ad6df705ee2a65a73ef042c8271e696613"
-  integrity sha512-WCfD5Ht3ZesJUsONdhvm84dmzWOiOzOAqOncN0++w0lBw1o8OuDNJF2McvvCef/yBqb/HYRahp1BYtODFQ8bRg==
 
 "@types/katex@^0.16.2":
   version "0.16.7"
@@ -3923,16 +3918,7 @@ string-argv@^0.3.1:
   resolved "https://registry.npmmirror.com/string-argv/-/string-argv-0.3.2.tgz#2b6d0ef24b656274d957d54e0a4bbf6153dc02b6"
   integrity sha512-aqD2Q0144Z+/RqG52NeHEkZauTAUWJO8c6yTftGJKO3Tja5tUgIfmIl6kExvhtxSDP7fXB6DvzkfMpCd/F3G+Q==
 
-"string-width-cjs@npm:string-width@^4.2.0":
-  version "4.2.3"
-  resolved "https://registry.npmmirror.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
-
-string-width@^4.1.0:
+"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0:
   version "4.2.3"
   resolved "https://registry.npmmirror.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -3978,14 +3964,7 @@ string.prototype.trimstart@^1.0.8:
     define-properties "^1.2.1"
     es-object-atoms "^1.0.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.npmmirror.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.npmmirror.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -4075,21 +4054,6 @@ tailwindcss@^3.4.3:
     postcss-selector-parser "^6.0.11"
     resolve "^1.22.2"
     sucrase "^3.32.0"
-
-terraformer-wkt-parser@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npmmirror.com/terraformer-wkt-parser/-/terraformer-wkt-parser-1.2.1.tgz#8041e2aeb0c9f2b4cbbec8ec2c5c00c45ddfee02"
-  integrity sha512-+CJyNLWb3lJ9RsZMTM66BY0MT3yIo4l4l22Jd9CrZuwzk54fsu4Sc7zejuS9fCITTuTQy3p06d4MZMVI7v5wSg==
-  dependencies:
-    "@types/geojson" "^1.0.0"
-    terraformer "~1.0.5"
-
-terraformer@~1.0.5:
-  version "1.0.12"
-  resolved "https://registry.npmmirror.com/terraformer/-/terraformer-1.0.12.tgz#39e08f9c753606421acce02e122440c72dfa12d3"
-  integrity sha512-MokUp0+MFal4CmJDVL6VAO1bKegeXcBM2RnPVfqcFIp2IIv8EbPAjG0j/vEy/vuKB8NVMMSF2vfpVS/QLe4DBg==
-  optionalDependencies:
-    "@types/geojson" "^7946.0.0 || ^1.0.0"
 
 thenify-all@^1.0.0:
   version "1.6.0"

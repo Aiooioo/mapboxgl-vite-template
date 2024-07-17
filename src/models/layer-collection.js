@@ -1,5 +1,16 @@
 import { shallowReadonly } from "vue";
 import { defineStore } from "pinia";
+import _ from "lodash";
+
+function convertLayerCollectionFromWebmapData(webmapLayers) {
+  return _.map(webmapLayers, (layer) => {
+    return {
+      id: layer.id,
+      name: layer.name,
+      visible: layer.visible,
+    };
+  });
+}
 
 class LayerCollection {
   constructor() {
@@ -38,6 +49,14 @@ const useLayerCollection = defineStore("layer-collection", {
 
       layers: [],
     };
+  },
+
+  actions: {
+    loadLayerCollectionsFromWebmap(webmap) {
+      this.layers = convertLayerCollectionFromWebmapData(webmap.layers);
+
+      this.internalData.clear();
+    },
   },
 });
 
