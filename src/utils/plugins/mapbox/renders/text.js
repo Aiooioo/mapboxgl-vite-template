@@ -46,6 +46,8 @@ export function generateTextLayer({ map, mode, features }) {
 
   map.addLayer(textLayer);
   // map.addLayer(circleLayer);
+
+  return [textLayer.id];
 }
 
 export function updateTextLayer({ map, mode, features }) {

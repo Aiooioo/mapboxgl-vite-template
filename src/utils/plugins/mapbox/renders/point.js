@@ -20,33 +20,20 @@ export function generatePointLayer({ map, mode, features }) {
   };
 
   map.addLayer(circleLayer);
+
+  return [circleLayer.id];
 }
 
-export function updatePointLayer({ map, mode, features }) {
-  // const symbolLayers = generateLayerStyle(feature);
-  // console.log(symbolLayers, "--symbolLayers");
-  // const fillLayer = symbolLayers.find((symbol) =>
-  //   symbol.layer.id.startsWith("draw-render-point-inner-"),
-  // );
-  // const strokeLayer = symbolLayers.find((symbol) =>
-  //   symbol.layer.id.startsWith("draw-render-point-outer-"),
-  // );
-  // const fillLayerOnMap = map.getLayer(fillLayer.id);
-  // if (fillLayerOnMap) {
-  //   map.setPaintProperty(fillLayer.id, "circle-color", symbolSettings.color);
-  //   map.setPaintProperty(fillLayer.id, "circle-radius", symbolSettings.size);
-  // }
-  // const strokeLayerOnMap = map.getLayer(strokeLayer.id);
-  // if (strokeLayerOnMap) {
-  //   map.setPaintProperty(
-  //     strokeLayer.id,
-  //     "circle-color",
-  //     symbolSettings.strokeColor,
-  //   );
-  //   map.setPaintProperty(
-  //     strokeLayer.id,
-  //     "circle-radius",
-  //     symbolSettings.strokeWidth + symbolSettings.size,
-  //   );
-  // }
+export function updatePointLayer({ map, layerIds, settings }) {
+  layerIds.forEach((layerId) => {
+    Object.entries(settings).forEach(([key, value]) => {
+      map.setPaintProperty(layerId, key, value);
+    });
+
+    // map.setPaintProperty(layerId, "circle-color", symbolSettings.color);
+    // map.setPaintProperty(fillLayer.id, "circle-color", symbolSettings.color);
+    // map.setPaintProperty(fillLayer.id, "circle-radius", symbolSettings.size);
+    // map.setPaintProperty(id, "circle-color", strokeColor);
+    // map.setPaintProperty(id, "circle-radius", strokeWidth + size);
+  });
 }

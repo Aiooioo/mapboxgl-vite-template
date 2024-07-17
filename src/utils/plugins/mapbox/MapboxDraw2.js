@@ -75,16 +75,21 @@ export default class MapboxDraw2 {
     const featureId = evt.features[0].id;
     this.draw.delete(featureId);
 
-    evt.mode = this.mode;
-    this.store[featureId] = evt;
-
     // 绘制自定义要素
     const params = {
       map: this.map,
       mode: this.mode,
       features: evt.features,
     };
-    renderFeatureLayer(params);
+    const layerIds = renderFeatureLayer(params);
+
+    // 存储自定义要素信息--mode layerIds
+    evt.mode = this.mode;
+    evt.layerIds = layerIds;
+    this.store[featureId] = evt;
+
+    // 触发自定义事件
+    callback(evt);
 
     // 绑定点击事件
     if (this.canEdit) {
@@ -101,8 +106,6 @@ export default class MapboxDraw2 {
         });
       }, 500);
     }
-
-    callback({ ...evt, mode: this.mode });
   }
 
   onClickFeature(evt) {

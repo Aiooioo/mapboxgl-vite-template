@@ -50,6 +50,8 @@ export function generatePolygonLayer({ map, mode, features }) {
 
   map.addLayer(fillLayer);
   map.addLayer(strokeLayer);
+
+  return [fillLayer.id, strokeLayer.id];
 }
 
 export function updatePolygonLayer({ map, mode, features }) {

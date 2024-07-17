@@ -24,6 +24,8 @@ export function generateLineLayer({ map, mode, features }) {
   };
 
   map.addLayer(lineLayer);
+
+  return [lineLayer.id];
 }
 
 export function updateLineLayer({ map, mode, features }) {
