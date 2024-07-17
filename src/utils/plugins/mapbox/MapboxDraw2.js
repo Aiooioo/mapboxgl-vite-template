@@ -12,13 +12,14 @@ export default class MapboxDraw2 {
     this.mode = null;
     this.edit = null;
     this.clickFunc = null;
+    this.selectedIds = [];
 
     this.init();
   }
 
   init() {
     const draw = new MapboxDraw({
-      displayControlsDefault: true,
+      displayControlsDefault: false,
       userProperties: true,
       modes: {
         ...MapboxDraw.modes,
@@ -64,8 +65,12 @@ export default class MapboxDraw2 {
     // 绑定点击事件
     if (this.canEdit) {
       const clickFunc = this.onClickFeature.bind(this);
-      this.map.on("click", clickFunc);
       this.clickFunc = clickFunc;
+
+      // 绘制完成时会立即触发 click 事件，需要延迟绑定
+      setTimeout(() => {
+        this.map.on("click", clickFunc);
+      }, 500);
     }
   }
 
@@ -81,17 +86,36 @@ export default class MapboxDraw2 {
         return feats.length;
       });
 
-      // console.log("idsFilter", idsFilter);
-      // console.log("this.store", this.store);
+      this.selectedIds = idsFilter;
 
       for (let i = 0; i < idsFilter.length; i++) {
+        // 控制点绘制，目前只有箭头有
         const controlPnts = this.store[idsFilter[i]].controlPnts;
         if (controlPnts) {
           this.edit.updateEditSource(controlPnts);
-          // this.edit.updateEditSource(features[0].geometry.coordinates);
           return;
         }
       }
+    } else {
+      this.selectedIds = [];
     }
+
+    // 借用 mapbox 事件系统，注册选中事件
+    this.map.fire("draw.select", { selectedIds: this.selectedIds });
+  }
+
+  destroy() {
+    if (this.canEdit) {
+      this.map.off("click", this.clickFunc);
+    }
+
+    this.map.removeControl(this.draw);
+
+    this.draw = null;
+    this.store = {};
+    this.mode = null;
+    this.edit = null;
+    this.clickFunc = null;
+    this.selectedIds = [];
   }
 }

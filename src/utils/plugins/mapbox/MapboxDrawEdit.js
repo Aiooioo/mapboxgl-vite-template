@@ -41,7 +41,7 @@ export default class MapboxDrawEdit {
       properties: {},
     }));
 
-    console.log(features);
+    // console.log(features);
 
     const data = {
       type: "FeatureCollection",

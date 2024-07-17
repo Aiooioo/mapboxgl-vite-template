@@ -7,7 +7,7 @@ export const usePlotMap = () => {
   let plotTool = null;
 
   const plotMapStore = usePlotMapStore();
-  const { setPlotTool } = plotMapStore;
+  const { setPlotTool, setSelectedIds } = plotMapStore;
 
   watch(
     () => plotMapStore.plotMap,
@@ -29,8 +29,15 @@ export const usePlotMap = () => {
   const initPlotTool = () => {
     plotTool = new MapboxDraw2({ map: plotMap });
 
+    plotMap.on("draw.select", onDrawSelect);
+
     setPlotTool(plotTool);
   };
+
+  function onDrawSelect(val) {
+    console.log("draw.select--val", val);
+    setSelectedIds(val.selectedIds);
+  }
 
   function cancelDraw() {
     if (!plotTool) return;
@@ -39,6 +46,8 @@ export const usePlotMap = () => {
 
   function destroyPlotTool() {
     if (plotTool && plotMap) {
+      plotMap.off("draw.select", onDrawSelect);
+      plotTool.destroy();
       plotTool = null;
     }
   }

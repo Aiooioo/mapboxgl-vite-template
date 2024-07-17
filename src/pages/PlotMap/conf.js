@@ -1,15 +1,9 @@
 import { defineAsyncComponent } from "vue";
 
 export const CUS_TOOL_COMPS = [
-  // {
-  //   title: "地图标注",
-  //   component: defineAsyncComponent(
-  //     () => import("@/components/overlay/SimpleDrawing/DrawingPane.vue")
-  //   ),
-  // },
   {
     title: "标注设置",
-    component: defineAsyncComponent(() => import("./PlotSetting.vue")),
+    component: defineAsyncComponent(() => import("./PlotSetting/index.vue")),
   },
 ];
 
