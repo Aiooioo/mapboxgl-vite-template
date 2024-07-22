@@ -1,6 +1,6 @@
 {
-  "baseUrl": "/",
-  "apiUrl": "/nudt",
+  "baseUrl": "/topo-map-imagery",
+  "apiUrl": "https://whps.gis.test/topo",
   "login": {
     "password": "macro123",
     "relogin": "../login/",

@@ -3,3 +3,9 @@ export const DefaultWebmapTemplate = {
   name: "新的工程",
   layers: [],
 };
+
+export const DefaultWebmapLayerTemplates = {};
+
+export const getLayerTemplate = (templateStr) => {
+  return DefaultWebmapLayerTemplates[templateStr];
+};

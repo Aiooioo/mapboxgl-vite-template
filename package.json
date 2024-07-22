@@ -41,12 +41,14 @@
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
+    "@types/crypto-js": "4.2.0",
     "@types/node": "^20.12.12",
     "@vitejs/plugin-vue": "^5.0.4",
     "autoprefixer": "^10.4.19",
     "naive-ui": "^2.38.2",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
+    "rollup-plugin-external-globals": "^0.11.0",
     "sass": "^1.77.2",
     "sass-loader": "^14.2.1",
     "tailwindcss": "^3.4.3",

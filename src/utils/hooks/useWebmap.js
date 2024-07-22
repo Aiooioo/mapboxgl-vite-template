@@ -12,7 +12,7 @@ const useWebmapCompose = () => {
     () => webmapStore.isWebmapLoaded,
     (value) => {
       if (value) {
-        layerCollection.loadLayerCollectionsFromWebmap()
+        layerCollection.loadLayerCollectionsFromWebmap(webmapStore.info);
       }
     },
   );

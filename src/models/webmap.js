@@ -77,6 +77,8 @@ const useWebmap = defineStore("webmap", {
           const webmap = WebmapInfo.createFromRemote(data);
           await webmap.loadingPromise;
 
+          this.info = webmap;
+
           this.isWebmapLoaded = true;
         }
       } catch (e) {
@@ -86,10 +88,7 @@ const useWebmap = defineStore("webmap", {
       }
     },
 
-
-    saveWebmap() {
-
-    }
+    saveWebmap() {},
   },
 });
 

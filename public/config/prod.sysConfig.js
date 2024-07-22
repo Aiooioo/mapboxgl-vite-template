@@ -1,7 +1,8 @@
 //匿名自执行函数
 (function () {
   window.prodConfig = {
-    apiUrl: "/",
+    baseUrl: "/topo-map-imagery",
+    apiUrl: "https://whps.gis.test/topo",
     wsUrl: "ws://192.168.0.215:8877/im",
     login: {
       password: "macro123",

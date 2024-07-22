@@ -34,9 +34,12 @@ import ZoneSwitcher from "@/components/overlay/TrainingZone/ZoneSwitcher.vue";
 import MapToolPane from "@/components/MapToolPane.vue";
 import BasemapToggle from "@/components/widgets/BasemapGallery/BasemapToggle.vue";
 import { useMap } from "@/models/map.js";
+import { useWebmapCompose } from "@/utils/hooks/useWebmap.js";
 
 const mapStore = useMap();
 const { showZones } = storeToRefs(mapStore);
+
+useWebmapCompose();
 </script>
 
 <style scoped lang="scss">
